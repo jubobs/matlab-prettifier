@@ -1,0 +1,282 @@
+% --- Package identification ---
+\def\lstml@pckgname{matlablistings}
+\def\lstml@pckgdate{2013/12/07}
+\def\lstml@pckgversion{0.1}
+\def\lstml@pckgdescription{LaTeX package for typesetting Matlab listings}
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{\lstml@pckgname}[\lstml@pckgdate{} v\lstml@pckgversion{} \lstml@pckgdescription]
+
+% switches for options
+\newif\iflstml@inlineescape\lstml@inlineescapefalse	% switch for 'inlineescape' option
+
+% --- Package option 'inlineescape' ---
+\DeclareOption{inlineescape}{\lstml@inlineescapetrue}
+
+% --- Pass all package options to package 'listings' ---
+\DeclareOption*{\PassOptionsToPackage{\CurrentOption}{listings}}	
+
+% --- Process options ---
+\ProcessOptions\relax
+
+% --- require packages ---
+\RequirePackage[dvipsnames]{xcolor}
+\RequirePackage{textcomp} % for upquote option
+\RequirePackage{listings}
+\RequirePackage{etoolbox}
+
+% --- Patch \lsthk@TextStyle if option 'inlineescape' has been passed ---
+% Patch adapted from http://tex.stackexchange.com/questions/43526/escaping-in-lstinline
+\iflstml@inlineescape
+	\patchcmd{\lsthk@TextStyle}
+		{\let\lst@DefEsc\@empty	}
+		{}{}
+		{%
+			\PackageError{\lstml@pckgname}
+			{%
+				Failed to patch \string\lsthk@TextStyle%
+			}{%
+				Option 'inlineescape' is the culprit%
+			}
+		}
+\fi
+
+
+\lstdefinelanguage{Matlabx}
+{%
+	extendedchars=false,
+	basicstyle=\lstml@basicstyle,
+	upquote=true,
+	%
+	% The keywords defined here are based on the list returned by the Matlab (R2013a) function 'iskeyword'.
+	%TODO However, multiple classes of keywords are used here.
+	% In the following, the keywords of class 1 are nicknamed ``companion keywords'', for their very special interactin with the ``end'' keyword. 
+	morekeywords=[1]%
+	{% 
+		break,
+		case,
+		catch,
+		continue,
+		else,
+		elseif,
+		for,
+		function,
+		global,
+		if,
+		otherwise,
+		parfor,
+		persistent,
+		return,
+		spmd,
+		switch,
+		try,
+		while,
+	},
+	keywordstyle=[1]\lstml@processcompanionkeyword,
+	%
+	% The 'classdef' keyword does not interact with the 'end' keyword the same way as the other keywords do; it is therefore treated separately. A large class number is used to minimise the risk of interference with user-defined keyword classes.
+	morekeywords=[256]{classdef},	
+	keywordstyle=[256]\lstml@keywordstyle,
+	%
+	% The syntax highlighting of the 'end' keyword is context-specific. A large class number is used to minimise the risk of interference with user-defined keyword classes.
+	morekeywords=[257]{end},
+	keywordstyle=[257]%
+	{%	
+		\iflstml@endkeyword%
+			\iflstml@insgllinecom%
+			\else%
+				\ignorespaces% %TODO required to remove a spurrious space before keywords
+				\lstml@keywordstyle%
+			\fi%
+		\fi%
+	},
+	%
+	% For correct syntax highlighting of the end keyword, each occurence of an opening or closing bracket, whether it be round, square, or curly, must be processed, in order to keep track of the context.
+	literate=%
+		{(}{{\lstml@processopeningbracket(}}1
+		{[}{{\lstml@processopeningbracket[}}1
+		{\{}{{\lstml@processopeningbracket\{}}1
+		{)}{{\lstml@processclosingbracket)}}1
+		{]}{{\lstml@processclosingbracket]}}1
+		{\}}{{\lstml@processclosingbracket\}}}1
+		{)'}{{\lstml@processclosingbracket)}{\textquotesingle}}2 %TODO necessary for A(1)'
+		{]'}{{\lstml@processclosingbracket]}{\textquotesingle}}2 %TODO necessary for A[1]'
+		{\}'}{{\lstml@processclosingbracket\}}{\textquotesingle}}2 %TODO necessary for A{1}'
+		{~}{{\raisebox{0.5ex}\texttildelow}}1,
+	%
+	% Matlab is case-sensitive.
+	sensitive=true,
+	%
+	% Strings
+	morestring=[m]',
+	stringstyle=\lstml@stringstyle,
+	%
+	% Comments
+	morecomment=[l]\%, 															% Single-line comments
+	morecomment=[s]{\%\{\^^M}{\%\}\^^M},						% Multiple-line comments
+	moredelim=**[il][\lstml@processdotdotdot]{...},% Line continuation
+	commentstyle=\lstml@commentstyle,
+}
+
+%TODO experimental patch to make literate work even when breaklines is set to true
+% this may have unforseen side-effects... time will tell
+\patchcmd{\lsthk@SelectCharTable}{)}{`}{}{}
+
+% --- now let's define various auxiliary macros ---
+
+% The following counters and switch are used for keeping track of the context in which 'end' keyword occurs.
+\newcounter{lstml@ocounter}
+\newcounter{lstml@ccounter}
+\newif\iflstml@endkeyword\lstml@endkeywordtrue
+
+% --- for line continuation ---
+\newif\iflstml@insgllinecom\lstml@insgllinecomfalse
+\lst@AddToHook{EOL}{\global\lstml@insgllinecomfalse}
+ 
+\newcommand\lstml@processopeningbracket%
+{%
+	\iflstml@endkeyword%
+		\global\lstml@endkeywordfalse%
+	\fi%
+	\stepcounter{lstml@ocounter}%
+}
+
+\newcommand\lstml@processclosingbracket%
+{% upon encou
+	\iflstml@endkeyword% if end is already a keyword, adding a closing brace is not going to change that
+		% reset the counters
+		\setcounter{lstml@ccounter}{0}%
+		\setcounter{lstml@ccounter}{0}%
+	\else%	otherwise, increment the closing counter and check whether the number of closing braces
+		\stepcounter{lstml@ccounter}%
+		\ifnum\value{lstml@ccounter}<\value{lstml@ocounter}%
+		\else%
+			\global\lstml@endkeywordtrue%
+		\fi%
+	\fi%
+}
+
+%
+\newcommand\lstml@resetendkeyword%
+{%
+	\global\lstml@endkeywordtrue%
+	\setcounter{lstml@ccounter}{0}%
+	\setcounter{lstml@ocounter}{0}%
+}
+
+\newcommand\lstml@processcompanionkeyword%
+{%
+	\lstml@resetendkeyword%
+	\ignorespaces% %TODO required to remove a spurrious space before keywords
+	\lstml@keywordstyle%
+}
+	
+\BeforeBeginEnvironment{lstlisting}{\lstml@resetendkeyword}
+\pretocmd\lstinputlisting{\lstml@resetendkeyword}{}{} %TODO error message
+\pretocmd\lstinline{\lstml@resetendkeyword}{}{} %TODO error message
+
+% macro for processing '...'
+\def\lstml@processdotdotdot%
+{%
+	\lst@CalcLostSpaceAndOutput% necessary to prevent weird spacing
+	\iflstml@insgllinecom%
+	...%
+	\else%
+		\global\lstml@insgllinecomtrue%
+		{%
+			\lstml@keywordstyle%
+			...%
+		}%
+	\fi%
+	\lstml@commentstyle%
+}
+
+
+% macro for processing additional literate replacements
+\def\lstml@addToLiterate#1%
+{%
+	\edef\lst@literate%
+	{%
+		\unexpanded\expandafter{\lst@literate} % this space is for cosmetic reasons
+		\unexpanded{#1}%
+	}%
+}
+
+% Definition of a `moreliterate' key to append to (not overwrite)
+% the list of existing literate replacements.
+\lst@Key{moreliterate}{}{\lstml@addToLiterate{#1}}
+
+
+
+% font shape and size
+\newcommand\lstml@basicshapesize{\ttfamily\normalsize}
+\newcommand\lstml@keywordshapesize\lstml@basicshapesize
+\newcommand\lstml@stringshapesize\lstml@basicshapesize
+\newcommand\lstml@commentshapesize\lstml@basicshapesize
+
+\newcommand\lstml@placeholderdelimo{\textlangle}
+\newcommand\lstml@placeholderdelimc{\textrangle}
+\newcommand\lstml@placeholderdelimstyle{\normalfont\upshape}
+\newcommand\lstml@placeholdercontentstyle{\normalfont\itshape}
+
+% colours
+\colorlet{lstml@basiccolor}{black}
+\definecolor{lstml@keywordcolor}{RGB}{000,000,255}
+\definecolor{lstml@commentcolor}{RGB}{034,139,034}
+\definecolor{lstml@stringcolor}{RGB}{160,032,240}
+\colorlet{lstml@placeholderdelimcolor}{RubineRed}%
+\colorlet{lstml@placeholdercontentcolor}{RubineRed}%
+
+% style macros
+\newcommand\lstml@basicstyle{\lstml@basicshapesize\color{lstml@basiccolor}}
+\newcommand\lstml@keywordstyle{	\lstml@keywordshapesize\color{lstml@keywordcolor}}
+\newcommand\lstml@stringstyle{\lstml@stringshapesize\color{lstml@stringcolor}}
+\newcommand\lstml@commentstyle{\lstml@commentshapesize\color{lstml@commentcolor}}
+
+% keys
+\define@key{lstml}{basicstyle}{\def\lstml@basicstyle{#1}}
+\define@key{lstml}{keywordstyle}{\def\lstml@keywordstyle{#1}}
+\define@key{lstml}{stringstyle}{\def\lstml@stringstyle{#1}}
+\define@key{lstml}{commentstyle}{\def\lstml@commentstyle{#1}}
+% 
+% lstset-like macro
+\lst@UserCommand\lstmlset{\begingroup \lst@setcatcodes \lstmlset@}
+\def\lstmlset@#1{\endgroup \ifx\@empty#1\@empty\else\setkeys{lstml}{#1}\fi}
+
+
+
+% --- macro for typesetting placeholders ---
+\newcommand\lstmlplaceholder[1]
+{%
+	{%
+		% opening delimiter
+		\lstml@placeholderdelimstyle%
+		\color{lstml@placeholderdelimcolor}%
+		\lstml@placeholderdelimo%
+	}{%
+		% placeholder content
+		\lstml@placeholdercontentstyle%
+		\color{lstml@placeholdercontentcolor}%
+		#1\lstml@italiccorrection%
+	}{%
+		% closing delimiter
+		\lstml@placeholderdelimstyle%
+		\color{lstml@placeholderdelimcolor}%
+		\lstml@placeholderdelimc%
+	}%
+}
+
+% --- auxiliary macro (for conditional italic correction in placeholder) ---
+\newcommand\lstml@italiccorrection
+{%
+	\ifdefstring{\f@shape}{sl}
+		{\/}
+		{%
+			\ifdefstring{\f@shape}{it}
+			{\/}
+			{}%
+		}%
+}
+
+\endinput
+
+
