@@ -1,5 +1,5 @@
 % --- Package identification ---
-\def\lstml@pckgname{matlablistings}
+\def\lstml@pckgname{matlab-prettifier}
 \def\lstml@pckgdate{2013/12/07}
 \def\lstml@pckgversion{0.1}
 \def\lstml@pckgdescription{LaTeX package for typesetting Matlab listings}
@@ -114,6 +114,7 @@
 	morecomment=[l]\%, 															% Single-line comments
 	morecomment=[s]{\%\{\^^M}{\%\}\^^M},						% Multiple-line comments
 	moredelim=**[il][\lstml@processdotdotdot]{...},% Line continuation
+	moredelim=[l][\color{orange}]{!}, %TODO
 	commentstyle=\lstml@commentstyle,
 }
 
@@ -218,16 +219,24 @@
 \newcommand\lstml@placeholderdelimstyle{\normalfont\upshape}
 \newcommand\lstml@placeholdercontentstyle{\normalfont\itshape}
 
-% colours
-\colorlet{lstml@basiccolor}{black}
-\definecolor{lstml@keywordcolor}{RGB}{000,000,255}
-\definecolor{lstml@commentcolor}{RGB}{034,139,034}
-\definecolor{lstml@stringcolor}{RGB}{160,032,240}
-\colorlet{lstml@placeholderdelimcolor}{RubineRed}%
-\colorlet{lstml@placeholdercontentcolor}{RubineRed}%
+% Desktop tool colors
+\colorlet{lstml@textcolor}{black}												% Text color
+\colorlet{lstml@bgcolor}{white}													% Background color 
+
+% Matlab syntax highlighting colors
+\definecolor{lstml@keywordcolor}{RGB}{000,000,255}			% Keywords
+\definecolor{lstml@stringcolor}{RGB}{160,032,240}			% Strings
+\definecolor{lstml@syscomcolor}{RGB}{178,140,000}			% System commands
+\definecolor{lstml@commentcolor}{RGB}{034,139,034}			% Comments
+\definecolor{lstml@noendstringcolor}{RGB}{178,000,000}	% Unterminated strings
+\definecolor{lstml@syntaxerrorcolor}{RGB}{255,000,000}	% Syntax errors
+
+% Placeholder colors
+\colorlet{lstml@placeholderdelimcolor}{RubineRed}			% Placeholder delimiter color	
+\colorlet{lstml@placeholdercontentcolor}{RubineRed}		% Placeholder text color
 
 % style macros
-\newcommand\lstml@basicstyle{\lstml@basicshapesize\color{lstml@basiccolor}}
+\newcommand\lstml@basicstyle{\lstml@basicshapesize\color{lstml@textcolor}}
 \newcommand\lstml@keywordstyle{	\lstml@keywordshapesize\color{lstml@keywordcolor}}
 \newcommand\lstml@stringstyle{\lstml@stringshapesize\color{lstml@stringcolor}}
 \newcommand\lstml@commentstyle{\lstml@commentshapesize\color{lstml@commentcolor}}
