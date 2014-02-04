@@ -75,20 +75,19 @@
 	%
 	% The 'classdef' keyword does not interact with the 'end' keyword the same way as the other keywords do; it is therefore treated separately. A large class number is used to minimise the risk of interference with user-defined keyword classes.
 	morekeywords=[256]{classdef},	
-	keywordstyle=[256]\lstml@keywordstyle,
+	keywordstyle=[256]\lstml@processclassdefkeyword,
 	%
-	% The syntax highlighting of the 'end' keyword is context-specific. A large class number is used to minimise the risk of interference with user-defined keyword classes.
-	morekeywords=[257]{end},
-	keywordstyle=[257]%
-	{%	
-		\iflstml@endkeyword%
-			\iflstml@insgllinecom%
-			\else%
-				\ignorespaces% %TODO required to remove a spurrious space before keywords
-				\lstml@keywordstyle%
-			\fi%
-		\fi%
+	morekeywords=[257]%
+	{%
+		enumeration,
+		events,
+		methods,
+		properties,
 	},
+	keywordstyle=[257]\lstml@processclassdefrelatedkeyword,
+	% The syntax highlighting of the 'end' keyword is context-specific. A large class number is used to minimise the risk of interference with user-defined keyword classes.
+	morekeywords=[258]{end},
+	keywordstyle=[258]\lstml@processendkeyword,
 	%
 	% For correct syntax highlighting of the end keyword, each occurence of an opening or closing bracket, whether it be round, square, or curly, must be processed, in order to keep track of the context.
 	literate=%
@@ -127,7 +126,10 @@
 % The following counters and switch are used for keeping track of the context in which 'end' keyword occurs.
 \newcounter{lstml@ocounter}
 \newcounter{lstml@ccounter}
+\newcounter{lstml@expectedendkeywords}
+\newcounter{lstml@expectedendkeywordsatlastclassdef}
 \newif\iflstml@endkeyword\lstml@endkeywordtrue
+\newif\iflstml@withinclassdef\lstml@withinclassdeffalse
 
 % --- for line continuation ---
 \newif\iflstml@insgllinecom\lstml@insgllinecomfalse
@@ -164,26 +166,73 @@
 	\setcounter{lstml@ocounter}{0}%
 }
 
+\newcommand\lstml@resetclassdef%
+{%
+	\global\lstml@withinclassdeffalse
+	\setcounter{lstml@expectedendkeywords}{0}
+	\setcounter{lstml@expectedendkeywordsatlastclassdef}{0}
+}
+
+
+\newcommand\lstml@processendkeyword%
+{%	
+	\iflstml@endkeyword%
+		\iflstml@insgllinecom%
+		\else%
+			\ifnum\value{lstml@expectedendkeywords}>0%
+				\addtocounter{lstml@expectedendkeywords}{-1}%
+			\fi%
+			\ifnum\value{lstml@expectedendkeywords}=\value{lstml@expectedendkeywordsatlastclassdef}%
+				\global\lstml@withinclassdeffalse%
+			\fi%
+			\ignorespaces% %TODO required to remove a spurrious space before keywords
+			\lstml@keywordstyle%
+		\fi%
+	\fi%
+}
+
 \newcommand\lstml@processcompanionkeyword%
 {%
 	\lstml@resetendkeyword%
+	\stepcounter{lstml@expectedendkeywords}%
 	\ignorespaces% %TODO required to remove a spurrious space before keywords
 	\lstml@keywordstyle%
 }
+
+\newcommand\lstml@processclassdefkeyword%
+{%
+	\lstml@resetendkeyword%
+	\global\lstml@withinclassdeftrue%
+	\setcounter{lstml@expectedendkeywordsatlastclassdef}{\value{lstml@expectedendkeywords}}%
+	\stepcounter{lstml@expectedendkeywords}%
+	\ignorespaces% %TODO required to remove a spurrious space before keywords
+	\lstml@keywordstyle%
+}
+
+\newcommand\lstml@processclassdefrelatedkeyword
+{%
+	\iflstml@withinclassdef%
+		\lstml@resetendkeyword%
+		\addtocounter{lstml@expectedendkeywords}{1}%
+		\ignorespaces% %TODO required to remove a spurrious space before keywords
+		\lstml@keywordstyle%
+	\fi%
+}
 	
-\BeforeBeginEnvironment{lstlisting}{\lstml@resetendkeyword}
-\pretocmd\lstinputlisting{\lstml@resetendkeyword}{}{} %TODO error message
-\pretocmd\lstinline{\lstml@resetendkeyword}{}{} %TODO error message
+\BeforeBeginEnvironment{lstlisting}{\lstml@resetendkeyword\lstml@resetclassdef}
+\pretocmd\lstinputlisting{\lstml@resetendkeyword\lstml@resetclassdef}{}{} %TODO error message
+\pretocmd\lstinline{\lstml@resetendkeyword\lstml@resetclassdef}{}{} %TODO error message
 
 % macro for processing '...'
-\def\lstml@processdotdotdot%
+\newcommand\lstml@processdotdotdot%
 {%
-	\lst@CalcLostSpaceAndOutput% necessary to prevent weird spacing
+	%\lst@CalcLostSpaceAndOutput% %TODO necessary to prevent weird spacing?
 	\iflstml@insgllinecom%
-	...%
+		...%
 	\else%
 		\global\lstml@insgllinecomtrue%
 		{%
+			\ignorespaces
 			\lstml@keywordstyle%
 			...%
 		}%
