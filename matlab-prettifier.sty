@@ -1,261 +1,142 @@
+%% matlab-prettifier.sty
+%% Copyright 2014 Julien Cretel
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+% 
+% The Current Maintainer of this work is Julien Cretel
+%
+% This work currently consists of the file matlab-prettifier.sty.
+
 % --- Package identification ---
-\def\lstml@pckgname{matlab-prettifier}
-\def\lstml@pckgdate{2013/12/07}
-\def\lstml@pckgversion{0.1}
-\def\lstml@pckgdescription{LaTeX package for typesetting Matlab listings}
+\newcommand\lstml@PkgName{matlab-prettifier}
+\newcommand\lstml@PkgDate{2014/02/05}
+\newcommand\lstml@PkgVer{0.1}
+\newcommand\lstml@PkgDescript{LaTeX package for typesetting Matlab listings}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{\lstml@pckgname}[\lstml@pckgdate{} v\lstml@pckgversion{} \lstml@pckgdescription]
+\ProvidesClass{\lstml@PkgName}
+[%
+	\lstml@PkgDate{}
+	v\lstml@PkgVer{}
+	\lstml@PkgDescript%
+]
 
-% switches for options
-\newif\iflstml@inlineescape\lstml@inlineescapefalse	% switch for 'inlineescape' option
-
-% --- Package option 'inlineescape' ---
-\DeclareOption{inlineescape}{\lstml@inlineescapetrue}
-
-% --- Pass all package options to package 'listings' ---
-\DeclareOption*{\PassOptionsToPackage{\CurrentOption}{listings}}	
+% --- Discard any option passed to the package ---
+\DeclareOption*%
+{%
+	\OptionNotUsed
+	\PackageWarning{\lstml@PkgName}{Unknown `\CurrentOption' option}
+}	
 
 % --- Process options ---
 \ProcessOptions\relax
 
-% --- require packages ---
-\RequirePackage[dvipsnames]{xcolor}
+% --- Require packages ---
+\RequirePackage{etoolbox}
+\RequirePackage{xcolor}
 \RequirePackage{textcomp} % for upquote option
 \RequirePackage{listings}
-\RequirePackage{etoolbox}
 
-% --- Patch \lsthk@TextStyle if option 'inlineescape' has been passed ---
-% Patch adapted from http://tex.stackexchange.com/questions/43526/escaping-in-lstinline
-\iflstml@inlineescape
-	\patchcmd{\lsthk@TextStyle}
-		{\let\lst@DefEsc\@empty	}
-		{}{}
-		{%
-			\PackageError{\lstml@pckgname}
-			{%
-				Failed to patch \string\lsthk@TextStyle%
-			}{%
-				Option 'inlineescape' is the culprit%
-			}
-		}
-\fi
-
-
+% --- Language definition (with a few dirty tricks) ---
 \lstdefinelanguage{Matlab-pretty}
 {%
-	extendedchars=false,
-	basicstyle=\lstml@basicstyle,
+	sensitive=true,% Matlab is case-sensitive.
 	upquote=true,
+	showstringspaces=false,
+	%
+	basicstyle=\lstml@BasicStyle,
 	%
 	% The keywords defined here are based on the list returned by the Matlab (R2013a) function 'iskeyword'.
-	%TODO However, multiple classes of keywords are used here.
-	% In the following, the keywords of class 1 are nicknamed ``companion keywords'', for their very special interactin with the ``end'' keyword. 
-	morekeywords=[1]%
+	%TODO Multiple classes of keywords are used here.
+	morekeywords=[257]% keywords opening blocks that are not related to class definition
 	{% 
+		for,
+		if,
+		otherwise,
+		parfor,
+		spmd,
+		switch,
+		try,
+		while,
+	},
+	keywordstyle=[257]\lstml@ProcessOpRegKW,
+	%
+	morekeywords=[258]% keywords occurring within blocks that are not related to class definition
+	{%
 		break,
 		case,
 		catch,
 		continue,
 		else,
 		elseif,
-		for,
-		function,
-		global,
-		if,
-		otherwise,
-		parfor,
-		persistent,
+		function, %TODO ?
 		return,
-		spmd,
-		switch,
-		try,
-		while,
-	},
-	keywordstyle=[1]\lstml@processcompanionkeyword,
+	}, 
+	keywordstyle=[258]\lstml@ProcessMidKW,
 	%
-	% The 'classdef' keyword does not interact with the 'end' keyword the same way as the other keywords do; it is therefore treated separately. A large class number is used to minimise the risk of interference with user-defined keyword classes.
-	morekeywords=[256]{classdef},	
-	keywordstyle=[256]\lstml@processclassdefkeyword,
+	morekeywords=[259]% standalone keywords
+	{%
+		global,
+		persistent,
+	}, 
+	keywordstyle=[259]\lstml@ProcessStdaKW,
 	%
-	morekeywords=[257]%
+	morekeywords=[260]{classdef},	
+	keywordstyle=[260]\lstml@ProcessClDefKW,
+	%
+	morekeywords=[261]% keywords occuring within classdef blocks
 	{%
 		enumeration,
 		events,
 		methods,
 		properties,
 	},
-	keywordstyle=[257]\lstml@processclassdefrelatedkeyword,
-	% The syntax highlighting of the 'end' keyword is context-specific. A large class number is used to minimise the risk of interference with user-defined keyword classes.
-	morekeywords=[258]{end},
-	keywordstyle=[258]\lstml@processendkeyword,
+	keywordstyle=[261]\lstml@ProcessMidClDefKW,
+	% 
+	morekeywords=[262]{end},
+	keywordstyle=[262]\lstml@ProcessEndKW,
 	%
-	% For correct syntax highlighting of the end keyword, each occurence of an opening or closing bracket, whether it be round, square, or curly, must be processed, in order to keep track of the context.
 	literate=%
-		{(}{{\lstml@processopeningbracket(}}1
-		{[}{{\lstml@processopeningbracket[}}1
-		{\{}{{\lstml@processopeningbracket\{}}1
-		{)}{{\lstml@processclosingbracket)}}1
-		{]}{{\lstml@processclosingbracket]}}1
-		{\}}{{\lstml@processclosingbracket\}}}1
-		{)'}{{\lstml@processclosingbracket)}{\textquotesingle}}2 %TODO necessary for A(1)'
-		{]'}{{\lstml@processclosingbracket]}{\textquotesingle}}2 %TODO necessary for A[1]'
-		{\}'}{{\lstml@processclosingbracket\}}{\textquotesingle}}2 %TODO necessary for A{1}'
-		{~}{{\raisebox{0.5ex}\texttildelow}}1,
+		{(}{{\lstml@ProcessOpBrkt(}}1
+		{[}{{\lstml@ProcessOpBrkt[}}1
+		{\{}{{\lstml@ProcessOpBrkt\{}}1
+		{)}{{\lstml@ProcessClBrkt)}}1
+		{]}{{\lstml@ProcessClBrkt]}}1
+		{\}}{{\lstml@ProcessClBrkt\}}}1
+		{)'}{{\lstml@ProcessClBrkt)}{\textquotesingle}}2
+		{]'}{{\lstml@ProcessClBrkt]}{\textquotesingle}}2
+		{\}'}{{\lstml@ProcessClBrkt\}}{\textquotesingle}}2
+		{~}{{\lstml@Tilde}}1,
 	%
-	% Matlab is case-sensitive.
-	sensitive=true,
-	%
-	% Strings
+	% strings
 	morestring=[m]',
-	stringstyle=\lstml@stringstyle,
+	stringstyle=\lstml@StringStyle,
 	%
-	% Comments
-	morecomment=[l]\%, 															% Single-line comments
-	morecomment=[s]{\%\{\^^M}{\%\}\^^M},						% Multiple-line comments
-	moredelim=**[il][\lstml@processdotdotdot]{...},% Line continuation
-	moredelim=[l][\color{orange}]{!}, %TODO
+	% comments
+	morecomment=[l]\%, 																% to-end-of-line comments
+	morecomment=[s]{\%\{\^^M}{\%\}\^^M},							% multiple-line comments
+	moredelim=**[il][\lstml@ProcessDotDotDot]{...},	% line-continuation token
 	commentstyle=\lstml@commentstyle,
-}
-
-%TODO experimental patch to make literate work even when breaklines is set to true
-% this may have unforseen side-effects... time will tell
-\patchcmd{\lsthk@SelectCharTable}{)}{`}{}{}
-
-% --- now let's define various auxiliary macros ---
-
-% The following counters and switch are used for keeping track of the context in which 'end' keyword occurs.
-\newcounter{lstml@ocounter}
-\newcounter{lstml@ccounter}
-\newcounter{lstml@expectedendkeywords}
-\newcounter{lstml@expectedendkeywordsatlastclassdef}
-\newif\iflstml@endkeyword\lstml@endkeywordtrue
-\newif\iflstml@withinclassdef\lstml@withinclassdeffalse
-
-% --- for line continuation ---
-\newif\iflstml@insgllinecom\lstml@insgllinecomfalse
-\lst@AddToHook{EOL}{\global\lstml@insgllinecomfalse}
- 
-\newcommand\lstml@processopeningbracket%
-{%
-	\iflstml@endkeyword%
-		\global\lstml@endkeywordfalse%
-	\fi%
-	\stepcounter{lstml@ocounter}%
-}
-
-\newcommand\lstml@processclosingbracket%
-{% upon encou
-	\iflstml@endkeyword% if end is already a keyword, adding a closing brace is not going to change that
-		% reset the counters
-		\setcounter{lstml@ccounter}{0}%
-		\setcounter{lstml@ccounter}{0}%
-	\else%	otherwise, increment the closing counter and check whether the number of closing braces
-		\stepcounter{lstml@ccounter}%
-		\ifnum\value{lstml@ccounter}<\value{lstml@ocounter}%
-		\else%
-			\global\lstml@endkeywordtrue%
-		\fi%
-	\fi%
-}
-
-%
-\newcommand\lstml@resetendkeyword%
-{%
-	\global\lstml@endkeywordtrue%
-	\setcounter{lstml@ccounter}{0}%
-	\setcounter{lstml@ocounter}{0}%
-}
-
-\newcommand\lstml@resetclassdef%
-{%
-	\global\lstml@withinclassdeffalse
-	\setcounter{lstml@expectedendkeywords}{0}
-	\setcounter{lstml@expectedendkeywordsatlastclassdef}{0}
-}
+	%
+	% system commands
+	moredelim=[l][\color{orange}]{!},
+}%
+[% `listings' aspects needed
+	keywords,
+	strings,
+	comments,
+]
 
 
-\newcommand\lstml@processendkeyword%
-{%	
-	\iflstml@endkeyword%
-		\iflstml@insgllinecom%
-		\else%
-			\ifnum\value{lstml@expectedendkeywords}>0%
-				\addtocounter{lstml@expectedendkeywords}{-1}%
-			\fi%
-			\ifnum\value{lstml@expectedendkeywords}=\value{lstml@expectedendkeywordsatlastclassdef}%
-				\global\lstml@withinclassdeffalse%
-			\fi%
-			\ignorespaces% %TODO required to remove a spurrious space before keywords
-			\lstml@keywordstyle%
-		\fi%
-	\fi%
-}
 
-\newcommand\lstml@processcompanionkeyword%
-{%
-	\lstml@resetendkeyword%
-	\stepcounter{lstml@expectedendkeywords}%
-	\ignorespaces% %TODO required to remove a spurrious space before keywords
-	\lstml@keywordstyle%
-}
-
-\newcommand\lstml@processclassdefkeyword%
-{%
-	\lstml@resetendkeyword%
-	\global\lstml@withinclassdeftrue%
-	\setcounter{lstml@expectedendkeywordsatlastclassdef}{\value{lstml@expectedendkeywords}}%
-	\stepcounter{lstml@expectedendkeywords}%
-	\ignorespaces% %TODO required to remove a spurrious space before keywords
-	\lstml@keywordstyle%
-}
-
-\newcommand\lstml@processclassdefrelatedkeyword
-{%
-	\iflstml@withinclassdef%
-		\lstml@resetendkeyword%
-		\addtocounter{lstml@expectedendkeywords}{1}%
-		\ignorespaces% %TODO required to remove a spurrious space before keywords
-		\lstml@keywordstyle%
-	\fi%
-}
-	
-\BeforeBeginEnvironment{lstlisting}{\lstml@resetendkeyword\lstml@resetclassdef}
-\pretocmd\lstinputlisting{\lstml@resetendkeyword\lstml@resetclassdef}{}{} %TODO error message
-\pretocmd\lstinline{\lstml@resetendkeyword\lstml@resetclassdef}{}{} %TODO error message
-
-% macro for processing '...'
-\newcommand\lstml@processdotdotdot%
-{%
-	\lst@CalcLostSpaceAndOutput% %TODO necessary to prevent weird spacing?
-	\iflstml@insgllinecom%
-		...%
-	\else%
-		\global\lstml@insgllinecomtrue%
-		{%
-			\ignorespaces
-			\lstml@keywordstyle%
-			...%
-		}%
-	\fi%
-	\lstml@commentstyle%
-}
-
-
-% macro for processing additional literate replacements
-\def\lstml@addToLiterate#1%
-{%
-	\edef\lst@literate%
-	{%
-		\unexpanded\expandafter{\lst@literate} % this space is for cosmetic reasons
-		\unexpanded{#1}%
-	}%
-}
-
-% Definition of a `moreliterate' key to append to (not overwrite)
-% the list of existing literate replacements.
-\lst@Key{moreliterate}{}{\lstml@addToLiterate{#1}}
-
-
+% --- internal style macros ---
 
 % font shape and size
 \newcommand\lstml@basicshapesize{\ttfamily\normalsize}
@@ -263,14 +144,9 @@
 \newcommand\lstml@stringshapesize\lstml@basicshapesize
 \newcommand\lstml@commentshapesize\lstml@basicshapesize
 
-\newcommand\lstml@placeholderdelimo{\textlangle}
-\newcommand\lstml@placeholderdelimc{\textrangle}
-\newcommand\lstml@placeholderdelimstyle{\normalfont\upshape}
-\newcommand\lstml@placeholdercontentstyle{\normalfont\itshape}
-
 % Desktop tool colors
-\colorlet{lstml@textcolor}{black}												% Text color
-\colorlet{lstml@bgcolor}{white}													% Background color 
+\colorlet{lstml@textcolor}{black}		% Text color 				%TODO currently unused
+\colorlet{lstml@bgcolor}{white}			% Background color 	%TODO currently unused
 
 % Matlab syntax highlighting colors
 \definecolor{lstml@keywordcolor}{RGB}{000,000,255}			% Keywords
@@ -280,27 +156,210 @@
 \definecolor{lstml@noendstringcolor}{RGB}{178,000,000}	% Unterminated strings
 \definecolor{lstml@syntaxerrorcolor}{RGB}{255,000,000}	% Syntax errors
 
-% Placeholder colors
-\colorlet{lstml@placeholderdelimcolor}{RubineRed}			% Placeholder delimiter color	
-\colorlet{lstml@placeholdercontentcolor}{RubineRed}		% Placeholder text color
-
-% style macros
-\newcommand\lstml@basicstyle{\lstml@basicshapesize\color{lstml@textcolor}}
+\newcommand\lstml@BasicStyle{\lstml@basicshapesize\color{lstml@textcolor}}
 \newcommand\lstml@keywordstyle{	\lstml@keywordshapesize\color{lstml@keywordcolor}}
-\newcommand\lstml@stringstyle{\lstml@stringshapesize\color{lstml@stringcolor}}
+\newcommand\lstml@StringStyle{\global\lstml@InStrtrue\lstml@stringshapesize\color{lstml@stringcolor}}
 \newcommand\lstml@commentstyle{\lstml@commentshapesize\color{lstml@commentcolor}}
 
-% keys
-\define@key{lstml}{basicstyle}{\def\lstml@basicstyle{#1}}
-\define@key{lstml}{keywordstyle}{\def\lstml@keywordstyle{#1}}
-\define@key{lstml}{stringstyle}{\def\lstml@stringstyle{#1}}
-\define@key{lstml}{commentstyle}{\def\lstml@commentstyle{#1}}
-% 
-% lstset-like macro
-\lst@UserCommand\lstmlset{\begingroup \lst@setcatcodes \lstmlset@}
-\def\lstmlset@#1{\endgroup \ifx\@empty#1\@empty\else\setkeys{lstml}{#1}\fi}
+
+% --- State variables ---
+
+\newcounter{lstml@OpBktCount} % running count of occurences of (, [ and, { 
+\newcounter{lstml@ClBktCount} % running count of occurences of ), ] and, }
+\newcounter{lstml@BlkLvl}					% keeps track of block nesting level
+\newcounter{lstml@BlkLvlAtClDef}	% saves the block nesting level at the last occurence of the classdef keyword
+
+\newif\iflstml@ClosingEndKW\lstml@ClosingEndKWtrue % if true, the end keyword acts as a closing keyword
+\newif\iflstml@InClDef\lstml@InClDeffalse					% if true, %TODO
+\newif\iflstml@InStr\lstml@InStrfalse							% if true, we're inside a string
+\newif\iflstml@InLineCom\lstml@InLineComfalse			% if true, we're inside a to-the-end-of-the-line comment
 
 
+% --- Macros for resetting counters and switches ---
+\newcommand\lstml@ResetBktCount%
+{%
+	\setcounter{lstml@OpBktCount}{0}%
+	\setcounter{lstml@ClBktCount}{0}%
+}
+
+\newcommand\lstml@ResetEndKW%
+{%
+	\global\lstml@ClosingEndKWtrue%
+	\lstml@ResetBktCount%
+}
+
+\newcommand\lstml@ResetClDef%
+{%
+	\global\lstml@InClDeffalse
+	\setcounter{lstml@BlkLvl}{0}
+	\setcounter{lstml@BlkLvlAtClDef}{0}
+}
+
+
+% --- macro for processing keywords ---
+\newcommand\lstml@ProcessOpRegKW%
+{%
+	\lstml@ResetEndKW%
+	\stepcounter{lstml@BlkLvl}%
+	\ignorespaces%
+	\lstml@keywordstyle%
+}
+
+\newcommand\lstml@ProcessMidKW%
+{%
+	\lstml@ResetEndKW%
+	\ignorespaces%
+	\lstml@keywordstyle%
+}
+
+\newcommand\lstml@ProcessStdaKW%
+{%
+	\lstml@ResetEndKW%
+	\ignorespaces%
+	\lstml@keywordstyle%
+}
+
+\newcommand\lstml@ProcessClDefKW%
+{%
+	\lstml@ResetEndKW%
+	\global\lstml@InClDeftrue%
+	\setcounter{lstml@BlkLvlAtClDef}{\value{lstml@BlkLvl}}%
+	\stepcounter{lstml@BlkLvl}%
+	\ignorespaces%
+	\lstml@keywordstyle%
+}
+
+\newcommand\lstml@ProcessMidClDefKW
+{%
+	\iflstml@InClDef%
+		\lstml@ResetEndKW%
+		\addtocounter{lstml@BlkLvl}{1}%
+		\ignorespaces%
+		\lstml@keywordstyle%
+	\fi%
+}
+
+\newcommand\lstml@ProcessEndKW%
+{%	
+	\iflstml@ClosingEndKW%
+		\iflstml@InLineCom%
+		\else%
+			\ifnum\value{lstml@BlkLvl}>0%
+				\addtocounter{lstml@BlkLvl}{-1}%
+			\fi%
+			\ifnum\value{lstml@BlkLvl}=\value{lstml@BlkLvlAtClDef}%
+				\global\lstml@InClDeffalse%
+			\fi%
+			\ignorespaces%
+			\lstml@keywordstyle%
+		\fi%
+	\fi%
+}
+
+
+% --- macros for processing opening and closing brackets ---
+\newcommand\lstml@ProcessOpBrkt%
+{%
+	\iflstml@ClosingEndKW%
+		\global\lstml@ClosingEndKWfalse%
+	\fi%
+	\stepcounter{lstml@OpBktCount}%
+}
+
+\newcommand\lstml@ProcessClBrkt%
+{%
+	\iflstml@ClosingEndKW%
+		\lstml@ResetBktCount%
+	\else%
+		\stepcounter{lstml@ClBktCount}%
+		\ifnum\value{lstml@ClBktCount}<\value{lstml@OpBktCount}%
+		\else%
+			\global\lstml@ClosingEndKWtrue%
+		\fi%
+	\fi%
+}
+
+% Patch to make literate replacement of ) work as expected when breaklines is set to true
+%TODO Find a way to undo that patch for listings other than Matlab
+\newcommand\lstml@PatchSelectCharTable%
+{%
+	\patchcmd{\lsthk@SelectCharTable}{)}{`}{}{}%
+}
+\lstml@PatchSelectCharTable
+
+
+% --- macro for literate replacement of tilde character ---
+\newcommand\lstml@Tilde{\raisebox{0.5ex}\texttildelow}
+
+
+% --- macros for handling unterminated string literal ---
+\newcommand\lstml@AddedToEOLHookUntermStr
+{%
+	\iflstml@InStr%
+		\global\lstml@InStrfalse%
+		\lst@LeaveMode%
+	\fi%
+}
+
+\newcommand\lstml@AddedToEndGroupHookUntermStr
+{%
+	\iflstml@InStr%
+		\global\lstml@InStrfalse%
+	\fi%
+}
+
+
+% --- macros for handling line continuation ---
+\newcommand\lstml@ProcessDotDotDot%
+{%
+	\lst@CalcLostSpaceAndOutput%
+	\iflstml@InLineCom%
+		...%
+	\else%
+		\global\lstml@InLineComtrue%
+		{%
+			\ignorespaces
+			\lstml@keywordstyle%
+			...%
+		}%
+	\fi%
+	\lstml@commentstyle%
+}
+
+\newcommand\lstml@AddedToEOLHookDotDotDot
+{%
+	\global\lstml@InLineComfalse%
+}
+
+
+% --- Add my macros to EOL and EndGroup hooks ---
+% EOL hook
+\newcommand\lstml@AddedToEOL{}
+\newcommand\lstml@@ddedToEOL%
+{%
+	\lstml@AddedToEOLHookDotDotDot%
+	\lstml@AddedToEOLHookUntermStr%
+}
+\lst@AddToHook{EOL}{\lstml@AddedToEOL}
+
+% EndGroup hook
+\newcommand\lstml@AddedToEndGroup{}
+\newcommand\lstml@@ddedToEndGroup%
+{%
+	\lstml@AddedToEndGroupHookUntermStr%
+}
+\lst@AddToHook{EndGroup}{\lstml@AddedToEndGroup}
+
+
+% --- Placeholders ---
+% Macros for delimiters
+\newcommand\lstml@placeholderdelimo{\textlangle}
+\newcommand\lstml@placeholderdelimc{\textrangle}
+\newcommand\lstml@placeholderdelimstyle{\normalfont\upshape}
+\newcommand\lstml@placeholdercontentstyle{\normalfont\itshape}
+% Placeholder colors
+\definecolor{lstml@placeholderdelimcolor}{RGB}{209,0,86}	% Placeholder delimiter color	
+\definecolor{lstml@placeholdercontentcolor}{RGB}{209,0,86}		% Placeholder text color
 
 % --- macro for typesetting placeholders ---
 \newcommand\lstmlplaceholder[1]
@@ -333,6 +392,60 @@
 			{\/}
 			{}%
 		}%
+}
+
+
+
+% ----------- key=value interface ---
+
+% keys
+\define@key{mlpretty}{basicstyle}{\def\lstml@BasicStyle{#1}}
+\define@key{mlpretty}{keywordstyle}{\def\lstml@keywordstyle{#1}}
+\define@key{mlpretty}{stringstyle}{\def\lstml@StringStyle{#1}}
+\define@key{mlpretty}{commentstyle}{\def\lstml@commentstyle{#1}}
+
+% define \mlprettyset, the matlab-prettifier equivalent to listings' \lstset
+\lst@UserCommand\mlprettyset{\begingroup \lst@setcatcodes \mlprettyset@}
+\def\mlprettyset@#1%
+{%
+	\endgroup
+	\ifx\@empty#1%
+		\@empty%
+	\else%
+		\setkeys{lst}{language=Matlab-pretty}%
+		\setkeys{mlpretty}{#1}%
+	\fi%
+}
+
+% --- matlab-prettifier listings environment and macro ---
+
+\newcommand\StartingCode@mlpretty[1][]%
+{%
+	\renewcommand\lstml@AddedToEOL\lstml@@ddedToEOL%
+	\renewcommand\lstml@AddedToEndGroup\lstml@@ddedToEndGroup%
+	\lstset{language = Matlab-pretty,#1}% %TODO replace by my own macro
+}
+
+\newcommand\EndingCode@mlpretty%
+{%
+	\renewcommand\lstml@AddedToEOL{}%
+	\renewcommand\lstml@AddedToEndGroup{}%
+	\lstml@ResetEndKW%
+	\lstml@ResetClDef%
+}
+
+\lstnewenvironment{matlablisting}[1][]%
+	{\StartingCode@mlpretty[#1]}
+	{\EndingCode@mlpretty}
+
+
+\newcommand\inputmatlablisting[2][]%
+{%
+	{%
+		\StartingCode@mlpretty[#1]%
+		\lstinputlisting{#2}%
+		\EndingCode@mlpretty%
+	}%
 }
 
 \endinput
