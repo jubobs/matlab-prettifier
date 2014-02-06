@@ -201,21 +201,18 @@
 {%
 	\ResetEndKW@mlpretty%
 	\stepcounter{BlkLvl@mlpretty}%
-	\ignorespaces%
 	\keywordstyle@mlpretty%
 }
 
 \newcommand\ProcessMidKW@mlpretty%
 {%
 	\ResetEndKW@mlpretty%
-	\ignorespaces%
 	\keywordstyle@mlpretty%
 }
 
 \newcommand\ProcessStdaKW@mlpretty%
 {%
 	\ResetEndKW@mlpretty%
-	\ignorespaces%
 	\keywordstyle@mlpretty%
 }
 
@@ -225,7 +222,6 @@
 	\global\InClDef@mlpretty@true%
 	\setcounter{BlkLvlAtClDef@mlpretty}{\value{BlkLvl@mlpretty}}%
 	\stepcounter{BlkLvl@mlpretty}%
-	\ignorespaces%
 	\keywordstyle@mlpretty%
 }
 
@@ -234,7 +230,6 @@
 	\ifInClDef@mlpretty@%
 		\ResetEndKW@mlpretty%
 		\addtocounter{BlkLvl@mlpretty}{1}%
-		\ignorespaces%
 		\keywordstyle@mlpretty%
 	\fi%
 }
@@ -250,7 +245,6 @@
 			\ifnum\value{BlkLvl@mlpretty}=\value{BlkLvlAtClDef@mlpretty}%
 				\global\InClDef@mlpretty@false%
 			\fi%
-			\ignorespaces%
 			\keywordstyle@mlpretty%
 		\fi%
 	\fi%
@@ -318,7 +312,7 @@
 	\else%
 		\global\InLineCom@mlpretty@true%
 		{%
-			\ignorespaces
+			%\ignorespaces
 			\keywordstyle@mlpretty%
 			...%
 		}%
