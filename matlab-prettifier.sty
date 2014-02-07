@@ -37,8 +37,6 @@
 \ProcessOptions\relax
 
 % --- Package dependencies ---
-\RequirePackage[T1]{fontenc}
-\RequirePackage{lmodern}
 \RequirePackage{textcomp}
 \RequirePackage{etoolbox}
 \RequirePackage{xcolor}
@@ -133,7 +131,7 @@
 ]
 
 
-% --- State variables ---
+% --- ``State variables'' ---
 
 \newcounter{opBktCount@mlpretty} 		 % running count of (, [ and, { 
 \newcounter{clBktCount@mlpretty} 		 % running count of ), ] and, }
@@ -171,26 +169,36 @@
 
 % Font shape and size
 \newcommand\basicShapeSize@mlpretty{\ttfamily\normalsize}
+\newcommand\lastElemShapeSize@mlpretty\basicShapeSize@mlpretty
 \newcommand\keywordShapeSize@mlpretty\basicShapeSize@mlpretty
 \newcommand\stringShapeSize@mlpretty\basicShapeSize@mlpretty
 \newcommand\commentShapeSize@mlpretty\basicShapeSize@mlpretty
+\newcommand\syscomShapeSize@mlpretty\basicShapeSize@mlpretty
 
 % Matlab syntax highlighting colors
-\colorlet{textColor@mlpretty}{black}                       % text color
-\definecolor{keywordColor@mlpretty}{RGB}{000,000,255}      % keywords
-\definecolor{stringColor@mlpretty}{RGB}{160,032,240}       % strings
-\definecolor{syscomColor@mlpretty}{RGB}{178,140,000}       % system commands
-\definecolor{commentColor@mlpretty}{RGB}{034,139,034}      % comments
+\colorlet{textColor@mlpretty}{black}                  % text color
+\colorlet{lastElemColor@mlpretty}{textColor@mlpretty} % last element color 
+\definecolor{keywordColor@mlpretty}{RGB}{000,000,255} % keywords
+\definecolor{stringColor@mlpretty}{RGB}{160,032,240}  % strings
+\definecolor{commentColor@mlpretty}{RGB}{034,139,034} % comments
+\definecolor{syscomColor@mlpretty}{RGB}{178,140,000}  % system commands
 
 % Additional colors (currently unused by matlab-prettifier)
 \colorlet{bgColor@mlpretty}{white}		                      % background color
 \definecolor{untermStringColor@mlpretty}{RGB}{178,000,000} % unterm. strings
 \definecolor{syntaxErrorColor@mlpretty}{RGB}{255,000,000}  % Syntax errors
+\definecolor{sharedScopeColor@mlpretty}{RGB}{000,163,163}  % Global variables
 
 \newcommand\basicStyle@mlpretty%
 {%
   \basicShapeSize@mlpretty%
   \color{textColor@mlpretty}%
+}
+
+\newcommand\lastElemStyle@mlpretty%
+{%
+  \lastElemShapeSize@mlpretty%
+  \color{lastElemColor@mlpretty}%
 }
 
 \newcommand\keywordStyle@mlpretty%
@@ -214,7 +222,7 @@
 
 \newcommand\syscomStyle@mlpretty%
 {%
-  \commentShapeSize@mlpretty%
+  \syscomShapeSize@mlpretty%
   \color{syscomColor@mlpretty}%
 }
 
@@ -270,6 +278,8 @@
 			\fi%
 			\keywordStyle@mlpretty%
 		\fi%
+	\else%
+	  \lastElemStyle@mlpretty%
 	\fi%
 }
 
@@ -310,7 +320,7 @@
 
 
 % --- macro for literate replacement of tilde character ---
-\newcommand\tilde@mlpretty{\textasciitilde}
+\newcommand\tilde@mlpretty{\raisebox{0.5ex}{\texttildelow}}
 
 % --- macros for handling unterminated string literal ---
 \newcommand\addedToEOLHookUntermStr@mlpretty
@@ -390,7 +400,6 @@
 		}%
 }
 
-
 % --- User macro for typesetting snippet placeholders ---
 \newcommand\snippetPlaceholder[1]
 {%
@@ -415,24 +424,27 @@
 
 % ----------- key=value interface ---
 
-% keys
-\define@key{mlpretty}{basicstyle}{\def\basicStyle@mlpretty{#1}}
-\define@key{mlpretty}{keywordstyle}{\def\keywordStyle@mlpretty{#1}}
-\define@key{mlpretty}{stringstyle}{\def\stringStyle@mlpretty{#1}}
-\define@key{mlpretty}{commentstyle}{\def\commentStyle@mlpretty{#1}}
-
-% define \mlprettyset, the matlab-prettifier equivalent to listings' \lstset
-\lst@UserCommand\mlprettyset{\begingroup \lst@setcatcodes \mlprettyset@}
-\def\mlprettyset@#1%
+% Note: Using the literate key in conjunction with Matlab-pretty is
+% ill-advised, as it will overwrite the package's literate replacements.
+% So we define a new key macro for allowing the user to specify additional
+% literate replacements without overwriting existing ones.
+\def\lstml@addToLiterate#1%
 {%
-	\endgroup
-	\ifx\@empty#1%
-		\@empty%
-	\else%
-		\setkeys{lst}{language=Matlab-pretty}%
-		\setkeys{mlpretty}{#1}%
-	\fi%
+	\edef\lst@literate%
+	{%
+		\unexpanded\expandafter{\lst@literate} %
+		\unexpanded{#1}%
+	}%
 }
+
+\define@key{lst}{mlbasicstyle}{\def\basicStyle@mlpretty{#1}}
+\define@key{lst}{mllastelemstyle}{\def\lastElemStyle@mlpretty{#1}}
+\define@key{lst}{mlkeywordstyle}{\def\keywordStyle@mlpretty{#1}}
+\define@key{lst}{mlstringstyle}{\def\stringStyle@mlpretty{#1}}
+\define@key{lst}{mlcommentstyle}{\def\commentStyle@mlpretty{#1}}
+\define@key{lst}{mlsyscomstyle}{\def\syscomStyle@mlpretty{#1}}
+\define@key{lst}{mltidle}{\def\tilde@mlpretty{#1}}
+\define@key{lst}{mlliterate}{\lstml@addToLiterate{#1}}
 
 
 % --- matlab-prettifier listings environment and macro ---
@@ -442,7 +454,7 @@
   \patchSelectCharTable@mlpretty%
 	\renewcommand\addedToEOL@mlpretty\@ddedToEOL@mlpretty%
 	\renewcommand\addedToEndGroup@mlpretty\@ddedToEndGroup@mlpretty%
-	\lstset{language=Matlab-pretty,#1}% %TODO replace by my own macro
+	\lstset{language=Matlab-pretty,#1}%
 }
 
 \newcommand\atEndCode@mlpretty%
@@ -454,10 +466,23 @@
 	\unpatchSelectCharTable@mlpretty%
 }
 
+% environment
 \lstnewenvironment{matlabpretty}[1][]%
 	{\atBeginCode@mlpretty[#1]}
 	{\atEndCode@mlpretty}
+	
+% macro for creating custom matlab-prettifier environments
+% Note: simply using \lstdefineenvironment wouldn't do, here,
+% because matlab-prettifier must apply/undo patches at the
+% beginning/end of the environment.
+\newcommand\newmatlabprettyenvironment[2][]
+{%
+	\lstnewenvironment{#2}[1][]%
+		{\atBeginCode@mlpretty[#1,##1]}%
+		{\atEndCode@mlpretty}%
+}
 
+% macro for source files
 \newcommand\inputmatlabpretty[2][]%
 {%
 	{%
@@ -466,5 +491,20 @@
 		\atEndCode@mlpretty%
 	}%
 }
+
+% inline Matlab code (no need for \atBeginCode and \atEndCode here)
+\newcommand\matlabprettyinline[2][]
+{%
+  \lstinline[language=Matlab-pretty,#1]|#2|%
+}
+
+% ... but that's a mouthful, so...
+\newcommand\DefineCharForMatlabPrettyInline[1][]%
+{%
+  \def\lst@shortinlinedef{\lstinline[language=Matlab-pretty,#1]}%
+  \lstMakeShortInline@%
+}%
+
+\newcommand\DeleteCharForMatlabPrettyInline\lstDeleteShortInline
 
 \endinput
