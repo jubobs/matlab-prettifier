@@ -16,46 +16,44 @@
 % This work currently consists of the file matlab-prettifier.sty.
 
 % --- Package identification ---
-\newcommand\PkgName@mlpretty{matlab-prettifier}
-\newcommand\PkgDate@mlpretty{2014/02/05}
-\newcommand\PkgVer@mlpretty{0.1}
-\newcommand\PkgDescript@mlpretty{LaTeX package for typesetting Matlab listings}
+\newcommand\pkgName@mlpretty{matlab-prettifier}
+\newcommand\pkgDate@mlpretty{2014/02/05}
+\newcommand\pkgVer@mlpretty{.alpha}
+\newcommand\pkgDesc@mlpretty{LaTeX package for typesetting Matlab listings}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{\PkgName@mlpretty}
+\ProvidesClass{\pkgName@mlpretty}
 [%
-	\PkgDate@mlpretty{}
-	v\PkgVer@mlpretty{}
-	\PkgDescript@mlpretty%
+	\pkgDate@mlpretty{}	v\pkgVer@mlpretty{} \pkgDesc@mlpretty%
 ]
 
 % --- Discard any option passed to the package ---
 \DeclareOption*%
 {%
 	\OptionNotUsed
-	\PackageWarning{\PkgName@mlpretty}{Unknown `\CurrentOption' option}
+	\PackageWarning{\pkgName@mlpretty}{Unknown `\CurrentOption' option}
 }	
 
 % --- Process options ---
 \ProcessOptions\relax
 
-% --- Require packages ---
+% --- Package dependencies ---
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+\RequirePackage{textcomp}
 \RequirePackage{etoolbox}
 \RequirePackage{xcolor}
-\RequirePackage{textcomp} % for upquote option
 \RequirePackage{listings}
 
-% --- Language definition (with a few dirty tricks) ---
+% --- Language definition (with a few dirty hacks) ---
 \lstdefinelanguage{Matlab-pretty}
 {%
 	sensitive=true,% Matlab is case-sensitive.
 	upquote=true,
 	showstringspaces=false,
 	%
-	basicstyle=\BasicStyle@mlpretty,
+	basicstyle=\basicStyle@mlpretty,
 	%
-	% The keywords defined here are based on the list returned by the Matlab (R2013a) function 'iskeyword'.
-	%TODO Multiple classes of keywords are used here.
-	morekeywords=[257]% keywords opening blocks that are not related to class definition
+	morekeywords=[257]% opening keywords unrelated to classdef
 	{% 
 		for,
 		if,
@@ -66,9 +64,9 @@
 		try,
 		while,
 	},
-	keywordstyle=[257]\ProcessOpRegKW@mlpretty,
+	keywordstyle=[257]\processOpRegKW@mlpretty,
 	%
-	morekeywords=[258]% keywords occurring within blocks that are not related to class definition
+	morekeywords=[258]% `middle' keywords unrelated to classdef
 	{%
 		break,
 		case,
@@ -76,57 +74,57 @@
 		continue,
 		else,
 		elseif,
-		function, %TODO ?
+		function,
 		return,
 	}, 
-	keywordstyle=[258]\ProcessMidKW@mlpretty,
+	keywordstyle=[258]\processMidKW@mlpretty,
 	%
-	morekeywords=[259]% standalone keywords
+	morekeywords=[259]% `standalone' keywords
 	{%
 		global,
 		persistent,
 	}, 
-	keywordstyle=[259]\ProcessStdaKW@mlpretty,
+	keywordstyle=[259]\processStdaKW@mlpretty,
 	%
 	morekeywords=[260]{classdef},	
-	keywordstyle=[260]\ProcessClDefKW@mlpretty,
+	keywordstyle=[260]\processClDefKW@mlpretty,
 	%
-	morekeywords=[261]% keywords occuring within classdef blocks
+	morekeywords=[261]% `middle' keywords related to classdef
 	{%
 		enumeration,
 		events,
 		methods,
 		properties,
 	},
-	keywordstyle=[261]\ProcessMidClDefKW@mlpretty,
+	keywordstyle=[261]\processMidClDefKW@mlpretty,
 	% 
 	morekeywords=[262]{end},
-	keywordstyle=[262]\ProcessEndKW@mlpretty,
+	keywordstyle=[262]\processEndKW@mlpretty,
 	%
 	literate=%
-		{(}{{\ProcessOpBrkt@mlpretty(}}1
-		{[}{{\ProcessOpBrkt@mlpretty[}}1
-		{\{}{{\ProcessOpBrkt@mlpretty\{}}1
-		{)}{{\ProcessClBrkt@mlpretty)}}1
-		{]}{{\ProcessClBrkt@mlpretty]}}1
-		{\}}{{\ProcessClBrkt@mlpretty\}}}1
-		{)'}{{\ProcessClBrkt@mlpretty)}{\textquotesingle}}2
-		{]'}{{\ProcessClBrkt@mlpretty]}{\textquotesingle}}2
-		{\}'}{{\ProcessClBrkt@mlpretty\}}{\textquotesingle}}2
-		{~}{{\Tilde@mlpretty}}1,
+		{(}{{\processOpBrkt@mlpretty(}}1
+		{[}{{\processOpBrkt@mlpretty[}}1
+		{\{}{{\processOpBrkt@mlpretty\{}}1
+		{)}{{\processClBrkt@mlpretty)}}1
+		{]}{{\processClBrkt@mlpretty]}}1
+		{\}}{{\processClBrkt@mlpretty\}}}1
+		{)'}{{\processClBrkt@mlpretty)}{\textquotesingle}}2
+		{]'}{{\processClBrkt@mlpretty]}{\textquotesingle}}2
+		{\}'}{{\processClBrkt@mlpretty\}}{\textquotesingle}}2
+		{~}{{\tilde@mlpretty}}1,
 	%
 	% strings
 	morestring=[m]',
-	stringstyle=\StringStyle@mlpretty,
+	stringstyle=\stringStyle@mlpretty,
 	%
 	% comments
-	morecomment=[l]\%, 																% to-end-of-line comments
-	morecomment=[s]{\%\{\^^M}{\%\}\^^M},							% multiple-line comments
-	moredelim=**[il][\ProcessDotDotDot@mlpretty]{...},	% line-continuation token
-	commentstyle=\commentstyle@mlpretty,
+	morecomment=[l]\%, 																	% to-end-of-line comments
+	morecomment=[s]{\%\{\^^M}{\%\}\^^M},								% multiline comments
+	moredelim=**[il][\processDotDotDot@mlpretty]{...},	% line-continuation token
+	commentstyle=\commentStyle@mlpretty,
 	%
 	% system commands
-	moredelim=[l][\color{orange}]{!},
+	moredelim=[l][\syscomStyle@mlpretty]{!},
 }%
 [% `listings' aspects needed
 	keywords,
@@ -135,249 +133,250 @@
 ]
 
 
-
-% --- internal style macros ---
-
-% font shape and size
-\newcommand\basicshapesize@mlpretty{\ttfamily\normalsize}
-\newcommand\keywordshapesize@mlpretty\basicshapesize@mlpretty
-\newcommand\stringshapesize@mlpretty\basicshapesize@mlpretty
-\newcommand\commentshapesize@mlpretty\basicshapesize@mlpretty
-
-% Desktop tool colors
-\colorlet{textcolor@mlpretty}{black}		% Text color 				%TODO currently unused
-\colorlet{bgcolor@mlpretty}{white}			% Background color 	%TODO currently unused
-
-% Matlab syntax highlighting colors
-\definecolor{keywordcolor@mlpretty}{RGB}{000,000,255}			% Keywords
-\definecolor{stringcolor@mlpretty}{RGB}{160,032,240}			% Strings
-\definecolor{syscomcolor@mlpretty}{RGB}{178,140,000}			% System commands
-\definecolor{commentcolor@mlpretty}{RGB}{034,139,034}			% Comments
-\definecolor{noendstringcolor@mlpretty}{RGB}{178,000,000}	% Unterminated strings
-\definecolor{syntaxerrorcolor@mlpretty}{RGB}{255,000,000}	% Syntax errors
-
-\newcommand\BasicStyle@mlpretty{\basicshapesize@mlpretty\color{textcolor@mlpretty}}
-\newcommand\keywordstyle@mlpretty{\keywordshapesize@mlpretty\color{keywordcolor@mlpretty}}
-\newcommand\StringStyle@mlpretty{\global\InStr@mlpretty@true\stringshapesize@mlpretty\color{stringcolor@mlpretty}}
-\newcommand\commentstyle@mlpretty{\commentshapesize@mlpretty\color{commentcolor@mlpretty}}
-
-
 % --- State variables ---
 
-\newcounter{OpBktCount@mlpretty} % running count of occurences of (, [ and, { 
-\newcounter{ClBktCount@mlpretty} % running count of occurences of ), ] and, }
-\newcounter{BlkLvl@mlpretty}					% keeps track of block nesting level
-\newcounter{BlkLvlAtClDef@mlpretty}	% saves the block nesting level at the last occurence of the classdef keyword
+\newcounter{opBktCount@mlpretty} 		 % running count of (, [ and, { 
+\newcounter{clBktCount@mlpretty} 		 % running count of ), ] and, }
+\newcounter{blkLvl@mlpretty}				 % block nesting level
+\newcounter{blkLvlAtClDef@mlpretty}	 % block nesting level at last classdef
 
-\newif\ifClosingEndKW@mlpretty@\ClosingEndKW@mlpretty@true % if true, the end keyword acts as a closing keyword
-\newif\ifInClDef@mlpretty@\InClDef@mlpretty@false					% if true, %TODO
-\newif\ifInStr@mlpretty@\InStr@mlpretty@false							% if true, we're inside a string
-\newif\ifInLineCom@mlpretty@\InLineCom@mlpretty@false			% if true, we're inside a to-the-end-of-the-line comment
+\newif\ifclosingEndKW@mlpretty@\closingEndKW@mlpretty@true
+\newif\ifinClDef@mlpretty@\inClDef@mlpretty@false
+\newif\ifinStr@mlpretty@\inStr@mlpretty@false
+\newif\ifinLineCom@mlpretty@\inLineCom@mlpretty@false
 
 
 % --- Macros for resetting counters and switches ---
-\newcommand\ResetBktCount@mlpretty%
+\newcommand\resetBktCount@mlpretty%
 {%
-	\setcounter{OpBktCount@mlpretty}{0}%
-	\setcounter{ClBktCount@mlpretty}{0}%
+	\setcounter{opBktCount@mlpretty}{0}%
+	\setcounter{clBktCount@mlpretty}{0}%
 }
 
-\newcommand\ResetEndKW@mlpretty%
+\newcommand\resetEndKW@mlpretty%
 {%
-	\global\ClosingEndKW@mlpretty@true%
-	\ResetBktCount@mlpretty%
+	\global\closingEndKW@mlpretty@true%
+	\resetBktCount@mlpretty%
 }
 
-\newcommand\ResetClDef@mlpretty%
+\newcommand\resetClDef@mlpretty%
 {%
-	\global\InClDef@mlpretty@false
-	\setcounter{BlkLvl@mlpretty}{0}
-	\setcounter{BlkLvlAtClDef@mlpretty}{0}
+	\global\inClDef@mlpretty@false
+	\setcounter{blkLvl@mlpretty}{0}
+	\setcounter{blkLvlAtClDef@mlpretty}{0}
 }
 
 
-% --- macro for processing keywords ---
-\newcommand\ProcessOpRegKW@mlpretty%
+% --- internal style macros ---
+
+% Font shape and size
+\newcommand\basicShapeSize@mlpretty{\ttfamily\normalsize}
+\newcommand\keywordShapeSize@mlpretty\basicShapeSize@mlpretty
+\newcommand\stringShapeSize@mlpretty\basicShapeSize@mlpretty
+\newcommand\commentShapeSize@mlpretty\basicShapeSize@mlpretty
+
+% Matlab syntax highlighting colors
+\colorlet{textColor@mlpretty}{black}                       % text color
+\definecolor{keywordColor@mlpretty}{RGB}{000,000,255}      % keywords
+\definecolor{stringColor@mlpretty}{RGB}{160,032,240}       % strings
+\definecolor{syscomColor@mlpretty}{RGB}{178,140,000}       % system commands
+\definecolor{commentColor@mlpretty}{RGB}{034,139,034}      % comments
+
+% Additional colors (currently unused by matlab-prettifier)
+\colorlet{bgColor@mlpretty}{white}		                      % background color
+\definecolor{untermStringColor@mlpretty}{RGB}{178,000,000} % unterm. strings
+\definecolor{syntaxErrorColor@mlpretty}{RGB}{255,000,000}  % Syntax errors
+
+\newcommand\basicStyle@mlpretty%
 {%
-	\ResetEndKW@mlpretty%
-	\stepcounter{BlkLvl@mlpretty}%
-	\keywordstyle@mlpretty%
+  \basicShapeSize@mlpretty%
+  \color{textColor@mlpretty}%
 }
 
-\newcommand\ProcessMidKW@mlpretty%
+\newcommand\keywordStyle@mlpretty%
 {%
-	\ResetEndKW@mlpretty%
-	\keywordstyle@mlpretty%
+  \keywordShapeSize@mlpretty%
+  \color{keywordColor@mlpretty}%
 }
 
-\newcommand\ProcessStdaKW@mlpretty%
+\newcommand\stringStyle@mlpretty%
 {%
-	\ResetEndKW@mlpretty%
-	\keywordstyle@mlpretty%
+  \global\inStr@mlpretty@true%
+  \stringShapeSize@mlpretty%
+  \color{stringColor@mlpretty}%
 }
 
-\newcommand\ProcessClDefKW@mlpretty%
+\newcommand\commentStyle@mlpretty%
 {%
-	\ResetEndKW@mlpretty%
-	\global\InClDef@mlpretty@true%
-	\setcounter{BlkLvlAtClDef@mlpretty}{\value{BlkLvl@mlpretty}}%
-	\stepcounter{BlkLvl@mlpretty}%
-	\keywordstyle@mlpretty%
+  \commentShapeSize@mlpretty%
+  \color{commentColor@mlpretty}%
 }
 
-\newcommand\ProcessMidClDefKW@mlpretty
+\newcommand\syscomStyle@mlpretty%
 {%
-	\ifInClDef@mlpretty@%
-		\ResetEndKW@mlpretty%
-		\addtocounter{BlkLvl@mlpretty}{1}%
-		\keywordstyle@mlpretty%
+  \commentShapeSize@mlpretty%
+  \color{syscomColor@mlpretty}%
+}
+
+
+% --- macros for processing keywords ---
+\newcommand\processOpRegKW@mlpretty%
+{%
+	\resetEndKW@mlpretty%
+	\stepcounter{blkLvl@mlpretty}%
+	\keywordStyle@mlpretty%
+}
+
+\newcommand\processMidKW@mlpretty%
+{%
+	\resetEndKW@mlpretty%
+	\keywordStyle@mlpretty%
+}
+
+\newcommand\processStdaKW@mlpretty%
+{%
+	\resetEndKW@mlpretty%
+	\keywordStyle@mlpretty%
+}
+
+\newcommand\processClDefKW@mlpretty%
+{%
+	\resetEndKW@mlpretty%
+	\global\inClDef@mlpretty@true%
+	\setcounter{blkLvlAtClDef@mlpretty}{\value{blkLvl@mlpretty}}%
+	\stepcounter{blkLvl@mlpretty}%
+	\keywordStyle@mlpretty%
+}
+
+\newcommand\processMidClDefKW@mlpretty
+{%
+	\ifinClDef@mlpretty@%
+		\resetEndKW@mlpretty%
+		\addtocounter{blkLvl@mlpretty}{1}%
+		\keywordStyle@mlpretty%
 	\fi%
 }
 
-\newcommand\ProcessEndKW@mlpretty%
+\newcommand\processEndKW@mlpretty%
 {%	
-	\ifClosingEndKW@mlpretty@%
-		\ifInLineCom@mlpretty@%
+	\ifclosingEndKW@mlpretty@%
+		\ifinLineCom@mlpretty@%
 		\else%
-			\ifnum\value{BlkLvl@mlpretty}>0%
-				\addtocounter{BlkLvl@mlpretty}{-1}%
+			\ifnum\value{blkLvl@mlpretty}>0%
+				\addtocounter{blkLvl@mlpretty}{-1}%
 			\fi%
-			\ifnum\value{BlkLvl@mlpretty}=\value{BlkLvlAtClDef@mlpretty}%
-				\global\InClDef@mlpretty@false%
+			\ifnum\value{blkLvl@mlpretty}=\value{blkLvlAtClDef@mlpretty}%
+				\global\inClDef@mlpretty@false%
 			\fi%
-			\keywordstyle@mlpretty%
+			\keywordStyle@mlpretty%
 		\fi%
 	\fi%
 }
 
 
 % --- macros for processing opening and closing brackets ---
-\newcommand\ProcessOpBrkt@mlpretty%
+\newcommand\processOpBrkt@mlpretty%
 {%
-	\ifClosingEndKW@mlpretty@%
-		\global\ClosingEndKW@mlpretty@false%
+	\ifclosingEndKW@mlpretty@%
+		\global\closingEndKW@mlpretty@false%
 	\fi%
-	\stepcounter{OpBktCount@mlpretty}%
+	\stepcounter{opBktCount@mlpretty}%
 }
 
-\newcommand\ProcessClBrkt@mlpretty%
+\newcommand\processClBrkt@mlpretty%
 {%
-	\ifClosingEndKW@mlpretty@%
-		\ResetBktCount@mlpretty%
+	\ifclosingEndKW@mlpretty@%
+		\resetBktCount@mlpretty%
 	\else%
-		\stepcounter{ClBktCount@mlpretty}%
-		\ifnum\value{ClBktCount@mlpretty}<\value{OpBktCount@mlpretty}%
+		\stepcounter{clBktCount@mlpretty}%
+		\ifnum\value{clBktCount@mlpretty}<\value{opBktCount@mlpretty}%
 		\else%
-			\global\ClosingEndKW@mlpretty@true%
+			\global\closingEndKW@mlpretty@true%
 		\fi%
 	\fi%
 }
 
-% Patch to make literate replacement of ) work as expected when breaklines is set to true
-%TODO Find a way to undo that patch for listings other than Matlab
-\newcommand\PatchSelectCharTable@mlpretty%
+% Patch to make literate replacement of ) work as expected when breaklines
+% is set to true. Find a way to undo that patch for non-Matlab listings
+\newcommand\patchSelectCharTable@mlpretty%
 {%
 	\patchcmd{\lsthk@SelectCharTable}{)}{`}{}{}%
 }
-\PatchSelectCharTable@mlpretty
+\patchSelectCharTable@mlpretty
 
 
 % --- macro for literate replacement of tilde character ---
-\newcommand\Tilde@mlpretty{\raisebox{0.5ex}\texttildelow}
+\newcommand\tilde@mlpretty{\raisebox{0.5ex}\texttildelow}
 
 
 % --- macros for handling unterminated string literal ---
-\newcommand\AddedToEOLHookUntermStr@mlpretty
+\newcommand\addedToEOLHookUntermStr@mlpretty
 {%
-	\ifInStr@mlpretty@%
-		\global\InStr@mlpretty@false%
+	\ifinStr@mlpretty@%
+		\global\inStr@mlpretty@false%
 		\lst@LeaveMode%
 	\fi%
 }
 
-\newcommand\AddedToEndGroupHookUntermStr@mlpretty
+\newcommand\addedToEndGroupHookUntermStr@mlpretty
 {%
-	\ifInStr@mlpretty@%
-		\global\InStr@mlpretty@false%
+	\ifinStr@mlpretty@%
+		\global\inStr@mlpretty@false%
 	\fi%
 }
-
 
 % --- macros for handling line continuation ---
-\newcommand\ProcessDotDotDot@mlpretty%
+\newcommand\processDotDotDot@mlpretty
 {%
 	\lst@CalcLostSpaceAndOutput%
-	\ifInLineCom@mlpretty@%
+	\ifinLineCom@mlpretty@%
 		...%
 	\else%
-		\global\InLineCom@mlpretty@true%
-		{%
-			%\ignorespaces
-			\keywordstyle@mlpretty%
-			...%
-		}%
+		\global\inLineCom@mlpretty@true%
+		{\keywordStyle@mlpretty...}%
 	\fi%
-	\commentstyle@mlpretty%
+	\commentStyle@mlpretty%
 }
 
-\newcommand\AddedToEOLHookDotDotDot@mlpretty
+\newcommand\addedToEOLHookDotDotDot@mlpretty
 {%
-	\global\InLineCom@mlpretty@false%
+	\global\inLineCom@mlpretty@false%
 }
 
 
-% --- Add my macros to EOL and EndGroup hooks ---
+% --- Macros for adding to listings hooks ---
 % EOL hook
-\newcommand\AddedToEOL@mlpretty{}
+\newcommand\addedToEOL@mlpretty{}
 \newcommand\@ddedToEOL@mlpretty%
 {%
-	\AddedToEOLHookDotDotDot@mlpretty%
-	\AddedToEOLHookUntermStr@mlpretty%
+	\addedToEOLHookDotDotDot@mlpretty%
+	\addedToEOLHookUntermStr@mlpretty%
 }
-\lst@AddToHook{EOL}{\AddedToEOL@mlpretty}
+\lst@AddToHook{EOL}{\addedToEOL@mlpretty}
 
 % EndGroup hook
-\newcommand\AddedToEndGroup@mlpretty{}
+\newcommand\addedToEndGroup@mlpretty{}
 \newcommand\@ddedToEndGroup@mlpretty%
 {%
-	\AddedToEndGroupHookUntermStr@mlpretty%
+	\addedToEndGroupHookUntermStr@mlpretty%
 }
-\lst@AddToHook{EndGroup}{\AddedToEndGroup@mlpretty}
+\lst@AddToHook{EndGroup}{\addedToEndGroup@mlpretty}
 
 
 % --- Placeholders ---
-% Macros for delimiters
-\newcommand\placeholderdelimo@mlpretty{\textlangle}
-\newcommand\placeholderdelimc@mlpretty{\textrangle}
-\newcommand\placeholderdelimstyle@mlpretty{\normalfont\upshape}
-\newcommand\placeholdercontentstyle@mlpretty{\normalfont\itshape}
+
 % Placeholder colors
-\definecolor{placeholderdelimcolor@mlpretty}{RGB}{209,0,86}	% Placeholder delimiter color	
-\definecolor{placeholdercontentcolor@mlpretty}{RGB}{209,0,86}		% Placeholder text color
+\definecolor{placeholderDelimColor@mlpretty}{RGB}{209,0,86}
+\definecolor{placeholderContentColor@mlpretty}{RGB}{209,0,86}
 
-% --- macro for typesetting placeholders ---
-\newcommand\lstmlplaceholder[1]
-{%
-	{%
-		% opening delimiter
-		\placeholderdelimstyle@mlpretty%
-		\color{placeholderdelimcolor@mlpretty}%
-		\placeholderdelimo@mlpretty%
-	}{%
-		% placeholder content
-		\placeholdercontentstyle@mlpretty%
-		\color{placeholdercontentcolor@mlpretty}%
-		#1\italiccorrection@mlpretty%
-	}{%
-		% closing delimiter
-		\placeholderdelimstyle@mlpretty%
-		\color{placeholderdelimcolor@mlpretty}%
-		\placeholderdelimc@mlpretty%
-	}%
-}
+% Macros for placeholder delimiters
+\newcommand\placeholderOpDelim@mlpretty{\textlangle}
+\newcommand\placeholderClDelim@mlpretty{\textrangle}
+\newcommand\placeholderDelimStyle@mlpretty{\normalfont\upshape}
+\newcommand\placeholderContentStyle@mlpretty{\normalfont\itshape}
 
-% --- auxiliary macro (for conditional italic correction in placeholder) ---
-\newcommand\italiccorrection@mlpretty
+% Macro for conditional italic correction
+\newcommand\itCorr@mlpretty
 {%
 	\ifdefstring{\f@shape}{sl}
 		{\/}
@@ -389,14 +388,35 @@
 }
 
 
+% --- User macro for typesetting snippet placeholders ---
+\newcommand\snippetPlaceholder[1]
+{%
+	{%
+		% opening delimiter
+		\placeholderDelimStyle@mlpretty%
+		\color{placeholderDelimColor@mlpretty}%
+		\placeholderOpDelim@mlpretty%
+	}{%
+		% placeholder content
+		\placeholderContentStyle@mlpretty%
+		\color{placeholderContentColor@mlpretty}%
+		#1\itCorr@mlpretty%
+	}{%
+		% closing delimiter
+		\placeholderDelimStyle@mlpretty%
+		\color{placeholderDelimColor@mlpretty}%
+		\placeholderClDelim@mlpretty%
+	}%
+}
+
 
 % ----------- key=value interface ---
 
 % keys
-\define@key{mlpretty}{basicstyle}{\def\BasicStyle@mlpretty{#1}}
-\define@key{mlpretty}{keywordstyle}{\def\keywordstyle@mlpretty{#1}}
-\define@key{mlpretty}{stringstyle}{\def\StringStyle@mlpretty{#1}}
-\define@key{mlpretty}{commentstyle}{\def\commentstyle@mlpretty{#1}}
+\define@key{mlpretty}{basicstyle}{\def\basicStyle@mlpretty{#1}}
+\define@key{mlpretty}{keywordstyle}{\def\keywordStyle@mlpretty{#1}}
+\define@key{mlpretty}{stringstyle}{\def\stringStyle@mlpretty{#1}}
+\define@key{mlpretty}{commentstyle}{\def\commentStyle@mlpretty{#1}}
 
 % define \mlprettyset, the matlab-prettifier equivalent to listings' \lstset
 \lst@UserCommand\mlprettyset{\begingroup \lst@setcatcodes \mlprettyset@}
@@ -411,34 +431,34 @@
 	\fi%
 }
 
+
 % --- matlab-prettifier listings environment and macro ---
 
-\newcommand\StartingCode@mlpretty[1][]%
+\newcommand\atBeginCode@mlpretty[1][]%
 {%
-	\renewcommand\AddedToEOL@mlpretty\@ddedToEOL@mlpretty%
-	\renewcommand\AddedToEndGroup@mlpretty\@ddedToEndGroup@mlpretty%
+	\renewcommand\addedToEOL@mlpretty\@ddedToEOL@mlpretty%
+	\renewcommand\addedToEndGroup@mlpretty\@ddedToEndGroup@mlpretty%
 	\lstset{language = Matlab-pretty,#1}% %TODO replace by my own macro
 }
 
-\newcommand\EndingCode@mlpretty%
+\newcommand\atEndCode@mlpretty%
 {%
-	\renewcommand\AddedToEOL@mlpretty{}%
-	\renewcommand\AddedToEndGroup@mlpretty{}%
-	\ResetEndKW@mlpretty%
-	\ResetClDef@mlpretty%
+	\renewcommand\addedToEOL@mlpretty{}%
+	\renewcommand\addedToEndGroup@mlpretty{}%
+	\resetEndKW@mlpretty%
+	\resetClDef@mlpretty%
 }
 
 \lstnewenvironment{matlablisting}[1][]%
-	{\StartingCode@mlpretty[#1]}
-	{\EndingCode@mlpretty}
-
+	{\atBeginCode@mlpretty[#1]}
+	{\atEndCode@mlpretty}
 
 \newcommand\inputmatlablisting[2][]%
 {%
 	{%
-		\StartingCode@mlpretty[#1]%
+		\atBeginCode@mlpretty[#1]%
 		\lstinputlisting{#2}%
-		\EndingCode@mlpretty%
+		\atEndCode@mlpretty%
 	}%
 }
 
