@@ -296,18 +296,21 @@
 	\fi%
 }
 
-% Patch to make literate replacement of ) work as expected when breaklines
-% is set to true. Find a way to undo that patch for non-Matlab listings
-\newcommand\patchSelectCharTable@mlpretty%
+% Patch to make literate replacement of ) work as expected
+% when breaklines is set to true.
+\newcommand\patchSelectCharTable@mlpretty
 {%
-	\patchcmd{\lsthk@SelectCharTable}{)}{`}{}{}%
+	\patchcmd{\lsthk@SelectCharTable}{`)}{``}{}{}%
 }
-\patchSelectCharTable@mlpretty
+
+\newcommand\unpatchSelectCharTable@mlpretty
+{%
+	\patchcmd{\lsthk@SelectCharTable}{``}{`)}{}{}%
+}
 
 
 % --- macro for literate replacement of tilde character ---
-\newcommand\tilde@mlpretty{\raisebox{0.5ex}\texttildelow}
-
+\newcommand\tilde@mlpretty{\textasciitilde}
 
 % --- macros for handling unterminated string literal ---
 \newcommand\addedToEOLHookUntermStr@mlpretty
@@ -436,9 +439,10 @@
 
 \newcommand\atBeginCode@mlpretty[1][]%
 {%
+  \patchSelectCharTable@mlpretty%
 	\renewcommand\addedToEOL@mlpretty\@ddedToEOL@mlpretty%
 	\renewcommand\addedToEndGroup@mlpretty\@ddedToEndGroup@mlpretty%
-	\lstset{language = Matlab-pretty,#1}% %TODO replace by my own macro
+	\lstset{language=Matlab-pretty,#1}% %TODO replace by my own macro
 }
 
 \newcommand\atEndCode@mlpretty%
@@ -447,13 +451,14 @@
 	\renewcommand\addedToEndGroup@mlpretty{}%
 	\resetEndKW@mlpretty%
 	\resetClDef@mlpretty%
+	\unpatchSelectCharTable@mlpretty%
 }
 
-\lstnewenvironment{matlablisting}[1][]%
+\lstnewenvironment{matlabpretty}[1][]%
 	{\atBeginCode@mlpretty[#1]}
 	{\atEndCode@mlpretty}
 
-\newcommand\inputmatlablisting[2][]%
+\newcommand\inputmatlabpretty[2][]%
 {%
 	{%
 		\atBeginCode@mlpretty[#1]%
