@@ -133,10 +133,10 @@
 
 % --- ``State variables'' ---
 
-\newcounter{opBktCount@mlpretty} 		 % running count of (, [ and, { 
-\newcounter{clBktCount@mlpretty} 		 % running count of ), ] and, }
-\newcounter{blkLvl@mlpretty}				 % block nesting level
-\newcounter{blkLvlAtClDef@mlpretty}	 % block nesting level at last classdef
+\newcount\opBktCount@mlpretty 		 % running count of (, [ and, { 
+\newcount\clBktCount@mlpretty 		 % running count of ), ] and, }
+\newcount\blkLvl@mlpretty				 % block nesting level
+\newcount\blkLvlAtClDef@mlpretty	 % block nesting level at last classdef
 
 \newif\ifclosingEndKW@mlpretty@\closingEndKW@mlpretty@true
 \newif\ifinClDef@mlpretty@\inClDef@mlpretty@false
@@ -147,8 +147,8 @@
 % --- Macros for resetting counters and switches ---
 \newcommand\resetBktCount@mlpretty%
 {%
-	\setcounter{opBktCount@mlpretty}{0}%
-	\setcounter{clBktCount@mlpretty}{0}%
+	\global\opBktCount@mlpretty=0%
+	\global\clBktCount@mlpretty=0%
 }
 
 \newcommand\resetEndKW@mlpretty%
@@ -159,9 +159,9 @@
 
 \newcommand\resetClDef@mlpretty%
 {%
-	\global\inClDef@mlpretty@false
-	\setcounter{blkLvl@mlpretty}{0}
-	\setcounter{blkLvlAtClDef@mlpretty}{0}
+	\global\inClDef@mlpretty@false%
+	\global\blkLvl@mlpretty=0%
+	\global\blkLvlAtClDef@mlpretty=0%
 }
 
 
@@ -231,7 +231,7 @@
 \newcommand\processOpRegKW@mlpretty%
 {%
 	\resetEndKW@mlpretty%
-	\stepcounter{blkLvl@mlpretty}%
+	\global\advance\blkLvl@mlpretty by \@ne%
 	\keywordStyle@mlpretty%
 }
 
@@ -251,8 +251,8 @@
 {%
 	\resetEndKW@mlpretty%
 	\global\inClDef@mlpretty@true%
-	\setcounter{blkLvlAtClDef@mlpretty}{\value{blkLvl@mlpretty}}%
-	\stepcounter{blkLvl@mlpretty}%
+	\global\blkLvlAtClDef@mlpretty=\blkLvl@mlpretty%
+	\global\advance\blkLvl@mlpretty by \@ne%
 	\keywordStyle@mlpretty%
 }
 
@@ -260,7 +260,7 @@
 {%
 	\ifinClDef@mlpretty@%
 		\resetEndKW@mlpretty%
-		\addtocounter{blkLvl@mlpretty}{1}%
+		\global\advance\blkLvl@mlpretty by \@ne%
 		\keywordStyle@mlpretty%
 	\fi%
 }
@@ -270,10 +270,10 @@
 	\ifclosingEndKW@mlpretty@%
 		\ifinLineCom@mlpretty@%
 		\else%
-			\ifnum\value{blkLvl@mlpretty}>0%
-				\addtocounter{blkLvl@mlpretty}{-1}%
+			\ifnum\blkLvl@mlpretty>0%
+				\global\advance\blkLvl@mlpretty by -\@ne%
 			\fi%
-			\ifnum\value{blkLvl@mlpretty}=\value{blkLvlAtClDef@mlpretty}%
+			\ifnum\blkLvl@mlpretty=\blkLvlAtClDef@mlpretty%
 				\global\inClDef@mlpretty@false%
 			\fi%
 			\keywordStyle@mlpretty%
@@ -290,7 +290,7 @@
 	\ifclosingEndKW@mlpretty@%
 		\global\closingEndKW@mlpretty@false%
 	\fi%
-	\stepcounter{opBktCount@mlpretty}%
+	\global\advance\opBktCount@mlpretty by \@ne%
 }
 
 \newcommand\processClBrkt@mlpretty%
@@ -298,8 +298,8 @@
 	\ifclosingEndKW@mlpretty@%
 		\resetBktCount@mlpretty%
 	\else%
-		\stepcounter{clBktCount@mlpretty}%
-		\ifnum\value{clBktCount@mlpretty}<\value{opBktCount@mlpretty}%
+		\global\advance\clBktCount@mlpretty by \@ne%
+		\ifnum\clBktCount@mlpretty<\opBktCount@mlpretty%
 		\else%
 			\global\closingEndKW@mlpretty@true%
 		\fi%
