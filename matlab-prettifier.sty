@@ -425,9 +425,9 @@
 % ----------- key=value interface ---
 
 % Note: Using the literate key in conjunction with Matlab-pretty is
-% ill-advised, as it will overwrite the package's literate replacements.
+% ill-advised, as it will clobber the package's literate replacements.
 % So we define a new key macro for allowing the user to specify additional
-% literate replacements without overwriting existing ones.
+% literate replacements without clobbering existing ones.
 \def\lstml@addToLiterate#1%
 {%
 	\edef\lst@literate%
@@ -437,14 +437,14 @@
 	}%
 }
 
-\define@key{lst}{mlbasicstyle}{\def\basicStyle@mlpretty{#1}}
-\define@key{lst}{mllastelemstyle}{\def\lastElemStyle@mlpretty{#1}}
-\define@key{lst}{mlkeywordstyle}{\def\keywordStyle@mlpretty{#1}}
-\define@key{lst}{mlstringstyle}{\def\stringStyle@mlpretty{#1}}
-\define@key{lst}{mlcommentstyle}{\def\commentStyle@mlpretty{#1}}
-\define@key{lst}{mlsyscomstyle}{\def\syscomStyle@mlpretty{#1}}
-\define@key{lst}{mltidle}{\def\tilde@mlpretty{#1}}
-\define@key{lst}{mlliterate}{\lstml@addToLiterate{#1}}
+\lst@Key{mlbasicstyle}\relax{\def\basicStyle@mlpretty{#1}}
+\lst@Key{mllastelemstyle}\relax{\def\lastElemStyle@mlpretty{#1}}
+\lst@Key{mlkeywordstyle}\relax{\def\keywordStyle@mlpretty{#1}}
+\lst@Key{mlstringstyle}\relax{\def\stringStyle@mlpretty{#1}}
+\lst@Key{mlcommentstyle}\relax{\def\commentStyle@mlpretty{#1}}
+\lst@Key{mlsyscomstyle}\relax{\def\syscomStyle@mlpretty{#1}}
+\lst@Key{mltidle}\relax{\def\tilde@mlpretty{#1}}
+\lst@Key{mlliterate}\relax{\lstml@addToLiterate{#1}}
 
 
 % --- matlab-prettifier listings environment and macro ---
