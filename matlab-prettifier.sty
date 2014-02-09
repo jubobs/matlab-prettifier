@@ -117,11 +117,11 @@
 	stringstyle=\processString@mlpretty,
 	%
 	% comments
-	morecomment=[l]\%,                                 % to-end-of-line comments
-	morecomment=[s]{\%\{\^^M}{\%\}\^^M},               % multiline comments
-	moredelim=**[il][\processDotDotDot@mlpretty]{...}, % line-continuation token
-	commentstyle=\commentStyle@mlpretty,
-	moredelim=**[l][\processSectionTitle@mlpretty]{\%\%\ },    % code section
+	morecomment=[l]\%,                                      % to-end-of-line
+	morecomment=[s]{\%\{\^^M}{\%\}\^^M},                    % multiline
+	moredelim=**[il][\processDotDotDot@mlpretty]{...},      % line continuation
+	moredelim=**[l][\processSectionTitle@mlpretty]{\%\%\ }, % code section
+  commentstyle=\commentStyle@mlpretty,
 	%
 	% system commands
 	moredelim=[l][\syscomStyle@mlpretty]{!},
@@ -140,16 +140,12 @@
 \newcount\blkLvl@mlpretty				   % block nesting level
 \newcount\blkLvlAtClDef@mlpretty	 % block nesting level at last classdef
 
-\newif\ifclosingEndKW@mlpretty@\closingEndKW@mlpretty@true
-\newif\ifinClDef@mlpretty@\inClDef@mlpretty@false
-\newif\ifinStr@mlpretty@\inStr@mlpretty@false
-\newif\ifinLineCom@mlpretty@\inLineCom@mlpretty@false
-\newif\iftooLateForCell@mlpretty@\tooLateForCell@mlpretty@false
-\newif\ifwithinSectionTitle@mlpretty@\withinSectionTitle@mlpretty@false
-
-%%TODO
-%\lst@AddToHook{EveryLine}{\global\tooLateForCell@mlpretty@false}
-%\lst@AddToHook{PostOutput}{\global\tooLateForCell@mlpretty@true}
+\newif\ifClosingEndKW@mlpretty@             \ClosingEndKW@mlpretty@true
+\newif\ifInClDef@mlpretty@                       \InClDef@mlpretty@false
+\newif\ifInStr@mlpretty@                           \InStr@mlpretty@false
+\newif\ifInLineCom@mlpretty@                   \InLineCom@mlpretty@false
+\newif\ifTooLateForSectionTitle@mlpretty@         \TooLateForSectionTitle@mlpretty@false
+\newif\ifWithinSectionTitle@mlpretty@ \WithinSectionTitle@mlpretty@false
 
 
 % --- Macros for resetting counters and switches ---
@@ -161,13 +157,13 @@
 
 \newcommand\resetEndKW@mlpretty%
 {%
-	\global\closingEndKW@mlpretty@true%
+	\global\ClosingEndKW@mlpretty@true%
 	\resetBktCount@mlpretty%
 }
 
 \newcommand\resetClDef@mlpretty%
 {%
-	\global\inClDef@mlpretty@false%
+	\global\InClDef@mlpretty@false%
 	\global\blkLvl@mlpretty=0%
 	\global\blkLvlAtClDef@mlpretty=0%
 }
@@ -175,15 +171,15 @@
 
 % --- internal style macros ---
 
-% Font shape and size
-\newcommand\basicShapeSize@mlpretty{\ttfamily\normalsize}
-\newcommand\lastElemShapeSize@mlpretty\basicShapeSize@mlpretty
-\newcommand\keywordShapeSize@mlpretty\basicShapeSize@mlpretty
-\newcommand\stringShapeSize@mlpretty\basicShapeSize@mlpretty
-\newcommand\commentShapeSize@mlpretty\basicShapeSize@mlpretty
-\newcommand\syscomShapeSize@mlpretty\basicShapeSize@mlpretty
-\newcommand\sectionTitleShapeSize@mlpretty{\commentShapeSize@mlpretty\bfseries}
-\newlength\cellRuleHeight@mlpretty\setlength\cellRuleHeight@mlpretty{.05em}
+% Declarations for font family, series, shape, and size (but not color)
+\newcommand\basicFontSpecs@mlpretty{\ttfamily\normalsize}
+\newcommand\lastElemFontSpecs@mlpretty\basicFontSpecs@mlpretty
+\newcommand\keywordFontSpecs@mlpretty\basicFontSpecs@mlpretty
+\newcommand\stringFontSpecs@mlpretty\basicFontSpecs@mlpretty
+\newcommand\commentFontSpecs@mlpretty\basicFontSpecs@mlpretty
+\newcommand\syscomFontSpecs@mlpretty\basicFontSpecs@mlpretty
+\newcommand\sectionTitleFontSpecs@mlpretty{\commentFontSpecs@mlpretty\bfseries}
+\newlength\sectionTitleRuleHeight@mlpretty\setlength\sectionTitleRuleHeight@mlpretty{.05em}
 
 % Matlab syntax highlighting colors
 \colorlet{textColor@mlpretty}{black}                      % text
@@ -192,7 +188,7 @@
 \definecolor{stringColor@mlpretty}{RGB}{160,032,240}      % strings
 \definecolor{commentColor@mlpretty}{RGB}{034,139,034}     % comments
 \definecolor{sectionTitleColor@mlpretty}{RGB}{034,139,034}% section titles
-\colorlet{cellRuleColor@mlpretty}{black!15}               % code-section rule
+\colorlet{sectionTitleRuleColor@mlpretty}{black!15}       % code-section rule
 \definecolor{syscomColor@mlpretty}{RGB}{178,140,000}      % system commands
 
 % Additional colors (currently unused by matlab-prettifier)
@@ -203,55 +199,55 @@
 
 \newcommand\basicStyle@mlpretty%
 {%
-  \basicShapeSize@mlpretty%
+  \basicFontSpecs@mlpretty%
   \color{textColor@mlpretty}%
 }
 
 \newcommand\lastElemStyle@mlpretty%
 {%
-  \lastElemShapeSize@mlpretty%
+  \lastElemFontSpecs@mlpretty%
   \color{lastElemColor@mlpretty}%
 }
 
 \newcommand\keywordStyle@mlpretty%
 {%
-  \keywordShapeSize@mlpretty%
+  \keywordFontSpecs@mlpretty%
   \color{keywordColor@mlpretty}%
 }
 
 \newcommand\stringStyle@mlpretty%
 {%
-  \global\inStr@mlpretty@true%
-  \stringShapeSize@mlpretty%
+  \global\InStr@mlpretty@true%
+  \stringFontSpecs@mlpretty%
   \color{stringColor@mlpretty}%
 }
 
 \newcommand\commentStyle@mlpretty%
 {%
-  \commentShapeSize@mlpretty%
+  \commentFontSpecs@mlpretty%
   \color{commentColor@mlpretty}%
 }
 
 \newcommand\sectionTitleStyle@mlpretty%
 {%
-  \sectionTitleShapeSize@mlpretty%
+  \sectionTitleFontSpecs@mlpretty%
   \color{sectionTitleColor@mlpretty}%
 }
 
-% --- cells ---
+% --- section titles ---
 \newlength\emHeight@mlpretty
 \newlength\jayDepth@mlpretty
-\newlength\cellRuleOffset@mlpretty
+\newlength\sectionTitleRuleOffset@mlpretty
 \setlength\emHeight@mlpretty{\fontcharht\font`M}
 \setlength\jayDepth@mlpretty{\fontchardp\font`j}
-\setlength\cellRuleOffset@mlpretty%
+\setlength\sectionTitleRuleOffset@mlpretty%
 {%
   \dimexpr.5\emHeight@mlpretty+.5\baselineskip-.5\jayDepth@mlpretty\relax%
 }
 
 \newcommand\syscomStyle@mlpretty%
 {%
-  \syscomShapeSize@mlpretty%
+  \syscomFontSpecs@mlpretty%
   \color{syscomColor@mlpretty}%
 }
 
@@ -259,7 +255,7 @@
 % --- macros for processing keywords ---
 \newcommand\processOpRegKW@mlpretty%
 {%
-  \ifwithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpretty@%
   \else%
 		\resetEndKW@mlpretty%
 		\global\advance\blkLvl@mlpretty by \@ne%
@@ -269,7 +265,7 @@
 
 \newcommand\processMidKW@mlpretty%
 {%
-  \ifwithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpretty@%
   \else%
 	  \resetEndKW@mlpretty%
 	  \keywordStyle@mlpretty%
@@ -278,7 +274,7 @@
 
 \newcommand\processStdaKW@mlpretty%
 {%
-  \ifwithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpretty@%
   \else%
 		\resetEndKW@mlpretty%
 		\keywordStyle@mlpretty%
@@ -287,10 +283,10 @@
 
 \newcommand\processClDefKW@mlpretty%
 {%
-  \ifwithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpretty@%
   \else%
 		\resetEndKW@mlpretty%
-		\global\inClDef@mlpretty@true%
+		\global\InClDef@mlpretty@true%
 		\global\blkLvlAtClDef@mlpretty=\blkLvl@mlpretty%
 		\global\advance\blkLvl@mlpretty by \@ne%
 		\keywordStyle@mlpretty%
@@ -299,9 +295,9 @@
 
 \newcommand\processMidClDefKW@mlpretty
 {%
-  \ifwithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpretty@%
   \else%
-		\ifinClDef@mlpretty@%
+		\ifInClDef@mlpretty@%
 			\resetEndKW@mlpretty%
 			\global\advance\blkLvl@mlpretty by \@ne%
 			\keywordStyle@mlpretty%
@@ -311,16 +307,16 @@
 
 \newcommand\processEndKW@mlpretty%
 {%
-  \ifwithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpretty@%
   \else%
-		\ifclosingEndKW@mlpretty@%
-			\ifinLineCom@mlpretty@%
+		\ifClosingEndKW@mlpretty@%
+			\ifInLineCom@mlpretty@%
 			\else%
 				\ifnum\blkLvl@mlpretty>0%
 					\global\advance\blkLvl@mlpretty by \m@ne%
 				\fi%
 				\ifnum\blkLvl@mlpretty=\blkLvlAtClDef@mlpretty%
-					\global\inClDef@mlpretty@false%
+					\global\InClDef@mlpretty@false%
 				\fi%
 				\keywordStyle@mlpretty%
 			\fi%
@@ -334,10 +330,10 @@
 % --- macros for processing opening and closing brackets ---
 \newcommand\processOpBrkt@mlpretty%
 {%
-  \ifwithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpretty@%
   \else%
-		\ifclosingEndKW@mlpretty@%
-			\global\closingEndKW@mlpretty@false%
+		\ifClosingEndKW@mlpretty@%
+			\global\ClosingEndKW@mlpretty@false%
 		\fi%
 		\global\advance\opBktCount@mlpretty by \@ne%
 	\fi%
@@ -345,15 +341,15 @@
 
 \newcommand\processClBrkt@mlpretty%
 {%
-  \ifwithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpretty@%
   \else%
-		\ifclosingEndKW@mlpretty@%
+		\ifClosingEndKW@mlpretty@%
 			\resetBktCount@mlpretty%
 		\else%
 			\global\advance\clBktCount@mlpretty by \@ne%
 			\ifnum\clBktCount@mlpretty<\opBktCount@mlpretty%
 			\else%
-				\global\closingEndKW@mlpretty@true%
+				\global\ClosingEndKW@mlpretty@true%
 			\fi%
 		\fi%
 	\fi%
@@ -362,7 +358,7 @@
 % --- strings ---
 \newcommand\processString@mlpretty
 {%
-  \ifwithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpretty@%
   \else%
     \stringStyle@mlpretty%  
   \fi%
@@ -372,13 +368,13 @@
 \newcommand\processDotDotDot@mlpretty
 {%
 	\lst@CalcLostSpaceAndOutput%
-	\ifwithinSectionTitle@mlpretty@%
+	\ifWithinSectionTitle@mlpretty@%
 	  ...%
   \else%
-		\ifinLineCom@mlpretty@%
+		\ifInLineCom@mlpretty@%
 			...%
 		\else%
-			\global\inLineCom@mlpretty@true%
+			\global\InLineCom@mlpretty@true%
 			{\keywordStyle@mlpretty...}%
 		\fi%
 		\commentStyle@mlpretty%
@@ -388,17 +384,17 @@
 % --- macro for processing section title ---
 \newcommand\processSectionTitle@mlpretty%
 {%
-  \global\withinSectionTitle@mlpretty@true%
+  \global\WithinSectionTitle@mlpretty@true%
   \resetEndKW@mlpretty%
   \commentStyle@mlpretty%
-  \iftooLateForCell@mlpretty@%
+  \ifTooLateForSectionTitle@mlpretty@%
   \else%
     \bgroup%
-		  \color{cellRuleColor@mlpretty}%
+		  \color{sectionTitleRuleColor@mlpretty}%
 		  \makebox[0em][l]%
 		  {%
-		    \raisebox{\cellRuleOffset@mlpretty}[0pt][0pt]%
-		      {\rule{\lst@linewidth}{\cellRuleHeight@mlpretty}}%
+		    \raisebox{\sectionTitleRuleOffset@mlpretty}[0pt][0pt]%
+		      {\rule{\lst@linewidth}{\sectionTitleRuleHeight@mlpretty}}%
 		  }%
     \egroup%
     \sectionTitleStyle@mlpretty%
@@ -425,34 +421,34 @@
 % --- macros for handling code sections in hooks ---
 \newcommand\addedToEveryLineCodeSection@mlpretty
 {%
-  \global\tooLateForCell@mlpretty@false%
+  \global\TooLateForSectionTitle@mlpretty@false%
 }
 
 \newcommand\addedToPostOutputCodeSection@mlpretty
 {%
-  \global\tooLateForCell@mlpretty@true%
+  \global\TooLateForSectionTitle@mlpretty@true%
 }
 
 % --- macros for handling unterminated string literal ---
 \newcommand\addedToEOLHookUntermStr@mlpretty
 {%
-	\ifinStr@mlpretty@%
-		\global\inStr@mlpretty@false%
+	\ifInStr@mlpretty@%
+		\global\InStr@mlpretty@false%
 		\lst@LeaveMode%
 	\fi%
 }
 
 \newcommand\addedToEndGroupHookUntermStr@mlpretty
 {%
-	\ifinStr@mlpretty@%
-		\global\inStr@mlpretty@false%
+	\ifInStr@mlpretty@%
+		\global\InStr@mlpretty@false%
 	\fi%
 }
 
 
 \newcommand\addedToEOLHookDotDotDot@mlpretty
 {%
-	\global\inLineCom@mlpretty@false%
+	\global\InLineCom@mlpretty@false%
 }
 
 
@@ -463,7 +459,7 @@
 {%
 	\addedToEOLHookDotDotDot@mlpretty%
 	\addedToEOLHookUntermStr@mlpretty%
-	\global\withinSectionTitle@mlpretty@false%
+	\global\WithinSectionTitle@mlpretty@false%
 }
 \lst@AddToHook{EOL}{\addedToEOL@mlpretty}
 
