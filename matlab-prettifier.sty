@@ -614,13 +614,20 @@
 % inline Matlab code (no need for \atBeginCode and \atEndCode here)
 \newcommand\matlabprettyinline[2][]
 {%
-  \lstinline[language=Matlab-pretty,#1]|#2|%
+  {%
+    \lstset{language=Matlab-pretty,#1}% preferable to lstinline[]{} which is an experimental feature of listings (as of v1.5b)
+    \lstinline?#2?% % question mark as delimiter because unlikely to be needed in inline code.
+  }%
 }
 
 % ... but that's a mouthful, so...
 \newcommand\DefineCharForMatlabPrettyInline[1][]%
 {%
-  \def\lst@shortinlinedef{\lstinline[language=Matlab-pretty,#1]}%
+  \def\lst@shortinlinedef%
+  {%
+    \lstset{language=Matlab-pretty,#1}%
+    \lstinline%
+  }%
   \lstMakeShortInline@%
 }%
 
