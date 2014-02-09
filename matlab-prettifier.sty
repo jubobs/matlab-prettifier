@@ -142,12 +142,12 @@
 \newcount\blkLvl@mlpretty				   % block nesting level
 \newcount\blkLvlAtClDef@mlpretty	 % block nesting level at last classdef
 
-\newif\ifClosingEndKW@mlpretty@             \ClosingEndKW@mlpretty@true
-\newif\ifInClDef@mlpretty@                       \InClDef@mlpretty@false
-\newif\ifInStr@mlpretty@                           \InStr@mlpretty@false
-\newif\ifInLineCom@mlpretty@                   \InLineCom@mlpretty@false
-\newif\ifTooLateForSectionTitle@mlpretty@         \TooLateForSectionTitle@mlpretty@false
-\newif\ifWithinSectionTitle@mlpretty@ \WithinSectionTitle@mlpretty@false
+\newif\ifClosingEndKW@mlpretty@                    \ClosingEndKW@mlpretty@true
+\newif\ifInClDef@mlpretty@                              \InClDef@mlpretty@false
+\newif\ifInStr@mlpretty@                                  \InStr@mlpretty@false
+\newif\ifInLineCom@mlpretty@                          \InLineCom@mlpretty@false
+\newif\ifTooLateForSectionTitle@mlpretty@\TooLateForSectionTitle@mlpretty@false
+\newif\ifWithinSectionTitle@mlpretty@        \WithinSectionTitle@mlpretty@false
 
 
 % --- Macros for resetting counters and switches ---
@@ -181,7 +181,6 @@
 \def\commentFontSpecs@mlpretty{\basicFontSpecs@mlpretty}
 \def\syscomFontSpecs@mlpretty{\basicFontSpecs@mlpretty}
 \def\sectionTitleFontSpecs@mlpretty{\commentFontSpecs@mlpretty\bfseries}
-\newlength\sectionTitleRuleHeight@mlpretty\setlength\sectionTitleRuleHeight@mlpretty{.05em}
 
 % Matlab syntax highlighting colors
 \colorlet{textColor@mlpretty}{black}                      % text
@@ -236,17 +235,6 @@
   \color{sectionTitleColor@mlpretty}%
 }
 
-% --- section titles ---
-\newlength\emHeight@mlpretty
-\newlength\jayDepth@mlpretty
-\newlength\sectionTitleRuleOffset@mlpretty
-\setlength\emHeight@mlpretty{\fontcharht\font`M}
-\setlength\jayDepth@mlpretty{\fontchardp\font`j}
-\setlength\sectionTitleRuleOffset@mlpretty%
-{%
-  \dimexpr.5\emHeight@mlpretty+.5\baselineskip-.5\jayDepth@mlpretty\relax%
-}
-
 \def\syscomStyle@mlpretty%
 {%
   \syscomFontSpecs@mlpretty%
@@ -295,7 +283,7 @@
   \fi%
 }
 
-\def\processMidClDefKW@mlpretty
+\def\processMidClDefKW@mlpretty%
 {%
   \ifWithinSectionTitle@mlpretty@%
   \else%
@@ -358,7 +346,7 @@
 }
 
 % --- strings ---
-\def\processString@mlpretty
+\def\processString@mlpretty%
 {%
   \ifWithinSectionTitle@mlpretty@%
   \else%
@@ -367,7 +355,7 @@
 }
 
 % --- macro for handling line continuation ---
-\def\processDotDotDot@mlpretty
+\def\processDotDotDot@mlpretty%
 {%
 	\lst@CalcLostSpaceAndOutput%
 	\ifWithinSectionTitle@mlpretty@%
@@ -384,6 +372,12 @@
 }
 
 % --- macro for processing section title ---
+\newlength\emHeight@mlpretty
+\newlength\jayDepth@mlpretty
+\newlength\sectionTitleRuleOffset@mlpretty
+\newlength\sectionTitleRuleThickness@mlpretty
+\def\sectionTitleRuleThicknessRatio@mlpretty{.05}
+
 \def\processSectionTitle@mlpretty%
 {%
   \ifWithinSectionTitle@mlpretty@% to avoid drawing the rule multiple times
@@ -394,12 +388,25 @@
 	  \ifTooLateForSectionTitle@mlpretty@%
 	  \else%
 	    \bgroup%
+	      % calculate the vertical offset for the rule
+	      \setlength\emHeight@mlpretty{\fontcharht\font`M}%
+        \setlength\jayDepth@mlpretty{\fontchardp\font`j}%
+        \setlength\sectionTitleRuleOffset@mlpretty%
+				{%
+				  \dimexpr.5\emHeight@mlpretty+.5\baselineskip-.5\jayDepth@mlpretty\relax%
+				}%
+				\setlength\sectionTitleRuleThickness@mlpretty%
+				{%
+				  \sectionTitleRuleThicknessRatio@mlpretty\baselineskip%
+        }%
 			  \color{sectionTitleRuleColor@mlpretty}%
-			  \makebox[0em][l]%
-			  {%
-			    \raisebox{\sectionTitleRuleOffset@mlpretty}[0pt][0pt]%
-			      {\rule{\lst@linewidth}{\sectionTitleRuleHeight@mlpretty}}%
-			  }%
+			  \ifShowCellrules@mlpretty@%
+				  \makebox[0em][l]%
+				  {%
+				    \raisebox{\sectionTitleRuleOffset@mlpretty}[0pt][0pt]%
+				      {\rule{\lst@linewidth}{\sectionTitleRuleThickness@mlpretty}}%
+				  }%
+				\fi%
 	    \egroup%
 	    \sectionTitleStyle@mlpretty%
 	  \fi%
@@ -408,12 +415,12 @@
 
 % Patch to make literate replacement of ) work as expected
 % when breaklines is set to true.
-\def\patchSelectCharTable@mlpretty
+\def\patchSelectCharTable@mlpretty%
 {%
 	\patchcmd{\lsthk@SelectCharTable}{`)}{``}{}{}%
 }
 
-\def\unpatchSelectCharTable@mlpretty
+\def\unpatchSelectCharTable@mlpretty%
 {%
 	\patchcmd{\lsthk@SelectCharTable}{``}{`)}{}{}%
 }
@@ -424,18 +431,18 @@
 
 
 % --- macros for handling code sections in hooks ---
-\def\addedToEveryLineCodeSection@mlpretty
+\def\addedToEveryLineCodeSection@mlpretty%
 {%
   \global\TooLateForSectionTitle@mlpretty@false%
 }
 
-\def\addedToPostOutputCodeSection@mlpretty
+\def\addedToPostOutputCodeSection@mlpretty%
 {%
   \global\TooLateForSectionTitle@mlpretty@true%
 }
 
 % --- macros for handling unterminated string literal ---
-\def\addedToEOLHookUntermStr@mlpretty
+\def\addedToEOLHookUntermStr@mlpretty%
 {%
 	\ifInStr@mlpretty@%
 		\global\InStr@mlpretty@false%
@@ -443,7 +450,7 @@
 	\fi%
 }
 
-\def\addedToEndGroupHookUntermStr@mlpretty
+\def\addedToEndGroupHookUntermStr@mlpretty%
 {%
 	\ifInStr@mlpretty@%
 		\global\InStr@mlpretty@false%
@@ -451,7 +458,7 @@
 }
 
 
-\def\addedToEOLHookDotDotDot@mlpretty
+\def\addedToEOLHookDotDotDot@mlpretty%
 {%
 	\global\InLineCom@mlpretty@false%
 }
@@ -492,6 +499,7 @@
 }
 \lst@AddToHook{PostOutput}{\addedToPostOutput@mlpretty}
 
+
 % --- Placeholders ---
 
 % Placeholder colors
@@ -505,7 +513,7 @@
 \def\placeholderContentStyle@mlpretty{\normalfont\itshape}
 
 % Macro for conditional italic correction
-\def\itCorr@mlpretty
+\def\itCorr@mlpretty%
 {%
 	\ifdefstring{\f@shape}{sl}
 		{\/}
@@ -544,7 +552,7 @@
 % ill-advised, as it will clobber the package's literate replacements.
 % So we define a new key macro for allowing the user to specify additional
 % literate replacements without clobbering existing ones.
-\def\lstml@addToLiterate#1%
+\def\addToLiterate@mlpretty#1%
 {%
 	\edef\lst@literate%
 	{%
@@ -554,13 +562,20 @@
 }
 
 \lst@Key{mlbasicstyle}\relax{\def\basicStyle@mlpretty{#1}}
-\lst@Key{mllastelemstyle}\relax{\def\lastElemStyle@mlpretty{#1}}
+\lst@Key{lastelementstyle}\relax{\def\lastElemStyle@mlpretty{#1}}
 \lst@Key{mlkeywordstyle}\relax{\def\keywordStyle@mlpretty{#1}}
 \lst@Key{mlstringstyle}\relax{\def\stringStyle@mlpretty{#1}}
 \lst@Key{mlcommentstyle}\relax{\def\commentStyle@mlpretty{#1}}
 \lst@Key{mlsyscomstyle}\relax{\def\syscomStyle@mlpretty{#1}}
 \lst@Key{mltidle}\relax{\def\tilde@mlpretty{#1}}
-\lst@Key{mlliterate}\relax{\lstml@addToLiterate{#1}}
+\lst@Key{mlliterate}\relax{\addToLiterate@mlpretty{#1}}
+\lst@Key{codesectionrulethickness}\relax%
+  {\def\sectionTitleRuleThicknessRatio@mlpretty{#1}}
+\lst@Key{codesectionrulecolor}\relax%
+  {\colorlet{sectionTitleRuleColor@mlpretty}{#1}}
+\lst@Key{showcodesectionrules}{false}[t]%
+  {\lstKV@SetIf{#1}\ifShowCellrules@mlpretty@}
+\lst@Key{codesectiontitlestyle}\relax{\def\sectionTitleStyle@mlpretty{#1}}
 
 
 % --- matlab-prettifier listings environment and macro ---
