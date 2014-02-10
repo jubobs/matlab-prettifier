@@ -175,11 +175,11 @@
 
 % Declarations for font family, series, shape, and size (but not color)
 \def\basicFontSpecs@mlpretty{\ttfamily\normalsize}
-\def\lastElemFontSpecs@mlpretty{\basicFontSpecs@mlpretty}
-\def\keywordFontSpecs@mlpretty{\basicFontSpecs@mlpretty}
-\def\stringFontSpecs@mlpretty{\basicFontSpecs@mlpretty}
-\def\commentFontSpecs@mlpretty{\basicFontSpecs@mlpretty}
-\def\syscomFontSpecs@mlpretty{\basicFontSpecs@mlpretty}
+\def\lastElemFontSpecs@mlpretty{}
+\def\keywordFontSpecs@mlpretty{}
+\def\stringFontSpecs@mlpretty{}
+\def\commentFontSpecs@mlpretty{}
+\def\syscomFontSpecs@mlpretty{}
 \def\sectionTitleFontSpecs@mlpretty{\commentFontSpecs@mlpretty\bfseries}
 
 % Matlab syntax highlighting colors
@@ -248,7 +248,7 @@
   \ifWithinSectionTitle@mlpretty@%
   \else%
 		\resetEndKW@mlpretty%
-		\global\advance\blkLvl@mlpretty by \@ne%
+		\global\advance\blkLvl@mlpretty\@ne%
 		\keywordStyle@mlpretty%
 	\fi%
 }
@@ -278,7 +278,7 @@
 		\resetEndKW@mlpretty%
 		\global\InClDef@mlpretty@true%
 		\global\blkLvlAtClDef@mlpretty=\blkLvl@mlpretty%
-		\global\advance\blkLvl@mlpretty by \@ne%
+		\global\advance\blkLvl@mlpretty\@ne%
 		\keywordStyle@mlpretty%
   \fi%
 }
@@ -289,7 +289,7 @@
   \else%
 		\ifInClDef@mlpretty@%
 			\resetEndKW@mlpretty%
-			\global\advance\blkLvl@mlpretty by \@ne%
+			\global\advance\blkLvl@mlpretty\@ne%
 			\keywordStyle@mlpretty%
 		\fi%
 	\fi%
@@ -303,7 +303,7 @@
 			\ifInLineCom@mlpretty@%
 			\else%
 				\ifnum\blkLvl@mlpretty>0%
-					\global\advance\blkLvl@mlpretty by \m@ne%
+					\global\advance\blkLvl@mlpretty\m@ne%
 				\fi%
 				\ifnum\blkLvl@mlpretty=\blkLvlAtClDef@mlpretty%
 					\global\InClDef@mlpretty@false%
@@ -527,22 +527,24 @@
 % --- User macro for typesetting snippet placeholders ---
 \def\snippetPlaceholder#1%
 {%
-	{%
+	\bgroup
 		% opening delimiter
 		\placeholderDelimStyle@mlpretty%
 		\color{placeholderDelimColor@mlpretty}%
 		\placeholderOpDelim@mlpretty%
-	}{%
+	\egroup
+	\bgroup
 		% placeholder content
 		\placeholderContentStyle@mlpretty%
 		\color{placeholderContentColor@mlpretty}%
 		#1\itCorr@mlpretty%
-	}{%
+	\egroup
+	\bgroup
 		% closing delimiter
 		\placeholderDelimStyle@mlpretty%
 		\color{placeholderDelimColor@mlpretty}%
 		\placeholderClDelim@mlpretty%
-	}%
+	\egroup
 }
 
 
@@ -627,13 +629,30 @@
 	}%
 }
 
+
+% --- inline code ---
+
+\def\applyCurrentFontsize@mlpretty% overrides the fontsize of \lst@basicstyle
+{%
+  \let\lst@basicstyleSaved@mlpretty\lst@basicstyle%
+  \let\f@sizeSaved@mlpretty\f@size%
+  \let\baselineskipSaved@mlpretty\baselineskip%
+  \def\lst@basicstyle%
+  {%
+      \lst@basicstyleSaved@mlpretty%
+      \fontsize{\f@sizeSaved@mlpretty}{\baselineskipSaved@mlpretty}%
+      \selectfont%
+  }%
+}
+
 % inline Matlab code (no need for \atBeginCode and \atEndCode here)
 \newcommand\matlabprettyinline[2][]
 {%
-  {%
+  \bgroup
     \lstset{language=Matlab-pretty,#1}% preferable to lstinline[]{} which is an experimental feature of listings (as of v1.5b)
+    \applyCurrentFontsize@mlpretty%
     \lstinline?#2?% % question mark as delimiter because unlikely to be needed in inline code.
-  }%
+  \egroup
 }
 
 % ... but that's a mouthful, so...
@@ -642,6 +661,7 @@
   \def\lst@shortinlinedef%
   {%
     \lstset{language=Matlab-pretty,#1}%
+    \applyCurrentFontsize@mlpretty%
     \lstinline%
   }%
   \lstMakeShortInline@%
