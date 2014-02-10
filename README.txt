@@ -6,7 +6,7 @@ and keeps track of the context behind the scenes in order to highlight code as
 it appears in the Matlab editor. In this respect, it arguably does a much
 better job than the other available options (minted, listings, mcode, etc.) do.
 
-Code elements currently highlighted by the matlab-prettifier package include.
+The matlab-prettifier automatically highlights
 
     - context-insensitive keywords (e.g. for, while, break),
     - context-sensitive keywords (e.g. end, properties, events),
@@ -17,6 +17,7 @@ Code elements currently highlighted by the matlab-prettifier package include.
 
 Additional features include
 
+    - manual highlighting of variables with shared scope,
     - a macro for easily typesetting placeholders in code snippets,
     - automatic scaling of inline code according to its surroundings,
     - two predefined styles (black & white, and a MatlabLexer-like style)

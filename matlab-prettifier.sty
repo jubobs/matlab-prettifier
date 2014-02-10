@@ -1,5 +1,5 @@
 %% matlab-prettifier.sty
-%% Copyright 2014 Julien Cretel
+%% Copyright 2014 Julien Cretel <jubobs.matlab.prettifier at gmail.com>
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
@@ -11,7 +11,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 % 
-% The Current Maintainer of this work is Julien Cretel
+% The Current Maintainer of this work is Julien Cretel <jubobs.matlab.prettifier at gmail.com>
 %
 % This work currently consists of the file matlab-prettifier.sty.
 
@@ -42,7 +42,48 @@
 \RequirePackage{xcolor}
 \RequirePackage{listings}
 
-% --- Language definition (with a few dirty hacks) ---
+
+% ----------- key=value interface ---
+%TODO
+% Note: Using the literate key in conjunction with Matlab-pretty is
+% ill-advised, as it will clobber the package's literate replacements.
+% So we define a new key macro for allowing the user to specify additional
+% literate replacements without clobbering existing ones.
+%\def\addToLiterate@mlpretty#1%
+%{%
+%	\edef\lst@literate%
+%	{%
+%		\unexpanded\expandafter{\lst@literate} %
+%		\unexpanded{#1}%
+%	}%
+%}
+%\lst@Key{mlliterate}\relax{\addToLiterate@mlpretty{#1}}
+
+\lst@Key{mlkeywordstyle}\relax{\def\keywordStyle@mlpretty{#1}}
+\lst@Key{mllastelementstyle}\relax{\def\lastElemStyle@mlpretty{#1}}
+\lst@Key{mlstringstyle}\relax{\def\stringStyle@mlpretty{#1}}
+\lst@Key{mlcommentstyle}\relax{\def\commentStyle@mlpretty{#1}}
+\lst@Key{mltidle}\relax{\def\tilde@mlpretty{#1}}
+\lst@Key{mlsectionrulethickness}\relax%
+  {\def\sectionRuleThicknessRatio@mlpretty{#1}}
+\lst@Key{mlsectionrulecolor}\relax%
+  {\colorlet{sectionRuleColor@mlpretty}{#1}}
+\lst@Key{mlshowsectionrules}{false}[t]%
+  {\lstKV@SetIf{#1}\ifShowCellrules@mlpretty@}
+\lst@Key{mlsectiontitlestyle}\relax{\def\sectionTitleStyle@mlpretty{#1}}
+\lst@Key{mlsyscomstyle}\relax{\def\syscomStyle@mlpretty{#1}}
+
+% we create a new ``keyword'' class for variables with shared scope
+% by using the very convenient internal listings macro \lst@InstallKeywords
+\lst@InstallKeywords k{mlsharedvars}{mlsharedvarStyle@mlpretty}\relax%
+  {mlsharedvarStyle@mlpretty}{}ld
+
+% Here we define a sharedvarstyle key that is used by
+% \lst@sharedvarStyle@mlpretty internally.
+\lst@Key{mlsharedvarstyle}\relax{\def\sharedvarStyle@mlpretty{#1}}
+
+
+% --- Language definition ---
 \lstdefinelanguage{Matlab-pretty}
 {%
 	sensitive=true,% Matlab is case-sensitive.
@@ -127,6 +168,9 @@
 	%
 	% system commands
 	moredelim=[l][\syscomStyle@mlpretty]{!},
+	%
+	% variables with shared scope
+	mlsharedvarStyle@mlpretty = \processSharedVar@mlpretty,
 }%
 [% `listings' aspects needed
 	keywords,
@@ -135,19 +179,21 @@
 ]
 
 
-% --- ``State variables'' ---
-
+% --- State variables ---
+% Counters and switches used as ``state variables''
+% (used to keep track of context)
 \newcount\opBktCount@mlpretty 		 % running count of (, [ and, { 
 \newcount\clBktCount@mlpretty 		 % running count of ), ] and, }
 \newcount\blkLvl@mlpretty				   % block nesting level
 \newcount\blkLvlAtClDef@mlpretty	 % block nesting level at last classdef
 
-\newif\ifClosingEndKW@mlpretty@                    \ClosingEndKW@mlpretty@true
-\newif\ifInClDef@mlpretty@                              \InClDef@mlpretty@false
-\newif\ifInStr@mlpretty@                                  \InStr@mlpretty@false
-\newif\ifInLineCom@mlpretty@                          \InLineCom@mlpretty@false
-\newif\ifTooLateForSectionTitle@mlpretty@\TooLateForSectionTitle@mlpretty@false
-\newif\ifWithinSectionTitle@mlpretty@        \WithinSectionTitle@mlpretty@false
+\newif\ifClosingEndKW@mlpretty@            \ClosingEndKW@mlpretty@true
+\newif\ifInClDef@mlpretty@                      \InClDef@mlpretty@false
+\newif\ifInStr@mlpretty@                          \InStr@mlpretty@false
+\newif\ifInLineCom@mlpretty@                  \InLineCom@mlpretty@false
+\newif\ifTooLateForSectionTitle@mlpretty@%
+                                 \TooLateForSectionTitle@mlpretty@false
+\newif\ifWithinSectionTitle@mlpretty@\WithinSectionTitle@mlpretty@false
 
 
 % --- Macros for resetting counters and switches ---
@@ -173,14 +219,15 @@
 
 % --- internal style macros ---
 
-% Declarations for font family, series, shape, and size (but not color)
+% Font family, series, shape, and size (color is defined separately)
 \def\basicFontSpecs@mlpretty{\ttfamily\normalsize}
 \def\lastElemFontSpecs@mlpretty{}
 \def\keywordFontSpecs@mlpretty{}
 \def\stringFontSpecs@mlpretty{}
 \def\commentFontSpecs@mlpretty{}
-\def\syscomFontSpecs@mlpretty{}
 \def\sectionTitleFontSpecs@mlpretty{\commentFontSpecs@mlpretty\bfseries}
+\def\syscomFontSpecs@mlpretty{}
+\def\sharedvarFontSpecs@mlpretty{}
 
 % Matlab syntax highlighting colors
 \colorlet{textColor@mlpretty}{black}                      % text
@@ -189,14 +236,14 @@
 \definecolor{stringColor@mlpretty}{RGB}{160,032,240}      % strings
 \definecolor{commentColor@mlpretty}{RGB}{034,139,034}     % comments
 \definecolor{sectionTitleColor@mlpretty}{RGB}{034,139,034}% section titles
-\colorlet{sectionTitleRuleColor@mlpretty}{black!15}       % code-section rule
+\colorlet{sectionRuleColor@mlpretty}{black!15}       % code-section rule
 \definecolor{syscomColor@mlpretty}{RGB}{178,140,000}      % system commands
+\definecolor{sharedvarColor@mlpretty}{RGB}{000,163,163}   % shared scope
 
-% Additional colors (currently unused by matlab-prettifier)
+% Additional colors (currently not used by matlab-prettifier)
 \colorlet{bgColor@mlpretty}{white}		                     % background color
 \definecolor{untermStringColor@mlpretty}{RGB}{178,000,000}% unterm. strings
 \definecolor{syntaxErrorColor@mlpretty}{RGB}{255,000,000} % Syntax errors
-\definecolor{sharedScopeColor@mlpretty}{RGB}{000,163,163} % Global variables
 
 \def\basicStyle@mlpretty%
 {%
@@ -239,6 +286,12 @@
 {%
   \syscomFontSpecs@mlpretty%
   \color{syscomColor@mlpretty}%
+}
+
+\def\sharedvarStyle@mlpretty%
+{%
+  \sharedvarFontSpecs@mlpretty%
+  \color{sharedvarColor@mlpretty}%
 }
 
 
@@ -374,9 +427,9 @@
 % --- macro for processing section title ---
 \newlength\emHeight@mlpretty
 \newlength\jayDepth@mlpretty
-\newlength\sectionTitleRuleOffset@mlpretty
-\newlength\sectionTitleRuleThickness@mlpretty
-\def\sectionTitleRuleThicknessRatio@mlpretty{.05}
+\newlength\sectionRuleOffset@mlpretty
+\newlength\sectionRuleThickness@mlpretty
+\def\sectionRuleThicknessRatio@mlpretty{.05}
 
 \def\processSectionTitle@mlpretty%
 {%
@@ -391,20 +444,20 @@
 	      % calculate the vertical offset for the rule
 	      \setlength\emHeight@mlpretty{\fontcharht\font`M}%
         \setlength\jayDepth@mlpretty{\fontchardp\font`j}%
-        \setlength\sectionTitleRuleOffset@mlpretty%
+        \setlength\sectionRuleOffset@mlpretty%
 				{%
 				  \dimexpr.5\emHeight@mlpretty+.5\baselineskip-.5\jayDepth@mlpretty\relax%
 				}%
-				\setlength\sectionTitleRuleThickness@mlpretty%
+				\setlength\sectionRuleThickness@mlpretty%
 				{%
-				  \sectionTitleRuleThicknessRatio@mlpretty\baselineskip%
+				  \sectionRuleThicknessRatio@mlpretty\baselineskip%
         }%
-			  \color{sectionTitleRuleColor@mlpretty}%
+			  \color{sectionRuleColor@mlpretty}%
 			  \ifShowCellrules@mlpretty@%
 				  \makebox[0em][l]%
 				  {%
-				    \raisebox{\sectionTitleRuleOffset@mlpretty}[0pt][0pt]%
-				      {\rule{\lst@linewidth}{\sectionTitleRuleThickness@mlpretty}}%
+				    \raisebox{\sectionRuleOffset@mlpretty}[0pt][0pt]%
+				      {\rule{\lst@linewidth}{\sectionRuleThickness@mlpretty}}%
 				  }%
 				\fi%
 	    \egroup%
@@ -412,6 +465,15 @@
 	  \fi%
 	\fi%
 }
+
+\def\processSharedVar@mlpretty%
+{%
+  \ifWithinSectionTitle@mlpretty@%
+  \else%
+      \sharedvarStyle@mlpretty%
+  \fi%
+}
+
 
 % Patch to make literate replacement of ) work as expected
 % when breaklines is set to true.
@@ -548,38 +610,6 @@
 }
 
 
-% ----------- key=value interface ---
-
-% Note: Using the literate key in conjunction with Matlab-pretty is
-% ill-advised, as it will clobber the package's literate replacements.
-% So we define a new key macro for allowing the user to specify additional
-% literate replacements without clobbering existing ones.
-\def\addToLiterate@mlpretty#1%
-{%
-	\edef\lst@literate%
-	{%
-		\unexpanded\expandafter{\lst@literate} %
-		\unexpanded{#1}%
-	}%
-}
-
-\lst@Key{mlbasicstyle}\relax{\def\basicStyle@mlpretty{#1}}
-\lst@Key{mllastelementstyle}\relax{\def\lastElemStyle@mlpretty{#1}}
-\lst@Key{mlkeywordstyle}\relax{\def\keywordStyle@mlpretty{#1}}
-\lst@Key{mlstringstyle}\relax{\def\stringStyle@mlpretty{#1}}
-\lst@Key{mlcommentstyle}\relax{\def\commentStyle@mlpretty{#1}}
-\lst@Key{mlsyscomstyle}\relax{\def\syscomStyle@mlpretty{#1}}
-\lst@Key{mltidle}\relax{\def\tilde@mlpretty{#1}}
-\lst@Key{mlliterate}\relax{\addToLiterate@mlpretty{#1}}
-\lst@Key{mlrulethickness}\relax%
-  {\def\sectionTitleRuleThicknessRatio@mlpretty{#1}}
-\lst@Key{mlrulecolor}\relax%
-  {\colorlet{sectionTitleRuleColor@mlpretty}{#1}}
-\lst@Key{mlshowrules}{false}[t]%
-  {\lstKV@SetIf{#1}\ifShowCellrules@mlpretty@}
-\lst@Key{mlsectiontitlestyle}\relax{\def\sectionTitleStyle@mlpretty{#1}}
-
-
 % --- matlab-prettifier listings environment and macro ---
 
 \newcommand\atBeginCode@mlpretty[1][]%
@@ -672,6 +702,14 @@
 
 % --- built-in matlab-prettifier styles (for users not necessarily familiar with listings) ---
 
+% Quick style, for those who don't want to bother with customization
+\lstdefinestyle{Matlab-easy-style}
+{
+  language = Matlab-pretty,
+  frame    = single,
+  numbers  = left,
+}
+
 % Black & white style
 \lstdefinestyle{Matlab-bw-style}
 {
@@ -681,6 +719,9 @@
   mlstringstyle       = \color[gray]{.5}                  ,
   mlsyscomstyle       = \color[gray]{.25}                 ,
   mlsectiontitlestyle = \color[gray]{.75}\bfseries\itshape,
+  mlsharedvarstyle    = \color[gray]{0}                   ,
+  frame               = single,
+  numbers             = left,
 }
 
 % Style very similar to the Pygments lexer called `MatlabLexer',
@@ -696,6 +737,9 @@
   mlstringstyle       = \color[RGB]{186,034,034}                 ,
   mlsyscomstyle       = \color[RGB]{000,127,000}                 ,
   mlsectiontitlestyle = \color[RGB]{063,127,127}         \itshape,
+  mlsharedvarstyle    = \color[RGB]{127,127,063}                 ,
+  frame               = single,
+  numbers             = left,
 }
 %TODO % digit color is [RGB]{102,102,102}
 
