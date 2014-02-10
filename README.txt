@@ -18,9 +18,9 @@ Code elements currently highlighted by the matlab-prettifier package include.
 Additional features include
 
     - a macro for easily typesetting placeholders in code snippets,
-    - automatical scaling of inline code according to its surroundings,
+    - automatic scaling of inline code according to its surroundings,
     - two predefined styles (black & white, and a MatlabLexer-like style)
     - compatibility with XeLaTeX and LuaLaTeX.
 
 I plan to submit matlab-prettifier to CTAN in the near future. In the meantime, 
-  you can simply download it from the Bitbucket repo.
+you can simply download it from the Bitbucket repo.

@@ -683,8 +683,10 @@
   mlsectiontitlestyle = \color[gray]{.75}\bfseries\itshape,
 }
 
-% Style bery similar to the Pygments lexer called `MatlabLexer'
-% see http://pygments.org/docs/lexers/
+% Style very similar to the Pygments lexer called `MatlabLexer',
+% (see http://pygments.org/docs/lexers/). This style can be used
+% to typeset Matlab code in a way similar to how minted, verbments,
+% and pythontex do it.
 \lstdefinestyle{Matlab-pygsty-style}
 {
   language            = Matlab-pretty,
@@ -693,6 +695,7 @@
   mlstringstyle       = \color[RGB]{186,034,034}                 ,
   mlsyscomstyle       = \color[RGB]{000,127,000}                 ,
   mlsectiontitlestyle = \color[RGB]{063,127,127}         \itshape,
+  mllastelementstyle  = \color[RGB]{127,063,127}\bfseries        ,
 }
 %TODO % digit color is [RGB]{102,102,102}
 
