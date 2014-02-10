@@ -49,7 +49,7 @@
 	upquote=true,
 	showstringspaces=false,
 	rulecolor=\color{black}, % prevents listings bug (nonuniform rule color)
-	alsoletter={0123456789_},% to allow those chars in identifiers
+%	alsoletter={0123456789_},% to allow those chars in identifiers %TODO 
 	%
 	basicstyle=\basicStyle@mlpretty,
 	%
@@ -119,9 +119,9 @@
 	%
 	% comments
 	morecomment=[l]\%,                                       % to-end-of-line
-	morecomment=[s]{\%\{\^^M}{\%\}\^^M},                     % block
+	morecomment=[n]{\%\{\^^M}{\%\}\^^M},                     % block
 	moredelim=**[il][\processDotDotDot@mlpretty]{...},       % line continuation
-	moredelim=**[l][\processSectionTitle@mlpretty]{\%\%},% code section
+	moredelim=**[l][\processSectionTitle@mlpretty]{\%\%},    % code section
 	moredelim=**[l][\processSectionTitle@mlpretty]{\%\%\ },  % code section
   commentstyle=\commentStyle@mlpretty,
 	%
@@ -564,20 +564,20 @@
 }
 
 \lst@Key{mlbasicstyle}\relax{\def\basicStyle@mlpretty{#1}}
-\lst@Key{lastelementstyle}\relax{\def\lastElemStyle@mlpretty{#1}}
+\lst@Key{mllastelementstyle}\relax{\def\lastElemStyle@mlpretty{#1}}
 \lst@Key{mlkeywordstyle}\relax{\def\keywordStyle@mlpretty{#1}}
 \lst@Key{mlstringstyle}\relax{\def\stringStyle@mlpretty{#1}}
 \lst@Key{mlcommentstyle}\relax{\def\commentStyle@mlpretty{#1}}
 \lst@Key{mlsyscomstyle}\relax{\def\syscomStyle@mlpretty{#1}}
 \lst@Key{mltidle}\relax{\def\tilde@mlpretty{#1}}
 \lst@Key{mlliterate}\relax{\addToLiterate@mlpretty{#1}}
-\lst@Key{codesectionrulethickness}\relax%
+\lst@Key{mlrulethickness}\relax%
   {\def\sectionTitleRuleThicknessRatio@mlpretty{#1}}
-\lst@Key{codesectionrulecolor}\relax%
+\lst@Key{mlrulecolor}\relax%
   {\colorlet{sectionTitleRuleColor@mlpretty}{#1}}
-\lst@Key{showcodesectionrules}{false}[t]%
+\lst@Key{mlshowrules}{false}[t]%
   {\lstKV@SetIf{#1}\ifShowCellrules@mlpretty@}
-\lst@Key{codesectiontitlestyle}\relax{\def\sectionTitleStyle@mlpretty{#1}}
+\lst@Key{mlsectiontitlestyle}\relax{\def\sectionTitleStyle@mlpretty{#1}}
 
 
 % --- matlab-prettifier listings environment and macro ---
@@ -668,5 +668,32 @@
 }%
 
 \let\DeleteCharForMatlabPrettyInline\lstDeleteShortInline
+
+
+% --- built-in matlab-prettifier styles (for users not necessarily familiar with listings) ---
+
+% Black & white style
+\lstdefinestyle{Matlab-bw-style}
+{
+  language            = Matlab-pretty,
+  mlkeywordstyle      = \color[gray]{0}  \bfseries        ,
+  mlcommentstyle      = \color[gray]{.75}         \itshape,
+  mlstringstyle       = \color[gray]{.5}                  ,
+  mlsyscomstyle       = \color[gray]{.25}                 ,
+  mlsectiontitlestyle = \color[gray]{.75}\bfseries\itshape,
+}
+
+% Style bery similar to the Pygments lexer called `MatlabLexer'
+% see http://pygments.org/docs/lexers/
+\lstdefinestyle{Matlab-pygsty-style}
+{
+  language            = Matlab-pretty,
+  mlkeywordstyle      = \color[RGB]{000,127,000}\bfseries        ,
+  mlcommentstyle      = \color[RGB]{063,127,127}         \itshape,
+  mlstringstyle       = \color[RGB]{186,034,034}                 ,
+  mlsyscomstyle       = \color[RGB]{000,127,000}                 ,
+  mlsectiontitlestyle = \color[RGB]{063,127,127}         \itshape,
+}
+%TODO % digit color is [RGB]{102,102,102}
 
 \endinput

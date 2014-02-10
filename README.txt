@@ -15,11 +15,12 @@ Code elements currently highlighted by the matlab-prettifier package include.
     - line-continuation tokens (...),
     - code-section titles.
 
-In addition, the matlab-prettifier package
+Additional features include
 
-    - defines a macro for easily typesetting placeholders in code snippets,
-    - automatically scales inline code to the size of its surroundings,
-    - doesn't support Unicode, but is compatible with XeLaTeX and LuaLaTeX.
+    - a macro for easily typesetting placeholders in code snippets,
+    - automatical scaling of inline code according to its surroundings,
+    - two predefined styles (black & white, and a MatlabLexer-like style)
+    - compatibility with XeLaTeX and LuaLaTeX.
 
 I plan to submit matlab-prettifier to CTAN in the near future. In the meantime, 
   you can simply download it from the Bitbucket repo.
