@@ -21,6 +21,11 @@ Additional features include
     - automatic scaling of inline code according to its surroundings,
     - two predefined styles (black & white, and a MatlabLexer-like style)
     - compatibility with XeLaTeX and LuaLaTeX.
+    - partial support of Unicode, if used in conjunction with the listingsutf8
+package.
 
-I plan to submit matlab-prettifier to CTAN in the near future. In the meantime, 
-you can simply download it from the Bitbucket repo.
+I plan to submit the matlab-prettifier package (complete with documentation) to
+CTAN (http://www.ctan.org) in the very near future. If my submission is
+successful, matlab-prettifier should be available directly through your
+favourite TeX distribution. In the meantime, you can simply download it from
+my Bitbucket repository (https://bitbucket.org/Jubobs/matlab-prettifier/src).
