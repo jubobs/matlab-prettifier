@@ -17,7 +17,7 @@
 
 % --- Package identification ---
 \def\pkgName@mlpretty{matlab-prettifier}
-\def\pkgDate@mlpretty{2014/02/05}
+\def\pkgDate@mlpretty{2014/02/11}
 \def\pkgVer@mlpretty{.alpha}
 \def\pkgDesc@mlpretty{LaTeX package for typesetting Matlab listings}
 \NeedsTeXFormat{LaTeX2e}
@@ -562,72 +562,24 @@
 \lst@AddToHook{PostOutput}{\addedToPostOutput@mlpretty}
 
 
-% --- Placeholders ---
-
-% Placeholder colors
-\definecolor{placeholderDelimColor@mlpretty}{RGB}{209,0,86}
-\definecolor{placeholderContentColor@mlpretty}{RGB}{209,0,86}
-
-% Macros for placeholder delimiters
-\def\placeholderOpDelim@mlpretty{\textlangle}
-\def\placeholderClDelim@mlpretty{\textrangle}
-\def\placeholderDelimStyle@mlpretty{\normalfont\upshape}
-\def\placeholderContentStyle@mlpretty{\normalfont\itshape}
-
-% Macro for conditional italic correction
-\def\itCorr@mlpretty%
-{%
-	\ifdefstring{\f@shape}{sl}
-		{\/}
-		{%
-			\ifdefstring{\f@shape}{it}
-			{\/}
-			{}%
-		}%
-}
-
-% --- User macro for typesetting snippet placeholders ---
-\def\snippetPlaceholder#1%
-{%
-	\bgroup
-		% opening delimiter
-		\placeholderDelimStyle@mlpretty%
-		\color{placeholderDelimColor@mlpretty}%
-		\placeholderOpDelim@mlpretty%
-	\egroup
-	\bgroup
-		% placeholder content
-		\placeholderContentStyle@mlpretty%
-		\color{placeholderContentColor@mlpretty}%
-		#1\itCorr@mlpretty%
-	\egroup
-	\bgroup
-		% closing delimiter
-		\placeholderDelimStyle@mlpretty%
-		\color{placeholderDelimColor@mlpretty}%
-		\placeholderClDelim@mlpretty%
-	\egroup
-}
-
-
 % --- matlab-prettifier listings environment and macro ---
 
 \newcommand\atBeginCode@mlpretty[1][]%
 {%
   \patchSelectCharTable@mlpretty%
-	\def\addedToEOL@mlpretty{\@ddedToEOL@mlpretty}% renew
-	\def\addedToEndGroup@mlpretty{\@ddedToEndGroup@mlpretty}% renew
-	\def\addedToEveryLine@mlpretty{\@ddedToEveryLine@mlpretty}% renew
-	\def\addedToPostOutput@mlpretty{\@ddedToPostOutput@mlpretty}% renew
+	\def\addedToEOL@mlpretty{\@ddedToEOL@mlpretty}%               (renewed)
+	\def\addedToEndGroup@mlpretty{\@ddedToEndGroup@mlpretty}%     (renewed)
+	\def\addedToEveryLine@mlpretty{\@ddedToEveryLine@mlpretty}%   (renewed)
+	\def\addedToPostOutput@mlpretty{\@ddedToPostOutput@mlpretty}% (renewed)
 	\lstset{language=Matlab-pretty,#1}%
 }
 
 \def\atEndCode@mlpretty%
 {%
-	\def\addedToEOL@mlpretty{}% renew
-	\def\addedToEndGroup@mlpretty{}% renew
-	\def\addedToEveryLine@mlpretty{}% renew
-	\def\addedToPostOutput@mlpretty{}% renew
+	\def\addedToEOL@mlpretty{}%         (renewed)
+	\def\addedToEndGroup@mlpretty{}%    (renewed)
+	\def\addedToEveryLine@mlpretty{}%   (renewed)
+	\def\addedToPostOutput@mlpretty{}%  (renewed)
 	\resetEndKW@mlpretty%
 	\resetClDef@mlpretty%
 	\unpatchSelectCharTable@mlpretty%
@@ -742,5 +694,54 @@
   numbers             = left,
 }
 %TODO % digit color is [RGB]{102,102,102}
+
+
+% --- Macros for placeholders ---
+
+% Placeholder colors
+\definecolor{placeholderDelimColor@mlpretty}{RGB}{209,0,86}
+\definecolor{placeholderContentColor@mlpretty}{RGB}{209,0,86}
+
+% Macros for placeholder delimiters
+\def\placeholderOpDelim@mlpretty{\textlangle}
+\def\placeholderClDelim@mlpretty{\textrangle}
+\def\placeholderDelimStyle@mlpretty{\normalfont\upshape}
+\def\placeholderContentStyle@mlpretty{\normalfont\itshape}
+
+% Macro for conditional italic correction
+\def\itCorr@mlpretty%
+{%
+	\ifdefstring{\f@shape}{sl}
+		{\/}
+		{%
+			\ifdefstring{\f@shape}{it}
+			{\/}
+			{}%
+		}%
+}
+
+% --- User macro for typesetting snippet placeholders ---
+\def\snippetPlaceholder#1%
+{%
+	\bgroup
+		% opening delimiter
+		\placeholderDelimStyle@mlpretty%
+		\color{placeholderDelimColor@mlpretty}%
+		\placeholderOpDelim@mlpretty%
+	\egroup
+	\bgroup
+		% placeholder content
+		\placeholderContentStyle@mlpretty%
+		\color{placeholderContentColor@mlpretty}%
+		#1\itCorr@mlpretty%
+	\egroup
+	\bgroup
+		% closing delimiter
+		\placeholderDelimStyle@mlpretty%
+		\color{placeholderDelimColor@mlpretty}%
+		\placeholderClDelim@mlpretty%
+	\egroup
+}
+
 
 \endinput
