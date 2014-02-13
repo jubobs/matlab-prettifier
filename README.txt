@@ -28,5 +28,6 @@ package.
 I plan to submit the matlab-prettifier package (complete with documentation) to
 CTAN (http://www.ctan.org) in the very near future. If my submission is
 successful, matlab-prettifier should be available directly through your
-favourite TeX distribution. In the meantime, you can simply download it from
-my Bitbucket repository (https://bitbucket.org/Jubobs/matlab-prettifier/src).
+favourite TeX distribution. In the meantime, you can simply download the alpha
+version from my Bitbucket repository
+(https://bitbucket.org/Jubobs/matlab-prettifier/src).

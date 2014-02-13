@@ -240,10 +240,13 @@
 \definecolor{syscomColor@mlpretty}{RGB}{178,140,000}      % system commands
 \definecolor{sharedvarColor@mlpretty}{RGB}{000,163,163}   % shared scope
 
-% Additional colors (currently not used by matlab-prettifier)
+% More Matlab colors (currently not used by matlab-prettifier)
 \colorlet{bgColor@mlpretty}{white}		                     % background color
 \definecolor{untermStringColor@mlpretty}{RGB}{178,000,000}% unterm. strings
 \definecolor{syntaxErrorColor@mlpretty}{RGB}{255,000,000} % Syntax errors
+
+% Additional custom colors
+\colorlet{numbersColor@matlabpretty}{gray}
 
 \def\basicStyle@mlpretty%
 {%
@@ -605,8 +608,8 @@
 \newcommand\inputmatlabpretty[2][]%
 {%
 	{%
-		\atBeginCode@mlpretty[#1]%
-		\lstinputlisting{#2}%
+		\atBeginCode@mlpretty%
+		\lstinputlisting[#1]{#2}%
 		\atEndCode@mlpretty%
 	}%
 }
