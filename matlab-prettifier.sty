@@ -84,13 +84,14 @@
 
 
 % --- Language definition ---
+\def\language@mlpretty{matlab-pretty} % for test in hooks (listings makes language names lowercase internally)
 \lstdefinelanguage{Matlab-pretty}
 {%
+  MoreSelectCharTable=\SelectCharTable@mlpretty,
 	sensitive=true,% Matlab is case-sensitive.
 	upquote=true,
 	showstringspaces=false,
 	rulecolor=\color{black}, % prevents listings bug (nonuniform rule color)
-%	alsoletter={0123456789_},% to allow those chars in identifiers %TODO 
 	%
 	basicstyle=\basicStyle@mlpretty,
 	%
@@ -142,7 +143,6 @@
 	morekeywords=[262]{end},
 	keywordstyle=[262]\processEndKW@mlpretty,
 	%
-	MoreSelectCharTable=\SelectCharTable@mlpretty,
 	literate=*{~}{{\newTilde@mlpretty}}1,
 	%
 	% strings
@@ -169,17 +169,6 @@
 	comments,
 ]
 
-
-% Macro for SelectCharTable key
-\newcommand\SelectCharTable@mlpretty%
-{%
-  \processOpenBracket@mlpretty{40}{\roundBktOp@mlpretty}%
-  \processOpenBracket@mlpretty{91}{\squareBktOp@mlpretty}%
-  \processOpenBracket@mlpretty{123}{\curlyBktOp@mlpretty}%
-  \processCloseBracket@mlpretty{41}{\roundBktCl@mlpretty}%
-  \processCloseBracket@mlpretty{93}{\squareBktCl@mlpretty}%
-  \processCloseBracket@mlpretty{125}{\curlyBktCl@mlpretty}%
-}
 
 
 % --- State variables ---
@@ -208,7 +197,7 @@
 	\resetBracketCount@mlpretty%
 }
 
-\newcommand\resetClDef@mlpretty%
+\newcommand\resetClassdefKW@mlpretty%
 {%
 	\global\InClDef@mlpretty@false%
 	\global\blkLvl@mlpretty=0%
@@ -298,6 +287,50 @@
 }
 
 
+% Macro for SelectCharTable key
+\newcommand\SelectCharTable@mlpretty%
+{%
+  \processOpenBracket@mlpretty{40}{\roundBktOp@mlpretty}%
+  \processOpenBracket@mlpretty{91}{\squareBktOp@mlpretty}%
+  \processOpenBracket@mlpretty{123}{\curlyBktOp@mlpretty}%
+  \processCloseBracket@mlpretty{41}{\roundBktCl@mlpretty}%
+  \processCloseBracket@mlpretty{93}{\squareBktCl@mlpretty}%
+  \processCloseBracket@mlpretty{125}{\curlyBktCl@mlpretty}%
+}
+
+
+% --- macros for processing opening and closing brackets ---
+\newcommand\processOpenBracket@mlpretty[2]%
+{%
+  \lst@DefSaveDef{#1}#2%
+  {%
+    #2%
+    \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
+      \global\ClosingEndKW@mlpretty@false%
+      \global\advance\netBracketCount@mlpretty by \@ne%
+    \fi%
+  }%  
+}
+
+\newcommand\processCloseBracket@mlpretty[2]%
+{%
+  \lst@DefSaveDef{#1}#2%
+  {%
+    #2%
+    \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
+      \ifClosingEndKW@mlpretty@% %if end is already a blue keyword, we can reset the count
+        \resetBracketCount@mlpretty%
+      \else%
+        \global\advance\netBracketCount@mlpretty by \m@ne%
+        \ifnum\netBracketCount@mlpretty>0%
+			  \else%
+				  \global\ClosingEndKW@mlpretty@true%
+			  \fi%
+			\fi%
+    \fi%
+  }%  
+}
+
 % --- macros for processing keywords ---
 \newcommand\processOpRegKW@mlpretty%
 {%
@@ -318,14 +351,8 @@
   \fi%
 }
 
-\newcommand\processStdaKW@mlpretty%
-{%
-  \ifWithinSectionTitle@mlpretty@%
-  \else%
-		\resetEndKW@mlpretty%
-		\keywordStyle@mlpretty%
-	\fi%
-}
+% No difference between standalone keywords and middle keywords
+\newcommand\processStdaKW@mlpretty\processMidKW@mlpretty
 
 \newcommand\processClDefKW@mlpretty%
 {%
@@ -372,40 +399,6 @@
 	\fi%
 }
 
-
-% --- macros for processing opening and closing brackets ---
-%TODO new
-\newcommand\processOpenBracket@mlpretty[2]%
-{%
-  \lst@DefSaveDef{#1}#2%
-  {%
-    \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
-      \global\ClosingEndKW@mlpretty@false%
-      \global\advance\netBracketCount@mlpretty by \@ne%
-    \fi%
-    #2%
-  }%  
-}
-
-%TODO new
-\newcommand\processCloseBracket@mlpretty[2]%
-{%
-  \lst@DefSaveDef{#1}#2%
-  {%
-    \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
-      \ifClosingEndKW@mlpretty@% %if end is already a blue keyword, we can reset the count
-        \resetBracketCount@mlpretty%
-      \else%
-        \global\advance\netBracketCount@mlpretty by \m@ne%
-        \ifnum\netBracketCount@mlpretty>0%
-			  \else%
-				  \global\ClosingEndKW@mlpretty@true%
-			  \fi%
-			\fi%
-    \fi%
-    #2%
-  }%  
-}
 
 % --- strings ---
 \newcommand\processString@mlpretty%
@@ -501,6 +494,7 @@
   \global\TooLateForSectionTitle@mlpretty@true%
 }
 
+
 % --- macros for handling unterminated string literal ---
 \newcommand\addedToEOLHookUntermStr@mlpretty%
 {%
@@ -516,7 +510,6 @@
 		\global\InStr@mlpretty@false%
 	\fi%
 }
-
 
 \newcommand\addedToEOLHookDotDotDot@mlpretty%
 {%
@@ -559,102 +552,37 @@
 }
 \lst@AddToHook{PostOutput}{\addedToPostOutput@mlpretty}
 
-
-% --- matlab-prettifier listings environment and macro ---
-
-\newcommand\atBeginCode@mlpretty[1][]%
+% PreInit Hook
+\newcommand\addedToPreInitHook%
 {%
-	\renewcommand\addedToEOL@mlpretty{\@ddedToEOL@mlpretty}%
-	\renewcommand\addedToEndGroup@mlpretty{\@ddedToEndGroup@mlpretty}%
-	\renewcommand\addedToEveryLine@mlpretty{\@ddedToEveryLine@mlpretty}%
-	\renewcommand\addedToPostOutput@mlpretty{\@ddedToPostOutput@mlpretty}%
-	\lstset{language=Matlab-pretty,#1}%
+  \ifx\lst@language\language@mlpretty%
+		\renewcommand\addedToEOL@mlpretty\@ddedToEOL@mlpretty%
+		\renewcommand\addedToEndGroup@mlpretty\@ddedToEndGroup@mlpretty%
+		\renewcommand\addedToEveryLine@mlpretty\@ddedToEveryLine@mlpretty%
+		\renewcommand\addedToPostOutput@mlpretty\@ddedToPostOutput@mlpretty%
+  \fi%
 }
+\lst@AddToHook{PreInit}{\addedToPreInitHook}
 
-\newcommand\atEndCode@mlpretty%
+% DeInit hook
+\newcommand\addedToDeInitHook%
 {%
-	\renewcommand\addedToEOL@mlpretty{}%
-	\renewcommand\addedToEndGroup@mlpretty{}%
-	\renewcommand\addedToEveryLine@mlpretty{}%
-	\renewcommand\addedToPostOutput@mlpretty{}%
-	\resetEndKW@mlpretty%
-	\resetClDef@mlpretty%
+  \ifx\lst@language\language@mlpretty%
+		\renewcommand\addedToEOL@mlpretty{}%
+		\renewcommand\addedToEndGroup@mlpretty{}%
+		\renewcommand\addedToEveryLine@mlpretty{}%
+		\renewcommand\addedToPostOutput@mlpretty{}%
+		\resetEndKW@mlpretty%
+		\resetClassdefKW@mlpretty%
+  \fi%
 }
-
-% environment
-\lstnewenvironment{matlabpretty}[1][]%
-	{\atBeginCode@mlpretty[#1]}
-	{\atEndCode@mlpretty}
-	
-% macro for creating custom matlab-prettifier environments
-% Note: simply using \lstdefineenvironment wouldn't do, here,
-% because matlab-prettifier must apply/undo patches at the
-% beginning/end of the environment.
-\newcommand\newmatlabprettyenvironment[2][]
-{%
-	\lstnewenvironment{#2}[1][]%
-		{\atBeginCode@mlpretty[#1,##1]}%
-		{\atEndCode@mlpretty}%
-}
-
-% Macro for source files.
-% Note: here we pass the options to \lstinputlisting instead of
-% \atBeginCode@mlpretty, otherwise options such as `firstline',
-% `firstnumber', etc. have no effect
-\newcommand\inputmatlabpretty[2][]%
-{%
-	{%
-		\atBeginCode@mlpretty%
-		\lstinputlisting[#1]{#2}%
-		\atEndCode@mlpretty%
-	}%
-}
+\lst@AddToHook{DeInit}{\addedToDeInitHook}
 
 
-% --- inline code ---
+% --- built-in matlab-prettifier styles ---
 
-\newcommand\applyCurrentFontsize@mlpretty% overrides the fontsize of \lst@basicstyle
-{%
-  \let\lst@basicstyleSaved@mlpretty\lst@basicstyle%
-  \let\f@sizeSaved@mlpretty\f@size%
-  \let\baselineskipSaved@mlpretty\baselineskip%
-  \renewcommand\lst@basicstyle%
-  {%
-      \lst@basicstyleSaved@mlpretty%
-      \fontsize{\f@sizeSaved@mlpretty}{\baselineskipSaved@mlpretty}%
-      \selectfont%
-  }%
-}
-
-% inline Matlab code (no need for \atBeginCode and \atEndCode here)
-\newcommand\matlabprettyinline[2][]
-{%
-  \bgroup%
-    \lstset{language=Matlab-pretty,#1}% preferable to lstinline[]{} which is an experimental feature of listings (as of v1.5b)
-    \applyCurrentFontsize@mlpretty%
-    \lstinline?#2?% % question mark as delimiter because unlikely to be needed in inline code.
-  \egroup%
-}
-
-% ... but that's a mouthful, so...
-\newcommand\DefineCharForMatlabPrettyInline[1][]%
-{%
-  \newcommand\lst@shortinlinedef%
-  {%
-    \lstset{language=Matlab-pretty,#1}%
-    \applyCurrentFontsize@mlpretty%
-    \lstinline%
-  }%
-  \lstMakeShortInline@%
-}%
-
-\let\DeleteCharForMatlabPrettyInline\lstDeleteShortInline
-
-
-% --- built-in matlab-prettifier styles (for users not necessarily familiar with listings) ---
-
-% Quick style, for those who don't want to bother with customization
-\lstdefinestyle{Matlab-easy-style}
+% Quick \& easy style, for those who don't want to bother with customization
+\lstdefinestyle{Matlab-standard-style}
 {
   language   = Matlab-pretty,
   frame      = single,
@@ -690,7 +618,7 @@
   mlstringstyle       = \color[RGB]{186,034,034}                 ,
   mlsyscomstyle       = \color[RGB]{000,127,000}                 ,
   mlsectiontitlestyle = \color[RGB]{063,127,127}         \itshape,
-  mlsharedvarstyle    = \color[RGB]{127,127,063}                 ,
+  mlsharedvarstyle    = \color[RGB]{034,034,186}                 ,
   frame               = single,
   numbers             = left,
   breaklines          = true,
@@ -745,5 +673,43 @@
 	\egroup
 }
 
+
+% --- macros for inline code (scaled to the surrounding font size) ---
+
+\newcommand\applyCurrentFontsize@mlpretty% overrides the fontsize of \lst@basicstyle
+{%
+  \let\lst@basicstyleSaved@mlpretty\lst@basicstyle%
+  \let\f@sizeSaved@mlpretty\f@size%
+  \let\baselineskipSaved@mlpretty\baselineskip%
+  \renewcommand\lst@basicstyle%
+  {%
+      \lst@basicstyleSaved@mlpretty%
+      \fontsize{\f@sizeSaved@mlpretty}{\baselineskipSaved@mlpretty}%
+      \selectfont%
+  }%
+}
+% inline Matlab code (no need for \atBeginCode and \atEndCode here)
+\newcommand\InlineMatlabPretty[2][]
+{%
+  \bgroup%
+    \lstset{language=Matlab-pretty,#1}% preferable to lstinline[]{} which is an experimental feature of listings (as of v1.5b)
+    \applyCurrentFontsize@mlpretty%
+    \lstinline?#2?% % question mark as delimiter because unlikely to be needed in inline code.
+  \egroup%
+}
+
+% ... but that's a mouthful, so...
+\newcommand\DefineCharForInlineMatlabPretty[1][]%
+{%
+  \newcommand\lst@shortinlinedef%
+  {%
+    \lstset{language=Matlab-pretty,#1}%
+    \applyCurrentFontsize@mlpretty%
+    \lstinline%
+  }%
+  \lstMakeShortInline@%
+}%
+
+\let\DeleteCharForMatlabPrettyInline\lstDeleteShortInline
 
 \endinput
