@@ -17,10 +17,13 @@ The matlab-prettifier automatically highlights
 
 Additional features include
 
+    - seamless compatibility with `listings`' `lstlisting` environment and
+`\lstinputenvironment` macro, 
     - manual highlighting of variables with shared scope,
     - a macro for easily typesetting placeholders in code snippets,
     - automatic scaling of inline code according to its surroundings,
-    - two predefined styles (black & white, and a MatlabLexer-like style)
+    - three predefined styles (standard, black & white, and a MatlabLexer-like
+style)
     - compatibility with XeLaTeX and LuaLaTeX.
     - partial support of Unicode, if used in conjunction with the listingsutf8
 package.
