@@ -19,12 +19,11 @@
 \newcommand\pkgName@mlpretty{matlab-prettifier}
 \newcommand\pkgDate@mlpretty{2014/02/15}
 \newcommand\pkgVer@mlpretty{.alpha}
-\newcommand\pkgDesc@mlpretty{LaTeX package for typesetting Matlab listings}
+\newcommand\pkgDesc@mlpretty%
+  {LaTeX package for typesetting prettified Matlab listings}
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
-\ProvidesClass{\pkgName@mlpretty}
-[%
-	\pkgDate@mlpretty{}	v\pkgVer@mlpretty{} \pkgDesc@mlpretty%
-]
+\ProvidesClass{\pkgName@mlpretty}%
+  [\pkgDate@mlpretty{}	v\pkgVer@mlpretty{} \pkgDesc@mlpretty]
 
 % --- Discard any option passed to the package ---
 \DeclareOption*%
@@ -63,7 +62,7 @@
 \lst@Key{mllastelementstyle}\relax{\renewcommand\lastElemStyle@mlpretty{#1}}
 \lst@Key{mlstringstyle}\relax{\renewcommand\stringStyle@mlpretty{#1}}
 \lst@Key{mlcommentstyle}\relax{\renewcommand\commentStyle@mlpretty{#1}}
-\lst@Key{mltidle}\relax{\renewcommand\tilde@mlpretty{#1}}
+\lst@Key{mltidle}\relax{\renewcommand\newTilde@mlpretty{#1}}
 \lst@Key{mlsectionrulethickness}\relax%
   {\renewcommand\sectionRuleThicknessRatio@mlpretty{#1}}
 \lst@Key{mlsectionrulecolor}\relax%
@@ -143,17 +142,8 @@
 	morekeywords=[262]{end},
 	keywordstyle=[262]\processEndKW@mlpretty,
 	%
-	literate=*%
-		{(}{{\processOpBrkt@mlpretty(}}1
-		{[}{{\processOpBrkt@mlpretty[}}1
-		{\{}{{\processOpBrkt@mlpretty\{}}1
-		{)}{{\processClBrkt@mlpretty)}}1
-		{]}{{\processClBrkt@mlpretty]}}1
-		{\}}{{\processClBrkt@mlpretty\}}}1
-		{)'}{{\processClBrkt@mlpretty)}{\textquotesingle}}2
-		{]'}{{\processClBrkt@mlpretty]}{\textquotesingle}}2
-		{\}'}{{\processClBrkt@mlpretty\}}{\textquotesingle}}2
-		{~}{{\tilde@mlpretty}}1,
+	MoreSelectCharTable=\SelectCharTable@mlpretty,
+	literate=*{~}{{\newTilde@mlpretty}}1,
 	%
 	% strings
 	morestring=[m]',
@@ -178,6 +168,18 @@
 	strings,
 	comments,
 ]
+
+
+% Macro for SelectCharTable key
+\newcommand\SelectCharTable@mlpretty%
+{%
+  \processOpenBracket@mlpretty{40}{\roundBktOp@mlpretty}%
+  \processOpenBracket@mlpretty{91}{\squareBktOp@mlpretty}%
+  \processOpenBracket@mlpretty{123}{\curlyBktOp@mlpretty}%
+  \processCloseBracket@mlpretty{41}{\roundBktCl@mlpretty}%
+  \processCloseBracket@mlpretty{93}{\squareBktCl@mlpretty}%
+  \processCloseBracket@mlpretty{125}{\curlyBktCl@mlpretty}%
+}
 
 
 % --- State variables ---
@@ -372,29 +374,37 @@
 
 
 % --- macros for processing opening and closing brackets ---
-\newcommand\processOpBrkt@mlpretty%
+%TODO new
+\newcommand\processOpenBracket@mlpretty[2]%
 {%
-  \ifWithinSectionTitle@mlpretty@%
-  \else%
-		\global\ClosingEndKW@mlpretty@false% if end was already not a blue keyword, an opening bracket won't change that
-		\global\advance\netBracketCount@mlpretty by \@ne%
-	\fi%
+  \lst@DefSaveDef{#1}#2%
+  {%
+    \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
+      \global\ClosingEndKW@mlpretty@false%
+      \global\advance\netBracketCount@mlpretty by \@ne%
+    \fi%
+    #2%
+  }%  
 }
 
-\newcommand\processClBrkt@mlpretty%
+%TODO new
+\newcommand\processCloseBracket@mlpretty[2]%
 {%
-  \ifWithinSectionTitle@mlpretty@%
-  \else%
-		\ifClosingEndKW@mlpretty@%
-			\resetBracketCount@mlpretty%
-		\else%
-			\global\advance\netBracketCount@mlpretty by \m@ne%
-			\ifnum\netBracketCount@mlpretty>0%
-			\else%
-				\global\ClosingEndKW@mlpretty@true%
+  \lst@DefSaveDef{#1}#2%
+  {%
+    \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
+      \ifClosingEndKW@mlpretty@% %if end is already a blue keyword, we can reset the count
+        \resetBracketCount@mlpretty%
+      \else%
+        \global\advance\netBracketCount@mlpretty by \m@ne%
+        \ifnum\netBracketCount@mlpretty>0%
+			  \else%
+				  \global\ClosingEndKW@mlpretty@true%
+			  \fi%
 			\fi%
-		\fi%
-	\fi%
+    \fi%
+    #2%
+  }%  
 }
 
 % --- strings ---
@@ -476,21 +486,8 @@
 }
 
 
-% Patch to make literate replacement of ) work as expected
-% when breaklines is set to true.
-\newcommand\patchSelectCharTable@mlpretty%
-{%
-	\patchcmd{\lsthk@SelectCharTable}{`)}{``}{}{}%
-}
-
-\newcommand\unpatchSelectCharTable@mlpretty%
-{%
-	\patchcmd{\lsthk@SelectCharTable}{``}{`)}{}{}%
-}
-
-
 % --- macro for literate replacement of tilde character ---
-\newcommand\tilde@mlpretty{\raisebox{0.5ex}{\texttildelow}}
+\newcommand\newTilde@mlpretty{\raisebox{0.5ex}{\texttildelow}}
 
 
 % --- macros for handling code sections in hooks ---
@@ -567,7 +564,6 @@
 
 \newcommand\atBeginCode@mlpretty[1][]%
 {%
-  \patchSelectCharTable@mlpretty%
 	\renewcommand\addedToEOL@mlpretty{\@ddedToEOL@mlpretty}%
 	\renewcommand\addedToEndGroup@mlpretty{\@ddedToEndGroup@mlpretty}%
 	\renewcommand\addedToEveryLine@mlpretty{\@ddedToEveryLine@mlpretty}%
@@ -583,7 +579,6 @@
 	\renewcommand\addedToPostOutput@mlpretty{}%
 	\resetEndKW@mlpretty%
 	\resetClDef@mlpretty%
-	\unpatchSelectCharTable@mlpretty%
 }
 
 % environment
@@ -623,7 +618,7 @@
   \let\lst@basicstyleSaved@mlpretty\lst@basicstyle%
   \let\f@sizeSaved@mlpretty\f@size%
   \let\baselineskipSaved@mlpretty\baselineskip%
-  \newcommand\lst@basicstyle%
+  \renewcommand\lst@basicstyle%
   {%
       \lst@basicstyleSaved@mlpretty%
       \fontsize{\f@sizeSaved@mlpretty}{\baselineskipSaved@mlpretty}%
@@ -634,11 +629,11 @@
 % inline Matlab code (no need for \atBeginCode and \atEndCode here)
 \newcommand\matlabprettyinline[2][]
 {%
-  \bgroup
+  \bgroup%
     \lstset{language=Matlab-pretty,#1}% preferable to lstinline[]{} which is an experimental feature of listings (as of v1.5b)
     \applyCurrentFontsize@mlpretty%
     \lstinline?#2?% % question mark as delimiter because unlikely to be needed in inline code.
-  \egroup
+  \egroup%
 }
 
 % ... but that's a mouthful, so...
