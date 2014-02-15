@@ -183,10 +183,10 @@
 % --- State variables ---
 % Counters and switches used as ``state variables''
 % (used to keep track of context)
-\newcount\opBktCount@mlpretty 		 % running count of (, [ and, { 
-\newcount\clBktCount@mlpretty 		 % running count of ), ] and, }
-\newcount\blkLvl@mlpretty				   % block nesting level
-\newcount\blkLvlAtClDef@mlpretty	 % block nesting level at last classdef
+\newcount\netBracketCount@mlpretty  % net running count of brackets
+                                    % ([{ count for +1, )]} count for -1 
+\newcount\blkLvl@mlpretty				     % block nesting level
+\newcount\blkLvlAtClDef@mlpretty	   % block nesting level at last classdef
 
 \newif\ifClosingEndKW@mlpretty@            \ClosingEndKW@mlpretty@true
 \newif\ifInClDef@mlpretty@                      \InClDef@mlpretty@false
@@ -198,16 +198,12 @@
 
 
 % --- Macros for resetting counters and switches ---
-\newcommand\resetBktCount@mlpretty%
-{%
-	\global\opBktCount@mlpretty=0%
-	\global\clBktCount@mlpretty=0%
-}
+\newcommand\resetBracketCount@mlpretty{\global\netBracketCount@mlpretty=0}
 
 \newcommand\resetEndKW@mlpretty%
 {%
 	\global\ClosingEndKW@mlpretty@true%
-	\resetBktCount@mlpretty%
+	\resetBracketCount@mlpretty%
 }
 
 \newcommand\resetClDef@mlpretty%
@@ -380,10 +376,8 @@
 {%
   \ifWithinSectionTitle@mlpretty@%
   \else%
-		\ifClosingEndKW@mlpretty@%
-			\global\ClosingEndKW@mlpretty@false%
-		\fi%
-		\global\advance\opBktCount@mlpretty by \@ne%
+		\global\ClosingEndKW@mlpretty@false% if end was already not a blue keyword, an opening bracket won't change that
+		\global\advance\netBracketCount@mlpretty by \@ne%
 	\fi%
 }
 
@@ -392,10 +386,10 @@
   \ifWithinSectionTitle@mlpretty@%
   \else%
 		\ifClosingEndKW@mlpretty@%
-			\resetBktCount@mlpretty%
+			\resetBracketCount@mlpretty%
 		\else%
-			\global\advance\clBktCount@mlpretty by \@ne%
-			\ifnum\clBktCount@mlpretty<\opBktCount@mlpretty%
+			\global\advance\netBracketCount@mlpretty by \m@ne%
+			\ifnum\netBracketCount@mlpretty>0%
 			\else%
 				\global\ClosingEndKW@mlpretty@true%
 			\fi%
