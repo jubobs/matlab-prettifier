@@ -23,14 +23,14 @@
   {LaTeX package for typesetting prettified Matlab listings}
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
 \ProvidesClass{\pkgName@mlpretty}%
-  [\pkgDate@mlpretty{}	v\pkgVer@mlpretty{} \pkgDesc@mlpretty]
+  [\pkgDate@mlpretty{}  v\pkgVer@mlpretty{} \pkgDesc@mlpretty]
 
 % --- Discard any option passed to the package ---
 \DeclareOption*%
 {%
-	\OptionNotUsed
-	\PackageWarning{\pkgName@mlpretty}{Unknown `\CurrentOption' option}
-}	
+  \OptionNotUsed
+  \PackageWarning{\pkgName@mlpretty}{Unknown `\CurrentOption' option}
+}  
 
 % --- Process options ---
 \ProcessOptions\relax
@@ -47,7 +47,8 @@
 \lst@Key{mllastelementstyle}\relax{\renewcommand\lastElemStyle@mlpretty{#1}}
 \lst@Key{mlstringstyle}\relax{\renewcommand\stringStyle@mlpretty{#1}}
 \lst@Key{mlcommentstyle}\relax{\renewcommand\commentStyle@mlpretty{#1}}
-\lst@Key{mltidle}\relax{\renewcommand\newTilde@mlpretty{#1}}
+\lst@Key{mllastelementstyle}\relax{\renewcommand\lastElemStyle@mlpretty{#1}}
+\lst@Key{mlplaceholderstyle}\relax{\renewcommand\placeholderStyle@mlpretty{#1}}
 \lst@Key{mlsectionrulethickness}\relax%
   {\renewcommand\sectionRuleThicknessRatio@mlpretty{#1}}
 \lst@Key{mlsectionrulecolor}\relax%
@@ -75,83 +76,83 @@
 \lstdefinelanguage{Matlab-pretty}
 {%
   MoreSelectCharTable=\SelectCharTable@mlpretty,
-	sensitive=true,% Matlab is case-sensitive.
-	upquote=true,
-	showstringspaces=false,
-	rulecolor=\color{black}, % prevents listings bug (nonuniform rule color)
-	%
-	basicstyle=\basicStyle@mlpretty,
-	%
-	morekeywords=[257]% opening keywords unrelated to classdef
-	{% 
-		for,
-		if,
-		otherwise,
-		parfor,
-		spmd,
-		switch,
-		try,
-		while,
-	},
-	keywordstyle=[257]\processOpRegKW@mlpretty,
-	%
-	morekeywords=[258]% `middle' keywords unrelated to classdef
-	{%
-		break,
-		case,
-		catch,
-		continue,
-		else,
-		elseif,
-		function,
-		return,
-	}, 
-	keywordstyle=[258]\processMidKW@mlpretty,
-	%
-	morekeywords=[259]% `standalone' keywords
-	{%
-		global,
-		persistent,
-	}, 
-	keywordstyle=[259]\processStdaKW@mlpretty,
-	%
-	morekeywords=[260]{classdef},	
-	keywordstyle=[260]\processClDefKW@mlpretty,
-	%
-	morekeywords=[261]% `middle' keywords related to classdef
-	{%
-		enumeration,
-		events,
-		methods,
-		properties,
-	},
-	keywordstyle=[261]\processMidClDefKW@mlpretty,
-	% 
-	morekeywords=[262]{end},
-	keywordstyle=[262]\processEndKW@mlpretty,
-	%
-	% strings
-	morestring=[m]',
-	stringstyle=\processString@mlpretty,
-	%
-	% comments
-	morecomment=[l]\%,                                       % to-end-of-line
-	morecomment=[n]{\%\{\^^M}{\%\}\^^M},                     % block
-	moredelim=**[il][\processDotDotDot@mlpretty]{...},       % line continuation
-	moredelim=**[l][\processSectionTitle@mlpretty]{\%\%},    % code section
-	moredelim=**[l][\processSectionTitle@mlpretty]{\%\%\ },  % code section
+  sensitive=true,% Matlab is case-sensitive.
+  upquote=true,
+  showstringspaces=false,
+  rulecolor=\color{black}, % prevents listings bug (nonuniform rule color)
+  %
+  basicstyle=\basicStyle@mlpretty,
+  %
+  morekeywords=[257]% opening keywords unrelated to classdef
+  {% 
+    for,
+    if,
+    otherwise,
+    parfor,
+    spmd,
+    switch,
+    try,
+    while,
+  },
+  keywordstyle=[257]\processOpRegKW@mlpretty,
+  %
+  morekeywords=[258]% `middle' keywords unrelated to classdef
+  {%
+    break,
+    case,
+    catch,
+    continue,
+    else,
+    elseif,
+    function,
+    return,
+  }, 
+  keywordstyle=[258]\processMidKW@mlpretty,
+  %
+  morekeywords=[259]% `standalone' keywords
+  {%
+    global,
+    persistent,
+  }, 
+  keywordstyle=[259]\processStdaKW@mlpretty,
+  %
+  morekeywords=[260]{classdef},  
+  keywordstyle=[260]\processClDefKW@mlpretty,
+  %
+  morekeywords=[261]% `middle' keywords related to classdef
+  {%
+    enumeration,
+    events,
+    methods,
+    properties,
+  },
+  keywordstyle=[261]\processMidClDefKW@mlpretty,
+  % 
+  morekeywords=[262]{end},
+  keywordstyle=[262]\processEndKW@mlpretty,
+  %
+  % strings
+  morestring=[m]',
+  stringstyle=\processString@mlpretty,
+  %
+  % comments
+  morecomment=[l]\%,                                       % to-end-of-line
+  morecomment=[n]{\%\{\^^M}{\%\}\^^M},                     % block
+  moredelim=**[il][\processDotDotDot@mlpretty]{...},       % line continuation
+  moredelim=**[l][\processSectionTitle@mlpretty]{\%\%},    % code section
+  moredelim=**[l][\processSectionTitle@mlpretty]{\%\%\ },  % code section
   commentstyle=\commentStyle@mlpretty,
-	%
-	% system commands
-	moredelim=[l][\syscomStyle@mlpretty]{!},
-	%
-	% variables with shared scope
-	mlsharedvarStyle@mlpretty = \processSharedVar@mlpretty,
+  %
+  % system commands
+  moredelim=[l][\syscomStyle@mlpretty]{!},
+  %
+  % variables with shared scope
+  mlsharedvarStyle@mlpretty = \processSharedVar@mlpretty,
 }%
 [% `listings' aspects needed
-	keywords,
-	strings,
-	comments,
+  keywords,
+  strings,
+  comments,
 ]
 
 
@@ -161,8 +162,8 @@
 % (used to keep track of context)
 \newcount\netBracketCount@mlpretty  % net running count of brackets
                                     % ([{ count for +1, )]} count for -1 
-\newcount\blkLvl@mlpretty				     % block nesting level
-\newcount\blkLvlAtClDef@mlpretty	   % block nesting level at last classdef
+\newcount\blkLvl@mlpretty             % block nesting level
+\newcount\blkLvlAtClDef@mlpretty     % block nesting level at last classdef
 
 \newif\ifClosingEndKW@mlpretty@            \ClosingEndKW@mlpretty@true
 \newif\ifInClDef@mlpretty@                      \InClDef@mlpretty@false
@@ -178,15 +179,15 @@
 
 \newcommand\resetEndKW@mlpretty%
 {%
-	\global\ClosingEndKW@mlpretty@true%
-	\resetBracketCount@mlpretty%
+  \global\ClosingEndKW@mlpretty@true%
+  \resetBracketCount@mlpretty%
 }
 
 \newcommand\resetClassdefKW@mlpretty%
 {%
-	\global\InClDef@mlpretty@false%
-	\global\blkLvl@mlpretty=0%
-	\global\blkLvlAtClDef@mlpretty=0%
+  \global\InClDef@mlpretty@false%
+  \global\blkLvl@mlpretty=0%
+  \global\blkLvlAtClDef@mlpretty=0%
 }
 
 
@@ -215,7 +216,7 @@
 \definecolor{sharedvarColor@mlpretty}{RGB}{000,163,163}   % shared scope
 
 % More Matlab colors (currently not used by matlab-prettifier)
-\colorlet{bgColor@mlpretty}{white}		                     % background color
+\colorlet{bgColor@mlpretty}{white}                         % background color
 \definecolor{untermStringColor@mlpretty}{RGB}{178,000,000}% unterm. strings
 \definecolor{syntaxErrorColor@mlpretty}{RGB}{255,000,000} % Syntax errors
 
@@ -308,10 +309,10 @@
       \else%
         \global\advance\netBracketCount@mlpretty by \m@ne%
         \ifnum\netBracketCount@mlpretty>0%
-			  \else%
-				  \global\ClosingEndKW@mlpretty@true%
-			  \fi%
-			\fi%
+        \else%
+          \global\ClosingEndKW@mlpretty@true%
+        \fi%
+      \fi%
     \fi%
   }%  
 }
@@ -321,18 +322,18 @@
 {%
   \ifWithinSectionTitle@mlpretty@%
   \else%
-		\resetEndKW@mlpretty%
-		\global\advance\blkLvl@mlpretty\@ne%
-		\keywordStyle@mlpretty%
-	\fi%
+    \resetEndKW@mlpretty%
+    \global\advance\blkLvl@mlpretty\@ne%
+    \keywordStyle@mlpretty%
+  \fi%
 }
 
 \newcommand\processMidKW@mlpretty%
 {%
   \ifWithinSectionTitle@mlpretty@%
   \else%
-	  \resetEndKW@mlpretty%
-	  \keywordStyle@mlpretty%
+    \resetEndKW@mlpretty%
+    \keywordStyle@mlpretty%
   \fi%
 }
 
@@ -343,11 +344,11 @@
 {%
   \ifWithinSectionTitle@mlpretty@%
   \else%
-		\resetEndKW@mlpretty%
-		\global\InClDef@mlpretty@true%
-		\global\blkLvlAtClDef@mlpretty=\blkLvl@mlpretty%
-		\global\advance\blkLvl@mlpretty\@ne%
-		\keywordStyle@mlpretty%
+    \resetEndKW@mlpretty%
+    \global\InClDef@mlpretty@true%
+    \global\blkLvlAtClDef@mlpretty=\blkLvl@mlpretty%
+    \global\advance\blkLvl@mlpretty\@ne%
+    \keywordStyle@mlpretty%
   \fi%
 }
 
@@ -357,41 +358,41 @@
   \ifOverridecontext@mlpretty@% 
     \keywordStyle@mlpretty%
   \else%
-	  \ifWithinSectionTitle@mlpretty@%
-	  \else%
-			\ifInClDef@mlpretty@%
-				\resetEndKW@mlpretty%
-				\global\advance\blkLvl@mlpretty\@ne%
-				\keywordStyle@mlpretty%
-			\fi%
-		\fi%
-	\fi%
+    \ifWithinSectionTitle@mlpretty@%
+    \else%
+      \ifInClDef@mlpretty@%
+        \resetEndKW@mlpretty%
+        \global\advance\blkLvl@mlpretty\@ne%
+        \keywordStyle@mlpretty%
+      \fi%
+    \fi%
+  \fi%
 }
 
 \newcommand\processEndKW@mlpretty%
 {%
   % only for typesetting those as ``last element'' in inline code
   \ifOverridecontext@mlpretty@% 
-	  \lastElemStyle@mlpretty%
-	\else%
-	  \ifWithinSectionTitle@mlpretty@%
-	  \else%
-			\ifClosingEndKW@mlpretty@%
-				\ifInLineCom@mlpretty@%
-				\else%
-					\ifnum\blkLvl@mlpretty>0%
-						\global\advance\blkLvl@mlpretty\m@ne%
-					\fi%
-					\ifnum\blkLvl@mlpretty=\blkLvlAtClDef@mlpretty%
-						\global\InClDef@mlpretty@false%
-					\fi%
-					\keywordStyle@mlpretty%
-				\fi%
-			\else%
-			  \lastElemStyle@mlpretty%
-			\fi%
-		\fi%
-	\fi%
+    \lastElemStyle@mlpretty%
+  \else%
+    \ifWithinSectionTitle@mlpretty@%
+    \else%
+      \ifClosingEndKW@mlpretty@%
+        \ifInLineCom@mlpretty@%
+        \else%
+          \ifnum\blkLvl@mlpretty>0%
+            \global\advance\blkLvl@mlpretty\m@ne%
+          \fi%
+          \ifnum\blkLvl@mlpretty=\blkLvlAtClDef@mlpretty%
+            \global\InClDef@mlpretty@false%
+          \fi%
+          \keywordStyle@mlpretty%
+        \fi%
+      \else%
+        \lastElemStyle@mlpretty%
+      \fi%
+    \fi%
+  \fi%
 }
 
 
@@ -407,18 +408,18 @@
 % --- macro for handling line continuation ---
 \newcommand\processDotDotDot@mlpretty%
 {%
-	\lst@CalcLostSpaceAndOutput%
-	\ifWithinSectionTitle@mlpretty@%
-	  ...%
+  \lst@CalcLostSpaceAndOutput%
+  \ifWithinSectionTitle@mlpretty@%
+    ...%
   \else%
-		\ifInLineCom@mlpretty@%
-			...%
-		\else%
-			\global\InLineCom@mlpretty@true%
-			{\keywordStyle@mlpretty...}%
-		\fi%
-		\commentStyle@mlpretty%
-	\fi%
+    \ifInLineCom@mlpretty@%
+      ...%
+    \else%
+      \global\InLineCom@mlpretty@true%
+      {\keywordStyle@mlpretty...}%
+    \fi%
+    \commentStyle@mlpretty%
+  \fi%
 }
 
 % --- macro for processing section title ---
@@ -432,37 +433,37 @@
 {%
   \ifWithinSectionTitle@mlpretty@% to avoid drawing the rule multiple times
   \else%
-	  \global\WithinSectionTitle@mlpretty@true%
-	  \resetEndKW@mlpretty%
-	  \commentStyle@mlpretty%
-	  \ifTooLateForSectionTitle@mlpretty@%
-	  \else%
-	    \bgroup%
-	      % calculate the vertical offset for the rule
-	      \setlength\emHeight@mlpretty{\fontcharht\font`M}%
+    \global\WithinSectionTitle@mlpretty@true%
+    \resetEndKW@mlpretty%
+    \commentStyle@mlpretty%
+    \ifTooLateForSectionTitle@mlpretty@%
+    \else%
+      \bgroup%
+        % calculate the vertical offset for the rule
+        \setlength\emHeight@mlpretty{\fontcharht\font`M}%
         \setlength\jayDepth@mlpretty{\fontchardp\font`j}%
         \setlength\sectionRuleOffset@mlpretty%
-				{%
-				  \dimexpr.5\emHeight@mlpretty%
-				         +.5\baselineskip%
-				         -.5\jayDepth@mlpretty\relax%
-				}%
-				\setlength\sectionRuleThickness@mlpretty%
-				{%
-				  \sectionRuleThicknessRatio@mlpretty\baselineskip%
+        {%
+          \dimexpr.5\emHeight@mlpretty%
+                 +.5\baselineskip%
+                 -.5\jayDepth@mlpretty\relax%
         }%
-			  \color{sectionRuleColor@mlpretty}%
-			  \ifShowCellrules@mlpretty@%
-				  \makebox[0em][l]%
-				  {%
-				    \raisebox{\sectionRuleOffset@mlpretty}[0pt][0pt]%
-				      {\rule{\lst@linewidth}{\sectionRuleThickness@mlpretty}}%
-				  }%
-				\fi%
-	    \egroup%
-	    \sectionTitleStyle@mlpretty%
-	  \fi%
-	\fi%
+        \setlength\sectionRuleThickness@mlpretty%
+        {%
+          \sectionRuleThicknessRatio@mlpretty\baselineskip%
+        }%
+        \color{sectionRuleColor@mlpretty}%
+        \ifShowCellrules@mlpretty@%
+          \makebox[0em][l]%
+          {%
+            \raisebox{\sectionRuleOffset@mlpretty}[0pt][0pt]%
+              {\rule{\lst@linewidth}{\sectionRuleThickness@mlpretty}}%
+          }%
+        \fi%
+      \egroup%
+      \sectionTitleStyle@mlpretty%
+    \fi%
+  \fi%
 }
 
 \newcommand\processSharedVar@mlpretty%
@@ -472,10 +473,6 @@
       \sharedvarStyle@mlpretty%
   \fi%
 }
-
-
-% --- macro for literate replacement of tilde character ---
-\newcommand\prettierTilde@mlpretty{\raisebox{0.5ex}{\texttildelow}}
 
 
 % --- macros for handling code sections in hooks ---
@@ -493,22 +490,22 @@
 % --- macros for handling unterminated string literal ---
 \newcommand\addedToEOLHookUntermStr@mlpretty%
 {%
-	\ifInStr@mlpretty@%
-		\global\InStr@mlpretty@false%
-		\lst@LeaveMode%
-	\fi%
+  \ifInStr@mlpretty@%
+    \global\InStr@mlpretty@false%
+    \lst@LeaveMode%
+  \fi%
 }
 
 \newcommand\addedToEndGroupHookUntermStr@mlpretty%
 {%
-	\ifInStr@mlpretty@%
-		\global\InStr@mlpretty@false%
-	\fi%
+  \ifInStr@mlpretty@%
+    \global\InStr@mlpretty@false%
+  \fi%
 }
 
 \newcommand\addedToEOLHookDotDotDot@mlpretty%
 {%
-	\global\InLineCom@mlpretty@false%
+  \global\InLineCom@mlpretty@false%
 }
 
 
@@ -517,9 +514,9 @@
 \newcommand\addedToEOL@mlpretty{}
 \newcommand\@ddedToEOL@mlpretty%
 {%
-	\addedToEOLHookDotDotDot@mlpretty%
-	\addedToEOLHookUntermStr@mlpretty%
-	\global\WithinSectionTitle@mlpretty@false%
+  \addedToEOLHookDotDotDot@mlpretty%
+  \addedToEOLHookUntermStr@mlpretty%
+  \global\WithinSectionTitle@mlpretty@false%
 }
 \lst@AddToHook{EOL}{\addedToEOL@mlpretty}
 
@@ -527,7 +524,7 @@
 \newcommand\addedToEndGroup@mlpretty{}
 \newcommand\@ddedToEndGroup@mlpretty%
 {%
-	\addedToEndGroupHookUntermStr@mlpretty%
+  \addedToEndGroupHookUntermStr@mlpretty%
 }
 \lst@AddToHook{EndGroup}{\addedToEndGroup@mlpretty}
 
@@ -554,10 +551,10 @@
 \newcommand\addedToPreInitHook%
 {%
   \ifx\lst@language\language@mlpretty%
-		\renewcommand\addedToEOL@mlpretty\@ddedToEOL@mlpretty%
-		\renewcommand\addedToEndGroup@mlpretty\@ddedToEndGroup@mlpretty%
-		\renewcommand\addedToEveryLine@mlpretty\@ddedToEveryLine@mlpretty%
-		\renewcommand\addedToPostOutput@mlpretty\@ddedToPostOutput@mlpretty%
+    \renewcommand\addedToEOL@mlpretty\@ddedToEOL@mlpretty%
+    \renewcommand\addedToEndGroup@mlpretty\@ddedToEndGroup@mlpretty%
+    \renewcommand\addedToEveryLine@mlpretty\@ddedToEveryLine@mlpretty%
+    \renewcommand\addedToPostOutput@mlpretty\@ddedToPostOutput@mlpretty%
   \fi%
 }
 \lst@AddToHook{PreInit}{\addedToPreInitHook}
@@ -569,11 +566,61 @@
 \newcommand\addedToDeInitHook%
 {%
   \ifx\lst@language\language@mlpretty%
-		\resetEndKW@mlpretty%
-		\resetClassdefKW@mlpretty%
+    \resetEndKW@mlpretty%
+    \resetClassdefKW@mlpretty%
   \fi%
 }
 \lst@AddToHook{DeInit}{\addedToDeInitHook}
+
+
+% --- Macros for placeholders ---
+
+% Placeholder colors
+\definecolor{placeholderColor@mlpretty}{RGB}{209,0,86}
+
+% Macros for placeholder delimiters
+\newcommand\placeholderOpDelim@mlpretty{\textlangle}
+\newcommand\placeholderClDelim@mlpretty{\textrangle}
+\newcommand\placeholderDelimFontSpecs@mlpretty{\normalfont\upshape}
+\newcommand\placeholderContentFontSpecs@mlpretty{\normalfont\itshape}
+
+\newcommand\placeholderStyle@mlpretty%
+{%
+  \placeholderContentFontSpecs@mlpretty%
+  \color{placeholderColor@mlpretty}%
+}
+
+% Macro for conditional italic correction
+\newcommand\condItalicCorrection@mlpretty%
+{%
+  \ifdefstring{\f@shape}{sl}
+    {\/}
+    {%
+      \ifdefstring{\f@shape}{it}
+      {\/}
+      {}%
+    }%
+}
+
+% --- User macro for typesetting snippet placeholders ---
+\newcommand\snippetPlaceholder[1]%
+{%
+  \bgroup%
+    \placeholderStyle@mlpretty%
+    \bgroup%
+      % opening delimiter
+      \placeholderDelimFontSpecs@mlpretty%
+      \placeholderOpDelim@mlpretty%
+    \egroup%
+    % placeholder content
+    #1\condItalicCorrection@mlpretty%
+    \bgroup%
+      % closing delimiter
+      \placeholderDelimFontSpecs@mlpretty%
+      \placeholderClDelim@mlpretty%
+    \egroup%
+  \egroup%
+}
 
 
 % --- built-in matlab-prettifier styles ---
@@ -591,12 +638,13 @@
 \lstdefinestyle{Matlab-bw-style}
 {
   language            = Matlab-pretty,
-  mlkeywordstyle      = \color[gray]{0}  \bfseries        ,
-  mlcommentstyle      = \color[gray]{.75}         \itshape,
-  mlstringstyle       = \color[gray]{.5}                  ,
-  mlsyscomstyle       = \color[gray]{.25}                 ,
-  mlsectiontitlestyle = \color[gray]{.75}\bfseries\itshape,
-  mlsharedvarstyle    = \color[gray]{0}                   ,
+  mlkeywordstyle      = \color[gray]{0}             \bfseries        ,
+  mlcommentstyle      = \color[gray]{.75}                    \itshape,
+  mlstringstyle       = \color[gray]{.5}                             ,
+  mlsyscomstyle       = \color[gray]{.25}                            ,
+  mlsectiontitlestyle = \color[gray]{.75}           \bfseries\itshape,
+  mlsharedvarstyle    = \color[gray]{0}                              ,
+  mlplaceholderstyle  = \color[gray]{0}  \normalfont         \itshape,
   frame               = single,
   numbers             = left,
   breaklines          = true,
@@ -609,13 +657,14 @@
 \lstdefinestyle{Matlab-pygsty-style}
 {
   language            = Matlab-pretty,
-  mllastelementstyle  = \color[RGB]{127,063,127}                 ,
-  mlkeywordstyle      = \color[RGB]{000,127,000}\bfseries        ,
-  mlcommentstyle      = \color[RGB]{063,127,127}         \itshape,
-  mlstringstyle       = \color[RGB]{186,034,034}                 ,
-  mlsyscomstyle       = \color[RGB]{000,127,000}                 ,
-  mlsectiontitlestyle = \color[RGB]{063,127,127}         \itshape,
-  mlsharedvarstyle    = \color[RGB]{034,034,186}                 ,
+  mllastelementstyle  = \color[RGB]{127,000,000}                            ,
+  mlkeywordstyle      = \color[RGB]{000,127,000}           \bfseries        ,
+  mlcommentstyle      = \color[RGB]{063,127,127}                    \itshape,
+  mlstringstyle       = \color[RGB]{186,034,034}                            ,
+  mlsyscomstyle       = \color[RGB]{000,127,000}                            ,
+  mlsectiontitlestyle = \color[RGB]{063,127,127}                    \itshape,
+  mlsharedvarstyle    = \color[RGB]{034,034,186}                            ,
+  mlplaceholderstyle  = \color[RGB]{127,063,127}\normalfont         \itshape,
   frame               = single,
   numbers             = left,
   breaklines          = true,
@@ -623,57 +672,9 @@
 %TODO % digit color is [RGB]{102,102,102}
 
 
-% --- Macros for placeholders ---
-
-% Placeholder colors
-\definecolor{placeholderDelimColor@mlpretty}{RGB}{209,0,86}
-\definecolor{placeholderContentColor@mlpretty}{RGB}{209,0,86}
-
-% Macros for placeholder delimiters
-\newcommand\placeholderOpDelim@mlpretty{\textlangle}
-\newcommand\placeholderClDelim@mlpretty{\textrangle}
-\newcommand\placeholderDelimStyle@mlpretty{\normalfont\upshape}
-\newcommand\placeholderContentStyle@mlpretty{\normalfont\itshape}
-
-% Macro for conditional italic correction
-\newcommand\itCorr@mlpretty%
-{%
-	\ifdefstring{\f@shape}{sl}
-		{\/}
-		{%
-			\ifdefstring{\f@shape}{it}
-			{\/}
-			{}%
-		}%
-}
-
-% --- User macro for typesetting snippet placeholders ---
-\newcommand\snippetPlaceholder[1]%
-{%
-	\bgroup
-		% opening delimiter
-		\placeholderDelimStyle@mlpretty%
-		\color{placeholderDelimColor@mlpretty}%
-		\placeholderOpDelim@mlpretty%
-	\egroup
-	\bgroup
-		% placeholder content
-		\placeholderContentStyle@mlpretty%
-		\color{placeholderContentColor@mlpretty}%
-		#1\itCorr@mlpretty%
-	\egroup
-	\bgroup
-		% closing delimiter
-		\placeholderDelimStyle@mlpretty%
-		\color{placeholderDelimColor@mlpretty}%
-		\placeholderClDelim@mlpretty%
-	\egroup
-}
-
-
 % --- macros for inline code (scaled to the surrounding font size) ---
-
-\newcommand\applyCurrentFontsize@mlpretty% overrides the fontsize of \lst@basicstyle
+% overrides the fontsize of \lst@basicstyle
+\newcommand\applyCurrentFontsize@mlpretty%
 {%
   \let\lst@basicstyleSaved@mlpretty\lst@basicstyle%
   \let\f@sizeSaved@mlpretty\f@size%
