@@ -37,7 +37,6 @@
 
 % --- Package dependencies ---
 \RequirePackage{textcomp}[2005/09/27]
-\RequirePackage{etoolbox}[2011/01/03]
 \RequirePackage{xcolor}[2007/01/21]
 \RequirePackage{listings}[2013/08/26]
 
@@ -591,15 +590,18 @@
 }
 
 % Macro for conditional italic correction
+% (in case the font shape is either italic or slanted)
+\newcommand*{\it@mlpretty}{it} 
+\newcommand*{\sl@mlpretty}{sl}
 \newcommand\condItalicCorrection@mlpretty%
 {%
-  \ifdefstring{\f@shape}{sl}
-    {\/}
-    {%
-      \ifdefstring{\f@shape}{it}
-      {\/}
-      {}%
-    }%
+  \ifx\f@shape\it@mlpretty%
+    \/%
+  \else%
+    \ifx\f@shape\sl@mlpretty%
+      \/%
+    \fi%
+  \fi%
 }
 
 % --- User macro for typesetting snippet placeholders ---
@@ -711,6 +713,6 @@
   \lstMakeShortInline@%
 }%
 
-\let\DeleteCharForMatlabPrettyInline\lstDeleteShortInline
+\let\DeleteCharForInlineMatlabPretty\lstDeleteShortInline
 
 \endinput
