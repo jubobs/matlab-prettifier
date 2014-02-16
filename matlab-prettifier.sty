@@ -17,7 +17,7 @@
 
 % --- Package identification ---
 \newcommand\pkgName@mlpretty{matlab-prettifier}
-\newcommand\pkgDate@mlpretty{2014/02/15}
+\newcommand\pkgDate@mlpretty{2014/02/16}
 \newcommand\pkgVer@mlpretty{.alpha}
 \newcommand\pkgDesc@mlpretty%
   {LaTeX package for typesetting prettified Matlab listings}
@@ -47,6 +47,7 @@
 \lst@Key{mlstringstyle}\relax{\renewcommand\stringStyle@mlpretty{#1}}
 \lst@Key{mlcommentstyle}\relax{\renewcommand\commentStyle@mlpretty{#1}}
 \lst@Key{mllastelementstyle}\relax{\renewcommand\lastElemStyle@mlpretty{#1}}
+\lst@Key{mlsharedvarstyle}\relax{\renewcommand\sharedvarStyle@mlpretty{#1}}
 \lst@Key{mlplaceholderstyle}\relax{\renewcommand\placeholderStyle@mlpretty{#1}}
 \lst@Key{mlsectionrulethickness}\relax%
   {\renewcommand\sectionRuleThicknessRatio@mlpretty{#1}}
@@ -65,14 +66,17 @@
 \lst@InstallKeywords k{mlsharedvars}{mlsharedvarStyle@mlpretty}\relax%
   {mlsharedvarStyle@mlpretty}{}ld
 
-% Here we define a sharedvarstyle key that is used by
-% \lst@sharedvarStyle@mlpretty internally.
-\lst@Key{mlsharedvarstyle}\relax{\renewcommand\sharedvarStyle@mlpretty{#1}}
-
 
 % --- Language definition ---
-\def\language@mlpretty{matlab-pretty} % for test in hooks (listings makes language names lowercase internally)
-\lstdefinelanguage{Matlab-pretty}
+\newcommand\language@mlpretty{Matlab-pretty}
+% ``normalised'' language name (listings lowercases language name internally)
+% Note: in \foo\bar{\baz}, to expand \baz once before anything else,
+% write \ex\foo\ex\bar\ex{\baz} (where \let\ex=\expandafter)
+\expandafter\lst@NormedDef\expandafter\languageNormedDefd@mlpretty%
+  \expandafter{\language@mlpretty}
+
+\expandafter\expandafter\expandafter\lstdefinelanguage\expandafter%
+{\language@mlpretty}
 {%
   MoreSelectCharTable=\SelectCharTable@mlpretty,
   sensitive=true,% Matlab is case-sensitive.
@@ -549,7 +553,7 @@
 % PreInit Hook
 \newcommand\addedToPreInitHook%
 {%
-  \ifx\lst@language\language@mlpretty%
+  \ifx\lst@language\languageNormedDefd@mlpretty%
     \renewcommand\addedToEOL@mlpretty\@ddedToEOL@mlpretty%
     \renewcommand\addedToEndGroup@mlpretty\@ddedToEndGroup@mlpretty%
     \renewcommand\addedToEveryLine@mlpretty\@ddedToEveryLine@mlpretty%
@@ -564,7 +568,7 @@
 % DeInit hook
 \newcommand\addedToDeInitHook%
 {%
-  \ifx\lst@language\language@mlpretty%
+  \ifx\lst@language\languageNormedDefd@mlpretty%
     \resetEndKW@mlpretty%
     \resetClassdefKW@mlpretty%
   \fi%
@@ -630,7 +634,7 @@
 % Quick \& easy style, for those who don't want to bother with customization
 \lstdefinestyle{Matlab-standard-style}
 {
-  language   = Matlab-pretty,
+  language   = \languageNormedDefd@mlpretty,
   frame      = single,
   numbers    = left,
   breaklines = true,
@@ -639,7 +643,7 @@
 % Black & white style
 \lstdefinestyle{Matlab-bw-style}
 {
-  language            = Matlab-pretty,
+  language            = \languageNormedDefd@mlpretty,
   mlkeywordstyle      = \color[gray]{0}             \bfseries        ,
   mlcommentstyle      = \color[gray]{.75}                    \itshape,
   mlstringstyle       = \color[gray]{.5}                             ,
@@ -658,7 +662,7 @@
 % and pythontex do it.
 \lstdefinestyle{Matlab-pygsty-style}
 {
-  language            = Matlab-pretty,
+  language            = \languageNormedDefd@mlpretty,
   mllastelementstyle  = \color[RGB]{127,000,000}                            ,
   mlkeywordstyle      = \color[RGB]{000,127,000}           \bfseries        ,
   mlcommentstyle      = \color[RGB]{063,127,127}                    \itshape,
@@ -695,7 +699,7 @@
     % According to the listings documentation, passing the option with
     % \lstset is preferable to passing them in the optional argument of  
     % \lstinline (which is still considered, as of listings v1.5b)
-    \lstset{language=Matlab-pretty, #1}%
+    \lstset{language=\languageNormedDefd@mlpretty, #1}%
     \applyCurrentFontsize@mlpretty%
     \lstinline?#2?% % question mark as delimiter because unlikely to be needed in inline code.
   \egroup%
@@ -706,7 +710,7 @@
 {%
   \newcommand\lst@shortinlinedef%
   {%
-    \lstset{language=Matlab-pretty, #1}%
+    \lstset{language=\languageNormedDefd@mlpretty, #1}%
     \applyCurrentFontsize@mlpretty%
     \lstinline%
   }%
