@@ -43,21 +43,6 @@
 
 
 % ----------- key=value interface ---
-%TODO
-% Note: Using the literate key in conjunction with Matlab-pretty is
-% ill-advised, as it will clobber the package's literate replacements.
-% So we define a new key macro for allowing the user to specify additional
-% literate replacements without clobbering existing ones.
-%\newcommand\addToLiterate@mlpretty#1%
-%{%
-%	\edef\lst@literate%
-%	{%
-%		\unexpanded\expandafter{\lst@literate} %
-%		\unexpanded{#1}%
-%	}%
-%}
-%\lst@Key{mlliterate}\relax{\addToLiterate@mlpretty{#1}}
-
 \lst@Key{mlkeywordstyle}\relax{\renewcommand\keywordStyle@mlpretty{#1}}
 \lst@Key{mllastelementstyle}\relax{\renewcommand\lastElemStyle@mlpretty{#1}}
 \lst@Key{mlstringstyle}\relax{\renewcommand\stringStyle@mlpretty{#1}}
@@ -72,6 +57,8 @@
 \lst@Key{mlsectiontitlestyle}\relax
   {\renewcommand\sectionTitleStyle@mlpretty{#1}}
 \lst@Key{mlsyscomstyle}\relax{\renewcommand\syscomStyle@mlpretty{#1}}
+\lst@Key{mloverridecontext}{false}[t]%
+  {\lstKV@SetIf{#1}\ifOverridecontext@mlpretty@}
 
 % we create a new ``keyword'' class for variables with shared scope
 % by using the very convenient internal listings macro \lst@InstallKeywords
@@ -142,8 +129,6 @@
 	% 
 	morekeywords=[262]{end},
 	keywordstyle=[262]\processEndKW@mlpretty,
-	%
-	literate=*{~}{{\newTilde@mlpretty}}1,
 	%
 	% strings
 	morestring=[m]',
@@ -368,33 +353,43 @@
 
 \newcommand\processMidClDefKW@mlpretty%
 {%
-  \ifWithinSectionTitle@mlpretty@%
+  %only for typesetting those as keywords in inline code
+  \ifOverridecontext@mlpretty@% 
+    \keywordStyle@mlpretty%
   \else%
-		\ifInClDef@mlpretty@%
-			\resetEndKW@mlpretty%
-			\global\advance\blkLvl@mlpretty\@ne%
-			\keywordStyle@mlpretty%
+	  \ifWithinSectionTitle@mlpretty@%
+	  \else%
+			\ifInClDef@mlpretty@%
+				\resetEndKW@mlpretty%
+				\global\advance\blkLvl@mlpretty\@ne%
+				\keywordStyle@mlpretty%
+			\fi%
 		\fi%
 	\fi%
 }
 
 \newcommand\processEndKW@mlpretty%
 {%
-  \ifWithinSectionTitle@mlpretty@%
-  \else%
-		\ifClosingEndKW@mlpretty@%
-			\ifInLineCom@mlpretty@%
+  % only for typesetting those as ``last element'' in inline code
+  \ifOverridecontext@mlpretty@% 
+	  \lastElemStyle@mlpretty%
+	\else%
+	  \ifWithinSectionTitle@mlpretty@%
+	  \else%
+			\ifClosingEndKW@mlpretty@%
+				\ifInLineCom@mlpretty@%
+				\else%
+					\ifnum\blkLvl@mlpretty>0%
+						\global\advance\blkLvl@mlpretty\m@ne%
+					\fi%
+					\ifnum\blkLvl@mlpretty=\blkLvlAtClDef@mlpretty%
+						\global\InClDef@mlpretty@false%
+					\fi%
+					\keywordStyle@mlpretty%
+				\fi%
 			\else%
-				\ifnum\blkLvl@mlpretty>0%
-					\global\advance\blkLvl@mlpretty\m@ne%
-				\fi%
-				\ifnum\blkLvl@mlpretty=\blkLvlAtClDef@mlpretty%
-					\global\InClDef@mlpretty@false%
-				\fi%
-				\keywordStyle@mlpretty%
+			  \lastElemStyle@mlpretty%
 			\fi%
-		\else%
-		  \lastElemStyle@mlpretty%
 		\fi%
 	\fi%
 }
@@ -480,7 +475,7 @@
 
 
 % --- macro for literate replacement of tilde character ---
-\newcommand\newTilde@mlpretty{\raisebox{0.5ex}{\texttildelow}}
+\newcommand\prettierTilde@mlpretty{\raisebox{0.5ex}{\texttildelow}}
 
 
 % --- macros for handling code sections in hooks ---
@@ -552,6 +547,9 @@
 }
 \lst@AddToHook{PostOutput}{\addedToPostOutput@mlpretty}
 
+% Now we apply all those patches at the PreSet hook,
+% under the condition that \lst@language expands to 
+% `matlab-prettifier'.
 % PreInit Hook
 \newcommand\addedToPreInitHook%
 {%
@@ -564,14 +562,13 @@
 }
 \lst@AddToHook{PreInit}{\addedToPreInitHook}
 
+% We reset counters apply at the DeInit hook,
+% under the condition that \lst@language expands to 
+% `matlab-prettifier'.
 % DeInit hook
 \newcommand\addedToDeInitHook%
 {%
   \ifx\lst@language\language@mlpretty%
-		\renewcommand\addedToEOL@mlpretty{}%
-		\renewcommand\addedToEndGroup@mlpretty{}%
-		\renewcommand\addedToEveryLine@mlpretty{}%
-		\renewcommand\addedToPostOutput@mlpretty{}%
 		\resetEndKW@mlpretty%
 		\resetClassdefKW@mlpretty%
   \fi%
@@ -692,7 +689,10 @@
 \newcommand\InlineMatlabPretty[2][]
 {%
   \bgroup%
-    \lstset{language=Matlab-pretty,#1}% preferable to lstinline[]{} which is an experimental feature of listings (as of v1.5b)
+    % According to the listings documentation, passing the option with
+    % \lstset is preferable to passing them in the optional argument of  
+    % \lstinline (which is still considered, as of listings v1.5b)
+    \lstset{language=Matlab-pretty, #1}%
     \applyCurrentFontsize@mlpretty%
     \lstinline?#2?% % question mark as delimiter because unlikely to be needed in inline code.
   \egroup%
@@ -703,7 +703,7 @@
 {%
   \newcommand\lst@shortinlinedef%
   {%
-    \lstset{language=Matlab-pretty,#1}%
+    \lstset{language=Matlab-pretty, #1}%
     \applyCurrentFontsize@mlpretty%
     \lstinline%
   }%
