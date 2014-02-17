@@ -25,6 +25,23 @@
 \ProvidesPackage{\pkgName@mlpretty}%
   [\pkgDate@mlpretty{}  v\pkgVer@mlpretty{} \pkgDesc@mlpretty]
 
+
+% --- check for incompatible listings options ---
+\newcommand\checkForListingsOption@mlpretty[1]%
+{%
+  \@ifpackagewith{listings}{#1}%
+  {
+	  \PackageError{\pkgName@mlpretty}%
+	    {incompatible listings' option #1}%
+	    {Make sure the `listings' package doesn't get loaded with option `#1'}
+  }{}
+}
+
+\checkForListingsOption@mlpretty{noaspects}
+\checkForListingsOption@mlpretty{0.21}
+\checkForListingsOption@mlpretty{savemem}
+
+
 % --- Discard any option passed to the package ---
 \DeclareOption*%
 {%
@@ -59,6 +76,8 @@
 \lst@Key{mlsyscomstyle}\relax{\renewcommand\syscomStyle@mlpretty{#1}}
 \lst@Key{mloverridecontext}{false}[t]%
   {\lstKV@SetIf{#1}\ifOverridecontext@mlpretty@}
+\lst@Key{mlunquotedstringdelim}\relax%
+  {\lst@DelimKey\relax{[is][\stringStyle@mlpretty]{#1}}}
 
 % we create a new ``keyword'' class for variables with shared scope
 % by using the very convenient internal listings macro \lst@InstallKeywords
@@ -119,7 +138,7 @@
   keywordstyle=[259]\processStdaKW@mlpretty,
   %
   morekeywords=[260]{classdef},  
-  keywordstyle=[260]\processClDefKW@mlpretty,
+  keywordstyle=[260]\processClassdefKW@mlpretty,
   %
   morekeywords=[261]% `middle' keywords related to classdef
   {%
@@ -128,7 +147,7 @@
     methods,
     properties,
   },
-  keywordstyle=[261]\processMidClDefKW@mlpretty,
+  keywordstyle=[261]\processMidClassdefKW@mlpretty,
   % 
   morekeywords=[262]{end},
   keywordstyle=[262]\processEndKW@mlpretty,
@@ -165,10 +184,10 @@
 \newcount\netBracketCount@mlpretty  % net running count of brackets
                                     % ([{ count for +1, )]} count for -1 
 \newcount\blkLvl@mlpretty             % block nesting level
-\newcount\blkLvlAtClDef@mlpretty     % block nesting level at last classdef
+\newcount\blkLvlAtClassdef@mlpretty     % block nesting level at last classdef
 
 \newif\ifClosingEndKW@mlpretty@            \ClosingEndKW@mlpretty@true
-\newif\ifInClDef@mlpretty@                      \InClDef@mlpretty@false
+\newif\ifInClassdef@mlpretty@                      \InClassdef@mlpretty@false
 \newif\ifInStr@mlpretty@                          \InStr@mlpretty@false
 \newif\ifInLineCom@mlpretty@                  \InLineCom@mlpretty@false
 \newif\ifTooLateForSectionTitle@mlpretty@%
@@ -187,9 +206,9 @@
 
 \newcommand\resetClassdefKW@mlpretty%
 {%
-  \global\InClDef@mlpretty@false%
+  \global\InClassdef@mlpretty@false%
   \global\blkLvl@mlpretty=0%
-  \global\blkLvlAtClDef@mlpretty=0%
+  \global\blkLvlAtClassdef@mlpretty=0%
 }
 
 
@@ -342,27 +361,26 @@
 % No difference between standalone keywords and middle keywords
 \newcommand\processStdaKW@mlpretty\processMidKW@mlpretty
 
-\newcommand\processClDefKW@mlpretty%
+\newcommand\processClassdefKW@mlpretty%
 {%
   \ifWithinSectionTitle@mlpretty@%
   \else%
     \resetEndKW@mlpretty%
-    \global\InClDef@mlpretty@true%
-    \global\blkLvlAtClDef@mlpretty=\blkLvl@mlpretty%
+    \global\InClassdef@mlpretty@true%
+    \global\blkLvlAtClassdef@mlpretty=\blkLvl@mlpretty%
     \global\advance\blkLvl@mlpretty\@ne%
     \keywordStyle@mlpretty%
   \fi%
 }
 
-\newcommand\processMidClDefKW@mlpretty%
+\newcommand\processMidClassdefKW@mlpretty%
 {%
   %only for typesetting those as keywords in inline code
   \ifOverridecontext@mlpretty@% 
-    \keywordStyle@mlpretty%
   \else%
     \ifWithinSectionTitle@mlpretty@%
     \else%
-      \ifInClDef@mlpretty@%
+      \ifInClassdef@mlpretty@%
         \resetEndKW@mlpretty%
         \global\advance\blkLvl@mlpretty\@ne%
         \keywordStyle@mlpretty%
@@ -385,8 +403,8 @@
           \ifnum\blkLvl@mlpretty>0%
             \global\advance\blkLvl@mlpretty\m@ne%
           \fi%
-          \ifnum\blkLvl@mlpretty=\blkLvlAtClDef@mlpretty%
-            \global\InClDef@mlpretty@false%
+          \ifnum\blkLvl@mlpretty=\blkLvlAtClassdef@mlpretty%
+            \global\InClassdef@mlpretty@false%
           \fi%
           \keywordStyle@mlpretty%
         \fi%
@@ -625,10 +643,9 @@
   breaklines          = true,
 }
 
-% Style very similar to the Pygments lexer called `MatlabLexer',
-% (see http://pygments.org/docs/lexers/). This style can be used
-% to typeset Matlab code in a way similar to how minted, verbments,
-% and pythontex do it.
+% Style very similar to that of the Pygments lexer called `MatlabLexer',
+% (see http://pygments.org/docs/lexers/). This style basically mimics
+% the output you get with the minted, verbments, and pythontex packages.
 \lstdefinestyle{Matlab-pygsty-style}
 {
   language            = \languageNormedDefd@mlpretty,
@@ -661,6 +678,7 @@
       \selectfont%
   }%
 }
+
 % inline Matlab code (no need for \atBeginCode and \atEndCode here)
 \newcommand\InlineMatlabPretty[2][]
 {%
@@ -670,7 +688,8 @@
     % \lstinline (which is still considered, as of listings v1.5b)
     \lstset{language=\languageNormedDefd@mlpretty, #1}%
     \applyCurrentFontsize@mlpretty%
-    \lstinline?#2?% % question mark as delimiter because unlikely to be needed in inline code.
+    \lstinline?#2?%
+    % (? is used as delimiter here because unlikely to occur in inline code)
   \egroup%
 }
 
