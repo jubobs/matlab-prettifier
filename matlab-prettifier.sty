@@ -477,94 +477,64 @@
 }
 
 
-% --- macros for handling code sections in hooks ---
-\newcommand\addedToEveryLineCodeSection@mlpretty%
-{%
-  \global\TooLateForSectionTitle@mlpretty@false%
-}
+% ----- Macros for hooks -----
 
-\newcommand\addedToPostOutputCodeSection@mlpretty%
+% --- InitVarsEOL hook ---
+\newcommand\addedToInitVarsEOL@mlpretty{}
+\newcommand\@ddedToInitVarsEOL@mlpretty%
 {%
-  \global\TooLateForSectionTitle@mlpretty@true%
-}
-
-
-% --- macros for handling unterminated string literal ---
-\newcommand\addedToEOLHookUntermStr@mlpretty%
-{%
+  % at the start of a line, we're not inside a one-line comment
+  \global\InLineCom@mlpretty@false%
+  % This avoids continuation of unterminated string literals on next line.
   \ifInStr@mlpretty@%
     \global\InStr@mlpretty@false%
     \lst@LeaveMode%
   \fi%
+  % we're not in a section title...
+  \global\WithinSectionTitle@mlpretty@false%
+  % ...but a section title is allowed to start here
+  \global\TooLateForSectionTitle@mlpretty@false%
 }
+\lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpretty}
 
-\newcommand\addedToEndGroupHookUntermStr@mlpretty%
+% --- EndGroup hook ---
+\newcommand\addedToEndGroup@mlpretty{}
+\newcommand\@ddedToEndGroup@mlpretty%
 {%
+  % if we were inside a string, we're now getting out of it
   \ifInStr@mlpretty@%
     \global\InStr@mlpretty@false%
   \fi%
 }
-
-\newcommand\addedToEOLHookDotDotDot@mlpretty%
-{%
-  \global\InLineCom@mlpretty@false%
-}
-
-
-% --- Macros for adding to listings hooks ---
-% EOL hook
-\newcommand\addedToEOL@mlpretty{}
-\newcommand\@ddedToEOL@mlpretty%
-{%
-  \addedToEOLHookDotDotDot@mlpretty%
-  \addedToEOLHookUntermStr@mlpretty%
-  \global\WithinSectionTitle@mlpretty@false%
-}
-\lst@AddToHook{EOL}{\addedToEOL@mlpretty}
-
-% EndGroup hook
-\newcommand\addedToEndGroup@mlpretty{}
-\newcommand\@ddedToEndGroup@mlpretty%
-{%
-  \addedToEndGroupHookUntermStr@mlpretty%
-}
 \lst@AddToHook{EndGroup}{\addedToEndGroup@mlpretty}
 
-% EveryLine hook
-\newcommand\addedToEveryLine@mlpretty{}
-\newcommand\@ddedToEveryLine@mlpretty%
-{%
-  \addedToEveryLineCodeSection@mlpretty%
-}
-\lst@AddToHook{EveryLine}{\addedToEveryLine@mlpretty}
-
-% PostOutput hook
+% --- PostOutput hook ---
 \newcommand\addedToPostOutput@mlpretty{}
 \newcommand\@ddedToPostOutput@mlpretty%
 {%
-  \addedToPostOutputCodeSection@mlpretty%
+  % At the first PostOutput, it's too late for a section title to start.
+  \global\TooLateForSectionTitle@mlpretty@true%
 }
 \lst@AddToHook{PostOutput}{\addedToPostOutput@mlpretty}
 
-% Now we apply all those patches at the PreSet hook,
-% under the condition that \lst@language expands to 
-% `matlab-prettifier'.
-% PreInit Hook
+% --- PreInit Hook ---
+% Now we apply all those patches at the PreInit hook,
+% under the condition that \lst@language and \languageNormedDefd@mlpretty
+% expand (once) to the same replacement text.
 \newcommand\addedToPreInitHook%
 {%
   \ifx\lst@language\languageNormedDefd@mlpretty%
-    \renewcommand\addedToEOL@mlpretty\@ddedToEOL@mlpretty%
+    \renewcommand\addedToInitVarsEOL@mlpretty\@ddedToInitVarsEOL@mlpretty%
     \renewcommand\addedToEndGroup@mlpretty\@ddedToEndGroup@mlpretty%
-    \renewcommand\addedToEveryLine@mlpretty\@ddedToEveryLine@mlpretty%
     \renewcommand\addedToPostOutput@mlpretty\@ddedToPostOutput@mlpretty%
   \fi%
 }
 \lst@AddToHook{PreInit}{\addedToPreInitHook}
 
+% --- DeInit hook ---
 % We reset counters apply at the DeInit hook,
-% under the condition that \lst@language expands to 
-% `matlab-prettifier'.
-% DeInit hook
+% under the condition that \lst@language and \languageNormedDefd@mlpretty
+% expand (once) to the same replacement text.
 \newcommand\addedToDeInitHook%
 {%
   \ifx\lst@language\languageNormedDefd@mlpretty%
