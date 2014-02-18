@@ -18,12 +18,16 @@
 % --- Package identification ---
 \newcommand\pkgName@mlpretty{matlab-prettifier}
 \newcommand\pkgDate@mlpretty{2014/02/17}
-\newcommand\pkgVer@mlpretty{.alpha}
+\newcommand\pkgVer@mlpretty{.1}
 \newcommand\pkgDesc@mlpretty%
-  {LaTeX package for typesetting prettified Matlab listings}
+  {LaTeX package for typesetting Matlab listings}
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
 \ProvidesPackage{\pkgName@mlpretty}%
-  [\pkgDate@mlpretty{}  v\pkgVer@mlpretty{} \pkgDesc@mlpretty]
+[%
+  \pkgDate@mlpretty{}
+  alpha %v\pkgVer@mlpretty{}
+  \pkgDesc@mlpretty{}
+]
 
 
 % --- check for incompatible listings options ---
@@ -59,12 +63,16 @@
 
 
 % ----------- key=value interface ---
+
+% we create a new ``keyword'' class for variables with shared scope
+% by using the very convenient internal listings macro \lst@InstallKeywords
+\lst@InstallKeywords k{mlsharedvars}{mlsharedvarStyle@mlpretty}\relax%
+  {mlsharedvarStyle@mlpretty}{}ld
+
 \lst@Key{mlkeywordstyle}\relax{\renewcommand\keywordStyle@mlpretty{#1}}
+\lst@Key{mllastelementstyle}\relax{\renewcommand\lastElemStyle@mlpretty{#1}}
 \lst@Key{mlstringstyle}\relax{\renewcommand\stringStyle@mlpretty{#1}}
 \lst@Key{mlcommentstyle}\relax{\renewcommand\commentStyle@mlpretty{#1}}
-\lst@Key{mllastelementstyle}\relax{\renewcommand\lastElemStyle@mlpretty{#1}}
-\lst@Key{mlsharedvarstyle}\relax{\renewcommand\sharedvarStyle@mlpretty{#1}}
-\lst@Key{mlplaceholderstyle}\relax{\renewcommand\placeholderStyle@mlpretty{#1}}
 \lst@Key{mlsectionrulethickness}\relax%
   {\renewcommand\sectionRuleThicknessRatio@mlpretty{#1}}
 \lst@Key{mlsectionrulecolor}\relax%
@@ -73,16 +81,14 @@
   {\lstKV@SetIf{#1}\ifShowCellrules@mlpretty@}
 \lst@Key{mlsectiontitlestyle}\relax
   {\renewcommand\sectionTitleStyle@mlpretty{#1}}
-\lst@Key{mlsyscomstyle}\relax{\renewcommand\syscomStyle@mlpretty{#1}}
 \lst@Key{mloverridecontext}{false}[t]%
   {\lstKV@SetIf{#1}\ifOverridecontext@mlpretty@}
+\lst@Key{mlsyscomstyle}\relax{\renewcommand\syscomStyle@mlpretty{#1}}
+\lst@Key{mlsharedvarstyle}\relax{\renewcommand\sharedvarStyle@mlpretty{#1}}
 \lst@Key{mlunquotedstringdelim}\relax%
   {\lst@DelimKey\relax{[is][\stringStyle@mlpretty]{#1}}}
-
-% we create a new ``keyword'' class for variables with shared scope
-% by using the very convenient internal listings macro \lst@InstallKeywords
-\lst@InstallKeywords k{mlsharedvars}{mlsharedvarStyle@mlpretty}\relax%
-  {mlsharedvarStyle@mlpretty}{}ld
+\lst@Key{mlplaceholderstyle}\relax%
+ {\renewcommand\placeholderStyle@mlpretty{#1}}
 
 
 % --- Language definition ---
@@ -216,8 +222,8 @@
 
 % Font family, series, shape, and size (color is defined separately)
 \newcommand\basicFontSpecs@mlpretty{\ttfamily\normalsize}
-\newcommand\lastElemFontSpecs@mlpretty{}
 \newcommand\keywordFontSpecs@mlpretty{}
+\newcommand\lastElemFontSpecs@mlpretty{}
 \newcommand\stringFontSpecs@mlpretty{}
 \newcommand\commentFontSpecs@mlpretty{}
 \newcommand\sectionTitleFontSpecs@mlpretty
