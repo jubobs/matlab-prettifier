@@ -63,6 +63,7 @@
 
 
 % ----------- key=value interface ---
+% Before we can define the language, we define additional keys
 
 % we create a new ``keyword'' class for variables with shared scope
 % by using the very convenient internal listings macro \lst@InstallKeywords
@@ -221,7 +222,13 @@
 % --- internal style macros ---
 
 % Font family, series, shape, and size (color is defined separately)
-\newcommand\basicFontSpecs@mlpretty{\ttfamily\normalsize}
+\newcommand\basicFontSpecs@mlpretty
+{%
+  \ttfamily%
+  \lst@ifdisplaystyle%
+    \normalsize%
+  \fi%
+}
 \newcommand\keywordFontSpecs@mlpretty{}
 \newcommand\lastElemFontSpecs@mlpretty{}
 \newcommand\stringFontSpecs@mlpretty{}
@@ -331,8 +338,8 @@
   {%
     #2%
     \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
-      \ifClosingEndKW@mlpretty@% %if end is already a blue keyword, we can reset the count
-        \resetBracketCount@mlpretty%
+      \ifClosingEndKW@mlpretty@%    % If end is already a blue keyword... 
+        \resetBracketCount@mlpretty % ... we can safely reset the count.
       \else%
         \global\advance\netBracketCount@mlpretty by \m@ne%
         \ifnum\netBracketCount@mlpretty>0%
@@ -501,10 +508,10 @@
 }
 
 
-% ----- Macros for hooks -----
+% ----- Hooking into listings -----
 
 % --- InitVarsEOL hook ---
-\newcommand\addedToInitVarsEOL@mlpretty{}
+\newcommand\addedToInitVarsEOL@mlpretty{} % polymorphic macro for InitVarsEOL
 \newcommand\@ddedToInitVarsEOL@mlpretty
 {%
   % at the start of a line, we're not inside a one-line comment
@@ -522,7 +529,7 @@
 \lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpretty}
 
 % --- EndGroup hook ---
-\newcommand\addedToEndGroup@mlpretty{}
+\newcommand\addedToEndGroup@mlpretty{} % polymorphic macro for EndGroup
 \newcommand\@ddedToEndGroup@mlpretty
 {%
   % if we were inside a string, we're now getting out of it
@@ -533,7 +540,7 @@
 \lst@AddToHook{EndGroup}{\addedToEndGroup@mlpretty}
 
 % --- PostOutput hook ---
-\newcommand\addedToPostOutput@mlpretty{}
+\newcommand\addedToPostOutput@mlpretty{} % polymorphic macro for PostOuput
 \newcommand\@ddedToPostOutput@mlpretty
 {%
   % At the first PostOutput, it's too late for a section title to start.
@@ -668,54 +675,5 @@
   breaklines          = true,
 }
 %TODO % digit color is [RGB]{102,102,102}
-
-
-% --- macros for inline code (scaled to the surrounding font size) ---
-% overrides the fontsize of \lst@basicstyle
-
-\newcommand\basicstyleSaved@mlpretty{}
-\newcommand\fsizeSaved@mlpretty{}
-\newcommand\baselineskipSaved@mlpretty{}
-
-\newcommand\applyCurrentFontsize@mlpretty
-{%
-  \let\basicstyleSaved@mlpretty\lst@basicstyle%
-  \let\fsizeSaved@mlpretty\f@size%
-  \let\baselineskipSaved@mlpretty\baselineskip%
-  \renewcommand\lst@basicstyle%
-  {%
-      \basicstyleSaved@mlpretty%
-      \fontsize{\fsizeSaved@mlpretty}{\baselineskipSaved@mlpretty}%
-      \selectfont%
-  }%
-}
-
-% inline Matlab code (no need for \atBeginCode and \atEndCode here)
-\newcommand\InlineMatlabPretty[2][]
-{%
-  \bgroup%
-    % According to the listings documentation, passing the option with
-    % \lstset is preferable to passing them in the optional argument of  
-    % \lstinline (which is still considered, as of listings v1.5b)
-    \lstset{language=\languageNormedDefd@mlpretty, #1}%
-    \applyCurrentFontsize@mlpretty%
-    \lstinline?#2?%
-    % (? is used as delimiter here because unlikely to occur in inline code)
-  \egroup%
-}
-
-% ... but that's a mouthful, so...
-\newcommand\DefineCharForInlineMatlabPretty[1][]
-{%
-  \newcommand\lst@shortinlinedef%
-  {%
-    \lstset{language=\languageNormedDefd@mlpretty, #1}%
-    \applyCurrentFontsize@mlpretty%
-    \lstinline%
-  }%
-  \lstMakeShortInline@%
-}%
-
-\let\DeleteCharForInlineMatlabPretty\lstDeleteShortInline
 
 \endinput
