@@ -672,15 +672,20 @@
 
 % --- macros for inline code (scaled to the surrounding font size) ---
 % overrides the fontsize of \lst@basicstyle
+
+\newcommand\basicstyleSaved@mlpretty{}
+\newcommand\fsizeSaved@mlpretty{}
+\newcommand\baselineskipSaved@mlpretty{}
+
 \newcommand\applyCurrentFontsize@mlpretty
 {%
-  \let\lst@basicstyleSaved@mlpretty\lst@basicstyle%
-  \let\f@sizeSaved@mlpretty\f@size%
+  \let\basicstyleSaved@mlpretty\lst@basicstyle%
+  \let\fsizeSaved@mlpretty\f@size%
   \let\baselineskipSaved@mlpretty\baselineskip%
   \renewcommand\lst@basicstyle%
   {%
-      \lst@basicstyleSaved@mlpretty%
-      \fontsize{\f@sizeSaved@mlpretty}{\baselineskipSaved@mlpretty}%
+      \basicstyleSaved@mlpretty%
+      \fontsize{\fsizeSaved@mlpretty}{\baselineskipSaved@mlpretty}%
       \selectfont%
   }%
 }
