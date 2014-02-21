@@ -1,1 +1,10 @@
 *.DS_store
+*.aux
+*.glo
+*.gls
+*.idx
+*.ilg
+*.log
+*.toc
+
+matlab-prettifier.pdf

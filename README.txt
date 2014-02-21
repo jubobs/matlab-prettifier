@@ -1,4 +1,15 @@
-matlab-prettifier is a package for LaTeX & friends that allows you to
-effortlessly and beautifully typeset Matlab source code in PDF files.
+Matlab-prettifier package
 
-matlab-prettifier is released under the LaTeX Project Public License.
+Copyright 2014--     Julien Cretel
+
+Released under the LaTeX Project Public License 1.3 or later
+
+The `matlab-prettifier' package allows you to effortlessly prettyprint 
+Matlab source code in documents typeset with LaTeX & friends. Built
+on top of the `listings' package, it defines a language called
+`Matlab-pretty', which can be invoked by `listings' macros and
+environments defined and can be used in conjunction with (most) parameters
+provided by the `listings' package. Fine-tuning of the output is possible
+via a number of special-purpose keys extending those defined by `listings'.
+The `matlab-prettifier' package also conveniently provides three
+predefined styles, for fast deployment.
