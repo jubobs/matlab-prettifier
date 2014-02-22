@@ -49,7 +49,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{581}
+% \CheckSum{580}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -90,14 +90,16 @@
 % \begin{abstract}
 %   The \mlpkg{} package allows you to effortlessly prettyprint
 %   Matlab source code in documents typeset with \LaTeX{} \& friends. Built
-%   on top of the \lstpkg{} package, it defines a language called
+%   on top of the \lstpkg{} package, \mlpkg{} defines a language called
 %   \mllng{}, which can be invoked by \lstpkg{} macros and
 %   environments and can be used in conjunction with (most) parameters
 %   provided by the \lstpkg{} package. Fine-tuning of the output is possible
-%   via a number of special-purpose keys extending those defined by \lstpkg{}.
-%   The \mlpkg{} package also conveniently provides three
-%   predefined styles, for fast deployment.
+%   via a key-value interface extending that of \lstpkg{}. The \mlpkg{}
+%   package also conveniently provides three predefined styles, for fast
+%   deployment.
 % \end{abstract}
+%
+% \newpage\tableofcontents\newpage
 %
 % \section{Introduction}
 %
@@ -185,17 +187,18 @@
 % \subsection{Key-value interface}
 %
 % We extend \lstpkg{}' key-value interface by defining several additional
-% keys, which we will use in the definitions of a new \lstpkg{} language
-% and three \lstpkg{} styles, further down. Most of those new keys start by
-% the prefix |ml|, so that the user easily distinguish them from
-% \emph{bona fide} \lstpkg{} keys.
+% keys, which we will use for defining a new \lstpkg{} language and three
+% \lstpkg{} styles, further down. Most of those new keys start by the prefix
+% |ml|, so that the user easily distinguish them from \emph{bona fide}
+% \lstpkg{} keys.
 %
 % \begin{macro}{mlkeywordstyle}
 %   In the upcoming language definition, we use several classes of \lstpkg{}
 % keywords to handle the different \matlab{} keywords. However, we need one
 % style key to ``rule them all''.
 %    \begin{macrocode}
-\lst@Key{mlkeywordstyle}\relax{\renewcommand\keywordStyle@mlpretty{#1}}
+\lst@Key{mlkeywordstyle}\relax%
+  {\renewcommand\keywordStyle@mlpretty{#1}}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{mllastelementstyle}
@@ -216,7 +219,7 @@
 % By default, in inline code, \mlpkg{} typesets the "end" keyword as closing
 % keyword (\emph{not} as ``last element''), and typesets the four
 % class-definition identifiers, "events", "enumeration", "methods", and
-% "properties", as \matlab{} functions (\emph{not} as to keywords). However,
+% "properties", as \matlab{} functions (\emph{not} as keywords). However,
 % the user may want to print 
 % \lstinline[language=Matlab-pretty,mloverride]|end|,
 % \lstinline[language=Matlab-pretty,mloverride]|events|, 
@@ -234,11 +237,13 @@
 % \begin{macro}{mlstringstyle}
 % This key controls the style of \matlab{} strings. TODO
 %    \begin{macrocode}
-\lst@Key{mlstringstyle}\relax{\renewcommand\stringStyle@mlpretty{#1}}
+\lst@Key{mlstringstyle}\relax%
+  {\renewcommand\stringStyle@mlpretty{#1}}
 %    \end{macrocode}
 % \end{macro}
 %    \begin{macrocode}
-\lst@Key{mlcommentstyle}\relax{\renewcommand\commentStyle@mlpretty{#1}}
+\lst@Key{mlcommentstyle}\relax%
+  {\renewcommand\commentStyle@mlpretty{#1}}
 \lst@Key{mlsectionrulethickness}\relax%
   {\renewcommand\sectionRuleThicknessRatio@mlpretty{#1}}
 \lst@Key{mlsectionrulecolor}\relax%
@@ -248,7 +253,8 @@
 \lst@Key{mlsectiontitlestyle}\relax
   {\renewcommand\sectionTitleStyle@mlpretty{#1}}
 
-\lst@Key{mlsyscomstyle}\relax{\renewcommand\syscomStyle@mlpretty{#1}}
+\lst@Key{mlsyscomstyle}\relax%
+  {\renewcommand\syscomStyle@mlpretty{#1}}
 %    \end{macrocode}
 %  \begin{macro}{mlsharedvars}
 %  \begin{macro}{moremlsharedvars}
@@ -269,7 +275,8 @@
 % The style of those variables with shared scope is controlled via the
 % \keyname{mlsharedvarstyle} key.
 %    \begin{macrocode}
-\lst@Key{mlsharedvarstyle}\relax{\renewcommand\sharedvarStyle@mlpretty{#1}}
+\lst@Key{mlsharedvarstyle}\relax%
+  {\renewcommand\sharedvarStyle@mlpretty{#1}}
 %    \end{macrocode}
 %    \begin{macrocode}
 \lst@Key{mlunquotedstringdelim}\relax%
@@ -279,6 +286,8 @@
 %    \end{macrocode}
 %
 % \subsection{Language definition}
+%
+% \subsubsection{Language name}
 %
 % To avoid code duplication, we define a macro that expands to the name of
 % our new language, \mllng{}.
@@ -305,7 +314,7 @@
 {%
 %    \end{macrocode}
 %
-% \matlab{}, of course, is a case-sensitive language.
+% \matlab{} is a case-sensitive language.
 %    \begin{macrocode}
   sensitive = true,
 %    \end{macrocode}
@@ -351,6 +360,8 @@
 % we define several classes of \pkg{listings} keywords
 % The user may want to use the keywords key
 % For precaution, we use relatively large class numbers.
+%
+% \subsubsection{Keywords}
 %
 % The following keywords open a block that has nothing to do with class
 % definition. We defer the definition of |\processOpRegKW@mlpretty| to
@@ -400,9 +411,9 @@
   keywordstyle=[259]\processStdaKW@mlpretty,
 %    \end{macrocode}
 % The "classdef" keyword interacts with other keywords in a unique fashion;
-% therefore, we use a dedicated class of \lstpkg{} keywords to handle it. We
-% defer the definition of |\processClassdefKW@mlpretty| to after the
-% language definition.
+% therefore, we dedicate a whole class of \lstpkg{} keywords to it. We defer
+% the definition of |\processClassdefKW@mlpretty| to after the language
+% definition.
 %    \begin{macrocode}
   morekeywords=[260]{classdef},  
   keywordstyle=[260]\processClassdefKW@mlpretty,
@@ -425,26 +436,42 @@
   % 
   morekeywords=[262]{end},
   keywordstyle=[262]\processEndKW@mlpretty,
-  %
-  % strings
+%    \end{macrocode}
+%
+% \subsubsection{Strings}
+%
+%    \begin{macrocode}
   morestring=[m]',
   stringstyle=\processString@mlpretty,
-  %
-  % comments
+%    \end{macrocode}
+%
+% \subsubsection{Comments \& section titles}
+%
+%    \begin{macrocode}
   morecomment=[l]\%,                                       % to-end-of-line
   morecomment=[n]{\%\{\^^M}{\%\}\^^M},                     % block
   moredelim=**[il][\processDotDotDot@mlpretty]{...},       % line continuation
   moredelim=**[l][\processSectionTitle@mlpretty]{\%\%},    % code section
   moredelim=**[l][\processSectionTitle@mlpretty]{\%\%\ },  % code section
   commentstyle=\commentStyle@mlpretty,
-  %
-  % system commands
+%    \end{macrocode}
+%
+% \subsubsection{System commands}
+%
+%    \begin{macrocode}
   moredelim=[l][\syscomStyle@mlpretty]{!},
-  %
-  % variables with shared scope
+%    \end{macrocode}
+%
+% \subsubsection{Variables with shared scope}
+%
+%    \begin{macrocode}
   mlsharedvarStyle@mlpretty = \processSharedVar@mlpretty,
-}
-[% `listings' aspects needed
+%    \end{macrocode}
+%
+% \subsubsection{\lstpkg{} aspects}
+%
+%    \begin{macrocode}
+}[`listings' aspects needed
   keywords,
   strings,
   comments,
@@ -470,7 +497,8 @@
 
 
 % --- Macros for resetting counters and switches ---
-\newcommand\resetBracketCount@mlpretty{\global\netBracketCount@mlpretty=0}
+\newcommand\resetBracketCount@mlpretty
+  {\global\netBracketCount@mlpretty=0}
 
 \newcommand\resetEndKW@mlpretty
 {%
@@ -504,6 +532,10 @@
   {\commentFontSpecs@mlpretty\bfseries}
 \newcommand\syscomFontSpecs@mlpretty{}
 \newcommand\sharedvarFontSpecs@mlpretty{}
+\newcommand\placeholderOpDelim@mlpretty{\textlangle}
+\newcommand\placeholderClDelim@mlpretty{\textrangle}
+\newcommand\placeholderDelimFontSpecs@mlpretty{\normalfont\upshape}
+\newcommand\placeholderContentFontSpecs@mlpretty{\normalfont\itshape}
 
 % Matlab syntax highlighting colors
 \colorlet{textColor@mlpretty}{black}                      % text
@@ -515,6 +547,7 @@
 \colorlet{sectionRuleColor@mlpretty}{black!15}            % code-section rule
 \definecolor{syscomColor@mlpretty}{RGB}{178,140,000}      % system commands
 \definecolor{sharedvarColor@mlpretty}{RGB}{000,163,163}   % shared scope
+\definecolor{placeholderColor@mlpretty}{RGB}{209,0,86}
 
 % More Matlab colors (currently not used by matlab-prettifier)
 \colorlet{bgColor@mlpretty}{white}                        % background color
@@ -572,6 +605,13 @@
   \sharedvarFontSpecs@mlpretty%
   \color{sharedvarColor@mlpretty}%
 }
+
+\newcommand\placeholderStyle@mlpretty
+{%
+  \placeholderContentFontSpecs@mlpretty%
+  \color{placeholderColor@mlpretty}%
+}
+
 
 
 % Macro for SelectCharTable key
@@ -842,30 +882,27 @@
   \fi%
 }
 \lst@AddToHook{DeInit}{\addedToDeInitHook}
-
-
-% --- Macros for placeholders ---
-
-% Placeholder colors
-\definecolor{placeholderColor@mlpretty}{RGB}{209,0,86}
-
-% Macros for placeholder delimiters
-\newcommand\placeholderOpDelim@mlpretty{\textlangle}
-\newcommand\placeholderClDelim@mlpretty{\textrangle}
-\newcommand\placeholderDelimFontSpecs@mlpretty{\normalfont\upshape}
-\newcommand\placeholderContentFontSpecs@mlpretty{\normalfont\itshape}
-
-\newcommand\placeholderStyle@mlpretty
-{%
-  \placeholderContentFontSpecs@mlpretty%
-  \color{placeholderColor@mlpretty}%
-}
-
-% Macro for conditional italic correction
-% (in case the font shape is either italic or slanted)
-\newcommand*{\it@mlpretty}{it} 
-\newcommand*{\sl@mlpretty}{sl}
-\newcommand\condItalicCorrection@mlpretty
+%    \end{macrocode}
+%
+% \subsection{Placeholders in code snippets}
+%
+% \begin{macro}{\it@mlpretty}
+% This macro simply expands to the \LaTeX{} name for italic shape.
+%    \begin{macrocode}
+\newcommand\it@mlpretty{it}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\sl@mlpretty}
+% This macro simply expands to the \LaTeX{} name for slanted shape.
+%    \begin{macrocode}
+\newcommand\sl@mlpretty{sl}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\itcorr@mlpretty}
+% This macro is used for inserting italic correction in case the font shape is
+% italic or slanted.
+%    \begin{macrocode}
+\newcommand\itcorr@mlpretty
 {%
   \ifx\f@shape\it@mlpretty%
     \/%
@@ -875,31 +912,36 @@
     \fi%
   \fi%
 }
-
-% --- User macro for typesetting snippet placeholders ---
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\snippetPlaceholder}
+% This user macro can be used to typeset placeholders in code snippets.
+%    \begin{macrocode}
 \newcommand\snippetPlaceholder[1]
 {%
   \bgroup%
     \placeholderStyle@mlpretty%
     \bgroup%
-      % opening delimiter
       \placeholderDelimFontSpecs@mlpretty%
       \placeholderOpDelim@mlpretty%
     \egroup%
-    % placeholder content
-    #1\condItalicCorrection@mlpretty%
+    #1\itcorr@mlpretty%
     \bgroup%
-      % closing delimiter
       \placeholderDelimFontSpecs@mlpretty%
       \placeholderClDelim@mlpretty%
     \egroup%
   \egroup%
 }
-
-
-% --- built-in matlab-prettifier styles ---
-
-% Quick \& easy style, for those who don't want to bother with customization
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Predefined \texorpdfstring{\mlpkg{}}{matlab-prettifier} styles}
+%
+% \subsubsection{Standard style}
+%
+% \begin{macro}{Matlab-standard-style}
+%    \begin{macrocode}
 \lstdefinestyle{Matlab-standard-style}
 {
   language   = \languageNormedDefd@mlpretty,
@@ -907,41 +949,56 @@
   numbers    = left,
   breaklines = true,
 }
-
-% Black & white style
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Black \& white style}
+%
+% \begin{macro}{Matlab-bw-style}
+%    \begin{macrocode}
 \lstdefinestyle{Matlab-bw-style}
 {
   language            = \languageNormedDefd@mlpretty,
-  mlkeywordstyle      = \color[gray]{0}             \bfseries        ,
-  mlcommentstyle      = \color[gray]{.75}                    \itshape,
-  mlstringstyle       = \color[gray]{.5}                             ,
-  mlsyscomstyle       = \color[gray]{.25}                            ,
-  mlsectiontitlestyle = \color[gray]{.75}           \bfseries\itshape,
-  mlsharedvarstyle    = \color[gray]{0}                              ,
-  mlplaceholderstyle  = \color[gray]{0}  \normalfont         \itshape,
-  frame               = single,
-  numbers             = left,
-  breaklines          = true,
-}
-
-% Style very similar to that of the Pygments lexer called `MatlabLexer',
-% (see http://pygments.org/docs/lexers/). This style basically mimics
-% the output obtained with the minted, verbments, and pythontex packages.
-\lstdefinestyle{Matlab-pygsty-style}
-{
-  language            = \languageNormedDefd@mlpretty,
-  mllastelementstyle  = \color[RGB]{127,000,000}                            ,
-  mlkeywordstyle      = \color[RGB]{000,127,000}           \bfseries        ,
-  mlcommentstyle      = \color[RGB]{063,127,127}                    \itshape,
-  mlstringstyle       = \color[RGB]{186,034,034}                            ,
-  mlsyscomstyle       = \color[RGB]{000,127,000}                            ,
-  mlsectiontitlestyle = \color[RGB]{063,127,127}                    \itshape,
-  mlsharedvarstyle    = \color[RGB]{034,034,186}                            ,
-  mlplaceholderstyle  = \color[RGB]{127,063,127}\normalfont         \itshape,
+  mlkeywordstyle      = \color[gray]{0}  \bfseries          ,
+  mlcommentstyle      = \color[gray]{.75}           \itshape,
+  mlstringstyle       = \color[gray]{.5}                    ,
+  mlsyscomstyle       = \color[gray]{.25}                   ,
+  mlsectiontitlestyle = \color[gray]{.75}\bfseries  \itshape,
+  mlsharedvarstyle    = \color[gray]{0}                     ,
+  mlplaceholderstyle  = \color[gray]{0}  \normalfont\itshape,
   frame               = single,
   numbers             = left,
   breaklines          = true,
 }
 %    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Pygments-like style}
+%
+% The \pkg{minted}, \pkg{verbments}, and \pkg{pythontex} packages all use
+% \href{http://pygments.org}{Pygments} lexers for syntax highlighting of
+% listings. This last \mlpkg{} style closely mimics that of the Pygments
+% lexer for \matlab{} called `MatlabLexer'.
+%
+% \begin{macro}{Matlab-pygsty-style}
+%    \begin{macrocode}
+\lstdefinestyle{Matlab-pygsty-style}
+{
+  language            = \languageNormedDefd@mlpretty,
+  mllastelementstyle  = \color[RGB]{127,000,000}                   ,
+  mlkeywordstyle      = \color[RGB]{000,127,000}\bfseries          ,
+  mlcommentstyle      = \color[RGB]{063,127,127}           \itshape,
+  mlstringstyle       = \color[RGB]{186,034,034}                   ,
+  mlsyscomstyle       = \color[RGB]{000,127,000}                   ,
+  mlsectiontitlestyle = \color[RGB]{063,127,127}           \itshape,
+  mlsharedvarstyle    = \color[RGB]{034,034,186}                   ,
+  mlplaceholderstyle  = \color[RGB]{127,063,127}\normalfont\itshape,
+  frame               = single,
+  numbers             = left,
+  breaklines          = true,
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \Finale
 \endinput
