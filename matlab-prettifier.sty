@@ -76,7 +76,7 @@
   {\lstKV@SetIf{#1}\ifShowCellrules@mlpretty@}
 \lst@Key{mlsectiontitlestyle}\relax
   {\renewcommand\sectionTitleStyle@mlpretty{#1}}
-\lst@Key{mloverridecontext}{false}[t]%
+\lst@Key{mloverride}{false}[t]%
   {\lstKV@SetIf{#1}\ifOverridecontext@mlpretty@}
 \lst@Key{mlsyscomstyle}\relax{\renewcommand\syscomStyle@mlpretty{#1}}
 \lst@Key{mlsharedvarstyle}\relax{\renewcommand\sharedvarStyle@mlpretty{#1}}
@@ -383,7 +383,8 @@
 \newcommand\processMidClassdefKW@mlpretty
 {%
   %only for typesetting those as keywords in inline code
-  \ifOverridecontext@mlpretty@% 
+  \ifOverridecontext@mlpretty@%
+    \keywordStyle@mlpretty%
   \else%
     \ifWithinSectionTitle@mlpretty@%
     \else%

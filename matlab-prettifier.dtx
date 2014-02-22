@@ -49,7 +49,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{580}
+% \CheckSum{581}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -186,9 +186,9 @@
 %
 % We extend \lstpkg{}' key-value interface by defining several additional
 % keys, which we will use in the definitions of a new \lstpkg{} language
-% and three \lstpkg{} styles, further down. In order to distinguish those
-% new keys from \emph{bona fide} \lstpkg{} keys, all their names start by the
-% prefix |ml|.
+% and three \lstpkg{} styles, further down. Most of those new keys start by
+% the prefix |ml|, so that the user easily distinguish them from
+% \emph{bona fide} \lstpkg{} keys.
 %
 % \begin{macro}{mlkeywordstyle}
 %   In the upcoming language definition, we use several classes of \lstpkg{}
@@ -204,7 +204,7 @@
 % it may stand for the last element of an array. In the first case, it's
 % highlighted in the same style as the other \matlab{} keywords, like so:
 % "end". In the other case, it's highlighted like ``normal text'', like so:
-% \lstinline[language=Matlab-pretty,mloverridecontext]|end|. The
+% \lstinline[language=Matlab-pretty,mloverride]|end|. The
 % \keyname{mllastelementstyle} key controls the look of the keyword when it
 % means ``last element''.
 %    \begin{macrocode}
@@ -212,24 +212,21 @@
   {\renewcommand\lastElemStyle@mlpretty{#1}}
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{mloverridecontext}
-% By default, \mlpkg{} typesets the "end" keyword as a closing keyword, but
-% the user may want to override that and typeset it as a ``last element''
-% \lstinline[language=Matlab-pretty,mloverridecontext]|end|, especially in
-% inline code.
-% Also, by default, \mlpkg{} typesets the four class-definition identifiers
-% ("events", "enumeration", "methods", and "properties") as \matlab{}
-% functions, but the user may want to override that and typeset them as
-% keywords
-% (^^A
-%   \lstinline[language=Matlab-pretty,mloverridecontext]|events|, 
-%   \lstinline[language=Matlab-pretty,mloverridecontext]|enumeration|, 
-%   \lstinline[language=Matlab-pretty,mloverridecontext]|methods|, and
-%   \lstinline[language=Matlab-pretty,mloverridecontext]|properties|^^A
-% ), especially in inline code.
-% This type of override can be achieved with the \keyname{mloverridecontext} key.
+% \begin{macro}{mloverride}
+% By default, in inline code, \mlpkg{} typesets the "end" keyword as closing
+% keyword (\emph{not} as ``last element''), and typesets the four
+% class-definition identifiers, "events", "enumeration", "methods", and
+% "properties", as \matlab{} functions (\emph{not} as to keywords). However,
+% the user may want to print 
+% \lstinline[language=Matlab-pretty,mloverride]|end|,
+% \lstinline[language=Matlab-pretty,mloverride]|events|, 
+% \lstinline[language=Matlab-pretty,mloverride]|enumeration|, 
+% \lstinline[language=Matlab-pretty,mloverride]|methods|, and
+% \lstinline[language=Matlab-pretty,mloverride]|properties|.
+% Overriding the default behaviour is made possible by the
+% \keyname{mloverride} key.
 %    \begin{macrocode}
-\lst@Key{mloverridecontext}{false}[t]%
+\lst@Key{mloverride}{false}[t]%
   {\lstKV@SetIf{#1}\ifOverridecontext@mlpretty@}
 %    \end{macrocode}
 % \end{macro}
@@ -647,6 +644,7 @@
 \newcommand\processClassdefKW@mlpretty
 {%
   \ifWithinSectionTitle@mlpretty@%
+    \keywordStyle@mlpretty%
   \else%
     \resetEndKW@mlpretty%
     \global\InClassdef@mlpretty@true%
