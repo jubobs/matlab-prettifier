@@ -5,6 +5,7 @@
 *.idx
 *.ilg
 *.log
+*.out
 *.toc
 
 matlab-prettifier.pdf

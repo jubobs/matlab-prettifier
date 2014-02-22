@@ -23,16 +23,21 @@
 %<*driver>
 \documentclass{ltxdoc}
 
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{filecontents}
 \usepackage{matlab-prettifier}
+\usepackage{hyperref}
 
 \lstMakeShortInline[language=Matlab-pretty]"
-\newcommand*{\pkg}[1]{\texttt{#1}}
+\newcommand*{\pkg}[1]{\textsf{#1}}
 \newcommand*{\keyname}[1]{\texttt{#1}}
 \newcommand*{\opt}[1]{\texttt{#1}}
-\newcommand*{\lstlng}[1]{\texttt{#1}}
 \newcommand*{\lststy}[1]{\texttt{#1}}
 \newcommand\matlab{\textsc{Matlab}}
+\newcommand\mlpkg{\pkg{matlab-prettifier}}
+\newcommand\lstpkg{\pkg{listings}}
+\newcommand\mllng{\texttt{Matlab-pretty}}
 
 \EnableCrossrefs
 \CodelineIndex
@@ -83,54 +88,63 @@
 % \maketitle
 %
 % \begin{abstract}
-%   The |matlab-prettifier| package allows you to effortlessly prettyprint
+%   The \mlpkg{} package allows you to effortlessly prettyprint
 %   Matlab source code in documents typeset with \LaTeX{} \& friends. Built
-%   on top of the |listings| package, it defines a language called
-%   |Matlab-pretty|, which can be invoked by |listings| macros and
-%   environments defined and can be used in conjunction with (most) parameters
-%   provided by the |listings| package. Fine-tuning of the output is possible
-%   via a number of special-purpose keys extending those defined by |listings|.
-%   The |matlab-prettifier| package also conveniently provides three
+%   on top of the \lstpkg{} package, it defines a language called
+%   \mllng{}, which can be invoked by \lstpkg{} macros and
+%   environments and can be used in conjunction with (most) parameters
+%   provided by the \lstpkg{} package. Fine-tuning of the output is possible
+%   via a number of special-purpose keys extending those defined by \lstpkg{}.
+%   The \mlpkg{} package also conveniently provides three
 %   predefined styles, for fast deployment.
 % \end{abstract}
 %
 % \section{Introduction}
 %
-% Put text here.
+% \section{Installation}
 %
-% \section{Usage}
-% \DescribeMacro{\YOURMACRO}
-% Put description of |\YOURMACRO| here.
+% \subsection{Required packages}
 %
-% \DescribeEnv{YOURENV}
-% Put description of |YOURENV| here.
+% \subsection{Installing \texorpdfstring{\pkg{matlab-prettifier}}{matlab-prettifier}}
+%
+% \section{Basic usage}
+%
+% \section{More advanced tweaks}
+%
+% \section{Known issues}
 %
 % \StopEventually{\clearpage\PrintChanges\PrintIndex}
 %
 % \section{Implementation}
 %
-% \subsection{Check for incompatible |listings| options}
+% \subsection{Preliminary checks}
 %
-% Here is a macro for checking whether the user has loaded the \pkg{listings}
-% package with some option that is incompatible with \pkg{matlab-prettifier},
-% and, if so, issuing an error.
+% Because the \lstpkg{} options \opt{noaspects}, \opt{0.21}, and \opt{savemem}
+% are incompatible with \pkg{matlab-prettifier}, checking whether the
+% \lstpkg{} package has been loaded with any of those options is a good idea;
+% if so, we should issue an error.
 % \begin{macro}{\lstoptcheck@mlpretty}
+%   This macro checks whether \lstpkg{} was loaded with a given option
+%   and, if so, throws an error.
 %    \begin{macrocode}
 \newcommand\lstoptcheck@mlpretty[1]
 {%
   \@ifpackagewith{listings}{#1}%
   {
-	  \PackageError{matlab-prettifier}%
-	    {incompatible listings' option #1}%
-	    {Make sure the `listings' package doesn't get loaded with option `#1'}
-  }{}
+    \PackageError{matlab-prettifier}%
+      {incompatible listings' option #1}%
+      {%
+        Make sure the `listings' package
+        doesn't get loaded with option `#1'%
+      }
+  }
+  {}
 }
 %    \end{macrocode}
 % \end{macro}
-% Because the \pkg{listings} options called \opt{noaspects}, \opt{0.21}, and
-% \opt{savemem} are incompatible with \pkg{matlab-prettifier}, we check
-% whether any of those three options has been used and, if so, we take
-% countermeasures.
+% Using that macro, we make sure that none of the problematic \lstpkg{}
+% options has been specified during an earlier loading of the \lstpkg{}
+% package.
 %    \begin{macrocode}
 \lstoptcheck@mlpretty{noaspects}
 \lstoptcheck@mlpretty{0.21}
@@ -139,9 +153,9 @@
 %
 % \subsection{Package options}
 %
-% \pkg{matlab-prettifier} currently offers no package option; therefore,
-% if the user mistakenly specifies some option for the package, we discard
-% that option and issue a warning.
+% \mlpkg{} currently offers no package option; therefore, if the user
+% mistakenly specifies any option for the package, we discard that option
+% and issue a warning.
 %    \begin{macrocode}
 \DeclareOption*%
 {%
@@ -153,8 +167,8 @@
 %
 % \subsection{Required packages}
 % 
-% Three packages are required, without any option.
-% We need \pkg{textcomp} in order to use the \pkg{listings}' \keyname{upquote}
+% We require three packages without any package option.
+% We need \pkg{textcomp} in order to use the \lstpkg{}' \keyname{upquote}
 % key;
 %    \begin{macrocode}
 \RequirePackage{textcomp}[2005/09/27]
@@ -163,20 +177,70 @@
 %    \begin{macrocode}
 \RequirePackage{xcolor}[2007/01/21]
 %    \end{macrocode}
-% and, of course, we need the ``big daddy''.
+% and, of course, we need the ``big daddy'': the \lstpkg{} package.
 %    \begin{macrocode}
 \RequirePackage{listings}[2013/08/26]
 %    \end{macrocode}
 %
-% \subsection{Key-value interface (TODO)}
+% \subsection{Key-value interface}
 %
-% A few additional keys, extending \pkg{listings}' key-value interface, are
-% defined. We use those keys for defining a new \pkg{listings} language
-% and three \pkg{listings} styles, further down.
+% We extend \lstpkg{}' key-value interface by defining several additional
+% keys, which we will use in the definitions of a new \lstpkg{} language
+% and three \lstpkg{} styles, further down. In order to distinguish those
+% new keys from \emph{bona fide} \lstpkg{} keys, all their names start by the
+% prefix |ml|.
+%
+% \begin{macro}{mlkeywordstyle}
+%   In the upcoming language definition, we use several classes of \lstpkg{}
+% keywords to handle the different \matlab{} keywords. However, we need one
+% style key to ``rule them all''.
 %    \begin{macrocode}
 \lst@Key{mlkeywordstyle}\relax{\renewcommand\keywordStyle@mlpretty{#1}}
-\lst@Key{mllastelementstyle}\relax{\renewcommand\lastElemStyle@mlpretty{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{mllastelementstyle}
+% The "end" keyword has different meanings depending on the context in which
+% it occurs: it may be used to close a code block (e.g.\ a "while" loop), or
+% it may stand for the last element of an array. In the first case, it's
+% highlighted in the same style as the other \matlab{} keywords, like so:
+% "end". In the other case, it's highlighted like ``normal text'', like so:
+% \lstinline[language=Matlab-pretty,mloverridecontext]|end|. The
+% \keyname{mllastelementstyle} key controls the look of the keyword when it
+% means ``last element''.
+%    \begin{macrocode}
+\lst@Key{mllastelementstyle}\relax%
+  {\renewcommand\lastElemStyle@mlpretty{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{mloverridecontext}
+% By default, \mlpkg{} typesets the "end" keyword as a closing keyword, but
+% the user may want to override that and typeset it as a ``last element''
+% \lstinline[language=Matlab-pretty,mloverridecontext]|end|, especially in
+% inline code.
+% Also, by default, \mlpkg{} typesets the four class-definition identifiers
+% ("events", "enumeration", "methods", and "properties") as \matlab{}
+% functions, but the user may want to override that and typeset them as
+% keywords
+% (^^A
+%   \lstinline[language=Matlab-pretty,mloverridecontext]|events|, 
+%   \lstinline[language=Matlab-pretty,mloverridecontext]|enumeration|, 
+%   \lstinline[language=Matlab-pretty,mloverridecontext]|methods|, and
+%   \lstinline[language=Matlab-pretty,mloverridecontext]|properties|^^A
+% ), especially in inline code.
+% This type of override can be achieved with the \keyname{mloverridecontext} key.
+%    \begin{macrocode}
+\lst@Key{mloverridecontext}{false}[t]%
+  {\lstKV@SetIf{#1}\ifOverridecontext@mlpretty@}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{mlstringstyle}
+% This key controls the style of \matlab{} strings. TODO
+%    \begin{macrocode}
 \lst@Key{mlstringstyle}\relax{\renewcommand\stringStyle@mlpretty{#1}}
+%    \end{macrocode}
+% \end{macro}
+%    \begin{macrocode}
 \lst@Key{mlcommentstyle}\relax{\renewcommand\commentStyle@mlpretty{#1}}
 \lst@Key{mlsectionrulethickness}\relax%
   {\renewcommand\sectionRuleThicknessRatio@mlpretty{#1}}
@@ -186,19 +250,25 @@
   {\lstKV@SetIf{#1}\ifShowCellrules@mlpretty@}
 \lst@Key{mlsectiontitlestyle}\relax
   {\renewcommand\sectionTitleStyle@mlpretty{#1}}
-\lst@Key{mloverridecontext}{false}[t]%
-  {\lstKV@SetIf{#1}\ifOverridecontext@mlpretty@}
+
 \lst@Key{mlsyscomstyle}\relax{\renewcommand\syscomStyle@mlpretty{#1}}
 %    \end{macrocode}
-% For convenience, we define a new class of ``keywords'' for allowing
-% the user to define variables with shared scope. The following invocation of
-% \pkg{listings}' internal macro |\lst@InstallKeywords| defines, not only a
-% \keyname{mlsharedvars} key, but also a \keyname{moremlsharedvars} key and a
-% \keyname{deletemlsharedvars} key.
+%  \begin{macro}{mlsharedvars}
+%  \begin{macro}{moremlsharedvars}
+%  \begin{macro}{deletemlsharedvars}
+% For convenience, we create a brand new class of \lstpkg{} ``keywords'' for
+% allowing the user to define \matlab{} variables with shared scope. The
+% following invocation of \lstpkg{}' internal macro |\lst@InstallKeywords|
+% defines, not only a \keyname{mlsharedvars} key, but also a
+% \keyname{moremlsharedvars} key and a \keyname{deletemlsharedvars} key.
 %    \begin{macrocode}
 \lst@InstallKeywords k{mlsharedvars}{mlsharedvarStyle@mlpretty}\relax%
   {mlsharedvarStyle@mlpretty}{}ld
 %    \end{macrocode}
+%  \end{macro}
+%  \end{macro}
+%  \end{macro}
+% 
 % The style of those variables with shared scope is controlled via the
 % \keyname{mlsharedvarstyle} key.
 %    \begin{macrocode}
@@ -214,7 +284,7 @@
 % \subsection{Language definition}
 %
 % To avoid code duplication, we define a macro that expands to the name of
-% our new language, \lstlng{Matlab-pretty}.
+% our new language, \mllng{}.
 % \begin{macro}{\language@mlpretty}
 %    \begin{macrocode}
 \newcommand\language@mlpretty{Matlab-pretty}
@@ -229,49 +299,56 @@
   \expandafter{\language@mlpretty}
 %    \end{macrocode}
 % \end{macro}
+%
 % We can now define our new \pkg{listings} language, using some |\expandafter|
 % trickery on |\lstdefinelanguage|.
 %    \begin{macrocode}
 \expandafter\expandafter\expandafter\lstdefinelanguage\expandafter%
 {\language@mlpretty}
-{
+{%
 %    \end{macrocode}
-%    \begin{macrocode}
-% In order to keep track of the context, we need to modify the character
-% table a bit. Don't bother wondering how we change it just yet; you'll
-% find more details after the language definition.
-%    \begin{macrocode}
-  MoreSelectCharTable = \SelectCharTable@mlpretty,
-%    \end{macrocode}
+%
 % \matlab{}, of course, is a case-sensitive language.
 %    \begin{macrocode}
   sensitive = true,
 %    \end{macrocode}
-% The \keyname{upquote} key is set, here so that single quotes are printed
-% straight, as in \matlab{}.
+%
+% The \keyname{upquote} key is set so that right single quotes be straight,
+% as in \matlab{}; no offense to gay right single quotes.
 %    \begin{macrocode}
   upquote = true,
 %    \end{macrocode}
+%
 % By default, we don't want any visible-space characters anywhere in the code;
 % however, the user can always override that by setting \keyname{showspaces}
-% and \keyname{showstringspaces} to |true| \emph{after} loading the
-% \lstlng{Matlab-pretty} language or one of the styles defines by
-% \pkg{matlab-prettifier}.
+% and \keyname{showstringspaces} to |true| \emph{after} loading the \mllng{}
+% language or one of the styles defines by \mlpkg{}.
 %    \begin{macrocode}
   showspaces       = false,
   showstringspaces = false,
 %    \end{macrocode}
+%
 % Frames around listings may not be of a uniform colour. In most cases, this
 % behaviour is undesirable, but can be avoided by passing some colour
 % specification to the \keyname{rulecolor} key.
 %    \begin{macrocode}
   rulecolor = \color{black},
 %    \end{macrocode}
-% The ``basic style'' of our \matlab{} listings is defined below; we define
-% the |\basicStyle@mlpretty| macro further down.
+%
+% In order to keep track of the context, we need to modify the character
+% table a bit; we defer the definition of |\SelectCharTable@mlpretty| to
+% after the language definition.
+%    \begin{macrocode}
+  MoreSelectCharTable = \SelectCharTable@mlpretty,
+%    \end{macrocode}
+%
+% The ``basic style'' of our \matlab{} listings is defined below.
+% We defer the definition of |\basicStyle@mlpretty| to after the language
+% definition.
 %    \begin{macrocode}
   basicstyle = \basicStyle@mlpretty,
 %    \end{macrocode}
+%
 % TODO Occurence of different \matlab{} keywords change the syntax
 % highlighting performed by \matlab{} editor in different ways.
 % we define several classes of \pkg{listings} keywords
@@ -279,7 +356,8 @@
 % For precaution, we use relatively large class numbers.
 %
 % The following keywords open a block that has nothing to do with class
-% definition. We define the |\processOpRegKW@mlpretty| macro further down.
+% definition. We defer the definition of |\processOpRegKW@mlpretty| to
+% after the language definition.
 %    \begin{macrocode}
   morekeywords = [257]%
   {% 
@@ -297,8 +375,8 @@
 % Most of the following keywords can only occur within a block opened by the
 % keywords listed above---"function" and "return" are exceptions, but, as far
 % as I can tell, seem to have the same effects on syntax highlighting as the
-% others---and are unrelated to class definition. We define the
-% |\processMidKW@mlpretty| macro further down.
+% others---and are unrelated to class definition. We defer the definition of
+% |\processMidKW@mlpretty| to after the language definition.
 %    \begin{macrocode}
   morekeywords = [258]%
   {%
@@ -314,7 +392,8 @@
   keywordstyle=[258]\processMidKW@mlpretty,
 %    \end{macrocode}
 % The following two keywords are ``standalone''; they don't open or close any
-% block. We define the |\processStdaKW@mlpretty| macro further down.
+% block. We defer the definition of |\processStdaKW@mlpretty| to after the
+% language definition.
 %    \begin{macrocode}
   morekeywords=[259]%
   {%
@@ -322,7 +401,12 @@
     persistent,
   }, 
   keywordstyle=[259]\processStdaKW@mlpretty,
-  %
+%    \end{macrocode}
+% The "classdef" keyword interacts with other keywords in a unique fashion;
+% therefore, we use a dedicated class of \lstpkg{} keywords to handle it. We
+% defer the definition of |\processClassdefKW@mlpretty| to after the
+% language definition.
+%    \begin{macrocode}
   morekeywords=[260]{classdef},  
   keywordstyle=[260]\processClassdefKW@mlpretty,
 %    \end{macrocode}
@@ -339,6 +423,8 @@
     properties,
   },
   keywordstyle=[261]\processMidClassdefKW@mlpretty,
+%    \end{macrocode}
+%    \begin{macrocode}
   % 
   morekeywords=[262]{end},
   keywordstyle=[262]\processEndKW@mlpretty,
@@ -842,7 +928,7 @@
 
 % Style very similar to that of the Pygments lexer called `MatlabLexer',
 % (see http://pygments.org/docs/lexers/). This style basically mimics
-% the output you get with the minted, verbments, and pythontex packages.
+% the output obtained with the minted, verbments, and pythontex packages.
 \lstdefinestyle{Matlab-pygsty-style}
 {
   language            = \languageNormedDefd@mlpretty,
