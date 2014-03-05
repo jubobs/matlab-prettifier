@@ -26,15 +26,18 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{filecontents}
+\usepackage{lstdoc}
 \usepackage{matlab-prettifier}
 \usepackage{hyperref}
 
-\lstMakeShortInline[language=Matlab-pretty]"
+\lstMakeShortInline[language=Matlab-pretty,mloverride]"
 \newcommand*{\pkg}[1]{\textsf{#1}}
-\newcommand*{\keyname}[1]{\texttt{#1}}
 \newcommand*{\opt}[1]{\texttt{#1}}
 \newcommand*{\lststy}[1]{\texttt{#1}}
 \newcommand\matlab{\textsc{Matlab}}
+\newcommand\matlabver{\matlab~R2013a}
+\newcommand\mathworks{MathWorks}
+\newcommand*\trademark[1]{#1\textsuperscript{\textregistered}}
 \newcommand\mlpkg{\pkg{matlab-prettifier}}
 \newcommand\lstpkg{\pkg{listings}}
 \newcommand\mllng{\texttt{Matlab-pretty}}
@@ -99,21 +102,164 @@
 %   deployment.
 % \end{abstract}
 %
-% \newpage\tableofcontents\newpage
+% \tableofcontents\newpage
 %
 % \section{Introduction}
 %
+% \subsection{Why this package?}
+%
+% \href{http://www.mathworks.co.uk/products/matlab/}{\trademark{\matlab}}
+% is a high-level language and interactive environment for numerical
+% computation, visualization, and programming.
+% Despite being proprietary^^A
+%   \footnote{\matlab{} is a \trademark{\mathworks} product.}
+% and occasionally frustrating, \matlab{} remains a great tool for
+% prototyping matrix-oriented, number-crunching programs.
+% As such, it enjoys widespread popularity, especially in academia,
+% where, in particular, it is often used for teaching numerical methods.
+%
+% For improved code readability, the \matlab{} editor performs on-the-fly
+% syntax highlighting of \matlab{} source files, which simply consists of
+% text files with an ``m''~extension.
+% Figure shows a sample listing in the \matlabver{} editor.
+% Several packages^^A
+% --- vanilla \lstpkg{}, \pkg{mcode}, and \pkg{minted}, among others---^^A
+% allow for inclusion and automatic syntax highlighting of \matlab{} listings
+% in \LaTeX{} documents.
+% However, none of those packages do a great job at replicating the
+% syntax-highlighting style of the \matlab{} editor.^^A
+%   \footnote{see ... for a comparison.}
+% Furthermore, the \matlab{} function "publish" can be used to automatically
+% generate \LaTeX{} code for typesettting listings, but it uses a |verbatim|
+% environment, which doesn't allow for any fancy formatting.
+%
+% The lack of tools for faithfully mimicking the style of the \matlab{}
+% editor is unfortunate, especially from an educational standpoint, for the
+% following reason.
+% Most newcomers to \matlab{} read and write code in the \matlab{} editor
+% and are therefore continually exposed to the latter's highlighting style.
+% According to the theory of associative learning, visual cues%
+% ---such as those provided by syntax highlighting---%
+% play an important role for recognising patterns.
+% Therefore, students of a programming language are more likely to quickly
+% and effectively learn and recognise its syntax if they see it highlighted
+% in a consistent manner, whether it be in a text editor or in some course
+% material (handout, assignment paper, etc.).
+%
+% The \mlpkg{} package is intended to fill that gap.
+% Built on top of the feature-rich \lstpkg{} package, \mlpkg{} configures
+% the latter to replicate, as closely as possible, the syntax-highlighting
+% style of the \matlab{} editor, while also allowing for some customization.
+%
+% \subsection{Features}
+% 
+% \mlpkg{} defines a \pkg{listings} language called \mllng{}, which can be
+% invoked in the user-level macros and environments provided by the \lstpkg{}
+% package.
+% 
+% The \mlpkg{} package automatically highlights
+% %
+% \begin{itemize}
+%   \item context-insensitive keywords ("for", "while", "break", etc.),
+%   \item context-sensitive keywords ("end", "properties", "events", etc.),
+%   \item (quoted) strings,
+%   \item one-line and block comments,
+%   \item line-continuation token (i.e.~"...") and associated one-line comment,
+%   \item code-section titles.
+% \end{itemize}
+% %
+% Additional features include
+% %
+% \begin{itemize}
+%   \item a key-value interface extending that of the listings package,
+%   \item automatic scaling of inline code according to its surroundings,
+%   \item manual highlighting of variables with shared scope,
+%   \item a macro for easily typesetting placeholders in code snippets,
+%   \item three predefined styles.
+% \end{itemize}
+% %
+%
+% \subsection{Comparison with other packages}
+%
+% TODO
+% 
 % \section{Installation}
 %
-% \subsection{Required packages}
+% \subsection{Package dependencies}
 %
-% \subsection{Installing \texorpdfstring{\pkg{matlab-prettifier}}{matlab-prettifier}}
+% \mlpkg{} requires relatively up-to-date versions of packages \pkg{textcomp},
+% \pkg{xcolor}, and \lstpkg{}, all three of which ship with popular \TeX{}
+% distributions.
+%
+% \subsection{Installing \texorpdfstring{\mlpkg{}}{matlab-prettifier}}
+%
+% To install \mlpkg{} manually, run
+% \begin{verbatim}
+%   latex matlab-prettifier.ins
+% \end{verbatim}
+% and copy \mlpkg{}.sty to a path where \LaTeX{} can find it.
+% To generate the documentation, run
+% %
+% \begin{verbatim}
+%   pdflatex matlab-prettifier.dtx
+%   makeindex -s gglo.ist -o matlab-prettifier.gls matlab-prettifier.glo
+%   makeindex -s gind.ist -o matlab-prettifier.ind matlab-prettifier.idx
+%   pdflatex matlab-prettifier.dtx
+%   pdflatex matlab-prettifier.dtx
+% \end{verbatim}
 %
 % \section{Basic usage}
+%
+% \subsection{Loading \texorpdfstring{\mlpkg{}}{matlab-prettifier}}
+%
+% Simply write
+% \begin{verbatim}
+%   \usepackage{matlab-prettifier}
+% \end{verbatim}
+% somewhere in your preamble. You may want to load the \lstpkg{} and
+% \pkg{xcolor} packages \emph{with options}; in that case, do so \emph{before}
+% loading the \mlpkg{} package.
+%
+% The \mlpkg{} package currently offers no package options.
+%
+% \subsection{Embedded listings}
+%
+% To typeset a \matlab{} listing that is embedded in your \LaTeX{} document,
+% use an |lstlisting| environment and pass the value \mllng{} to the
+% |language| key.
+%
+% \begin{lstsample}[lstlisting]{}{}
+%    \begin{lstlisting}[language=Matlab-pretty]
+%    for k = 1:100
+%      k_multiple_of_three = (mod(k,3) == 0);
+%      k_multiple_of_five  = (mod(k,5) == 0);
+%      if k_multiple_of_three && k_multiple_of_five
+%        disp('FizzBuzz')
+%      elseif k_multiple_of_three
+%        disp('Fizz')
+%      elseif k_multiple_of_five
+%        disp('Buzz')
+%      else
+%        disp(num2str(k))
+%      end
+%    end
+%    \end{lstlisting}
+% \end{lstsample}
+% 
+%
+% \subsection{Standalone listings}
+%
+% \subsection{Inline listings}
+%
+% \subsection{Placeholders}
 %
 % \section{More advanced tweaks}
 %
 % \section{Known issues}
+% 
+%  Extended characters are not allowed in listings. use listingsutf8
+%
+% \section{Bug reports and missing features}
 %
 % \StopEventually{\clearpage\PrintChanges\PrintIndex}
 %
@@ -170,22 +316,18 @@
 % \subsection{Required packages}
 % 
 % We require three packages without any package option.
-% We need \pkg{textcomp} in order to use the \lstpkg{}' \keyname{upquote}
-% key;
-%    \begin{macrocode}
-\RequirePackage{textcomp}[2005/09/27]
-%    \end{macrocode}
-% we need the \pkg{xcolor} package in order to color our \matlab{} code;
-%    \begin{macrocode}
-\RequirePackage{xcolor}[2007/01/21]
-%    \end{macrocode}
+% We need \pkg{textcomp} in order to use the \lstpkg{}' |upquote|
+% key; we need the \pkg{xcolor} package in order to color our \matlab{} code;
 % and, of course, we need the ``big daddy'': the \lstpkg{} package.
 %    \begin{macrocode}
+\RequirePackage{textcomp}[2005/09/27]
+\RequirePackage{xcolor}[2007/01/21]
 \RequirePackage{listings}[2013/08/26]
 %    \end{macrocode}
 %
 % \subsection{Key-value interface}
 %
+% TODO: \mlpkg{} does a lot behind the scenes; using the listings key wouldn't do. several classes of keyword for conveninence, but the user really wants to affect the style of all those keyword in one go.
 % We extend \lstpkg{}' key-value interface by defining several additional
 % keys, which we will use for defining a new \lstpkg{} language and three
 % \lstpkg{} styles, further down. Most of those new keys start by the prefix
@@ -208,7 +350,7 @@
 % highlighted in the same style as the other \matlab{} keywords, like so:
 % "end". In the other case, it's highlighted like ``normal text'', like so:
 % \lstinline[language=Matlab-pretty,mloverride]|end|. The
-% \keyname{mllastelementstyle} key controls the look of the keyword when it
+% |mllastelementstyle| key controls the look of the keyword when it
 % means ``last element''.
 %    \begin{macrocode}
 \lst@Key{mllastelementstyle}\relax%
@@ -227,7 +369,7 @@
 % \lstinline[language=Matlab-pretty,mloverride]|methods|, and
 % \lstinline[language=Matlab-pretty,mloverride]|properties|.
 % Overriding the default behaviour is made possible by the
-% \keyname{mloverride} key.
+% |mloverride| key.
 %    \begin{macrocode}
 \lst@Key{mloverride}{false}[t]%
   {\lstKV@SetIf{#1}\ifOverridecontext@mlpretty@}
@@ -262,8 +404,8 @@
 % For convenience, we create a brand new class of \lstpkg{} ``keywords'' for
 % allowing the user to define \matlab{} variables with shared scope. The
 % following invocation of \lstpkg{}' internal macro |\lst@InstallKeywords|
-% defines, not only a \keyname{mlsharedvars} key, but also a
-% \keyname{moremlsharedvars} key and a \keyname{deletemlsharedvars} key.
+% defines, not only a |mlsharedvars| key, but also a
+% |moremlsharedvars| key and a |deletemlsharedvars| key.
 %    \begin{macrocode}
 \lst@InstallKeywords k{mlsharedvars}{mlsharedvarStyle@mlpretty}\relax%
   {mlsharedvarStyle@mlpretty}{}ld
@@ -273,7 +415,7 @@
 %  \end{macro}
 % 
 % The style of those variables with shared scope is controlled via the
-% \keyname{mlsharedvarstyle} key.
+% |mlsharedvarstyle| key.
 %    \begin{macrocode}
 \lst@Key{mlsharedvarstyle}\relax%
   {\renewcommand\sharedvarStyle@mlpretty{#1}}
@@ -319,15 +461,15 @@
   sensitive = true,
 %    \end{macrocode}
 %
-% The \keyname{upquote} key is set so that right single quotes be straight,
+% The |upquote| key is set so that right single quotes be straight,
 % as in \matlab{}; no offense to gay right single quotes.
 %    \begin{macrocode}
   upquote = true,
 %    \end{macrocode}
 %
 % By default, we don't want any visible-space characters anywhere in the code;
-% however, the user can always override that by setting \keyname{showspaces}
-% and \keyname{showstringspaces} to |true| \emph{after} loading the \mllng{}
+% however, the user can always override that by setting |showspaces|
+% and |showstringspaces| to |true| \emph{after} loading the \mllng{}
 % language or one of the styles defines by \mlpkg{}.
 %    \begin{macrocode}
   showspaces       = false,
@@ -336,7 +478,7 @@
 %
 % Frames around listings may not be of a uniform colour. In most cases, this
 % behaviour is undesirable, but can be avoided by passing some colour
-% specification to the \keyname{rulecolor} key.
+% specification to the |rulecolor| key.
 %    \begin{macrocode}
   rulecolor = \color{black},
 %    \end{macrocode}
@@ -471,7 +613,7 @@
 % \subsubsection{\lstpkg{} aspects}
 %
 %    \begin{macrocode}
-}[`listings' aspects needed
+}[
   keywords,
   strings,
   comments,
