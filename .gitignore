@@ -6,6 +6,7 @@
 *.ilg
 *.log
 *.out
+*.tmp
 *.toc
 
 matlab-prettifier.pdf
