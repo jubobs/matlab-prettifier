@@ -5,6 +5,7 @@
 *.idx
 *.ilg
 *.log
+*.m
 *.out
 *.tmp
 *.toc

@@ -29,13 +29,25 @@
 \usepackage{lstdoc}
 \usepackage{matlab-prettifier}
 \usepackage{hyperref}
+\usepackage{cleveref}
+
+\begin{filecontents*}{placeholder.m}
+while `\ph{condition}`
+  if `\ph{something-bad-happens}`
+    break
+  else
+    % do something useful
+  end
+end
+\end{filecontents*}
 
 \lstMakeShortInline[language=Matlab-pretty,mloverride]"
+\let\ph\snippetPlaceholder
 \newcommand*{\pkg}[1]{\textsf{#1}}
 \newcommand*{\opt}[1]{\texttt{#1}}
 \newcommand*{\lststy}[1]{\texttt{#1}}
 \newcommand\matlab{\textsc{Matlab}}
-\newcommand\matlabver{\matlab~R2013a}
+\newcommand\matlabver{\matlab~(R2013a)}
 \newcommand\mathworks{MathWorks}
 \newcommand*\trademark[1]{#1\textsuperscript{\textregistered}}
 \newcommand\mlpkg{\pkg{matlab-prettifier}}
@@ -121,25 +133,25 @@
 % For improved code readability, the \matlab{} editor performs on-the-fly
 % syntax highlighting of \matlab{} source files, which simply consists of
 % text files with an ``m''~extension.
-% Figure shows a sample listing in the \matlabver{} editor.
-% Several packages^^A
-% --- vanilla \lstpkg{}, \pkg{mcode}, and \pkg{minted}, among others---^^A
-% allow for inclusion and automatic syntax highlighting of \matlab{} listings
-% in \LaTeX{} documents.
+% Several \LaTeX{} packages^^A
+% ---vanilla \lstpkg{}, \pkg{mcode}, and \pkg{minted}, among others---^^A
+% allow for automatic syntax highlighting of \matlab{} listings in \LaTeX{}
+% documents.
 % However, none of those packages do a great job at replicating the
 % syntax-highlighting style of the \matlab{} editor.^^A
 %   \footnote{see ... for a comparison.}
-% Furthermore, the \matlab{} function "publish" can be used to automatically
-% generate \LaTeX{} code for typesettting listings, but it uses a |verbatim|
-% environment, which doesn't allow for any fancy formatting.
+% Besides, although \matlab{} provides a built-in function, called "publish",
+% that can be used to generate \LaTeX{} code for typesetting \matlab{}
+% listings, that function uses the rudimentary |verbatim| environment,
+% which, in particular, doesn't allow for any fancy formatting.
 %
 % The lack of tools for faithfully mimicking the style of the \matlab{}
 % editor is unfortunate, especially from an educational standpoint, for the
 % following reason.
 % Most newcomers to \matlab{} read and write code in the \matlab{} editor
-% and are therefore continually exposed to the latter's highlighting style.
-% According to the theory of associative learning, visual cues%
-% ---such as those provided by syntax highlighting---%
+% and are therefore continually exposed to the its highlighting style.
+% According to the theory of associative learning, visual cues^^A
+% ---such as those provided by syntax highlighting---^^A
 % play an important role for recognising patterns.
 % Therefore, students of a programming language are more likely to quickly
 % and effectively learn and recognise its syntax if they see it highlighted
@@ -147,18 +159,19 @@
 % material (handout, assignment paper, etc.).
 %
 % The \mlpkg{} package is intended to fill that gap.
-% Built on top of the feature-rich \lstpkg{} package, \mlpkg{} configures
-% the latter to replicate, as closely as possible, the syntax-highlighting
-% style of the \matlab{} editor, while also allowing for some customization.
+% Built on top of the feature-rich \lstpkg{} package, \mlpkg{} allows you to
+%  beautifully and effortlessly typeset \matlab{} listings, as it configures
+% \lstpkg{} ``behind the scenes'' to replicate, as closely as possible, the
+% syntax-highlighting style of the \matlab{} editor.
+% Furthermore, \mlpkg{} comes with a few additional features that should make
+% your life easier. Read on!
 %
 % \subsection{Features}
 % 
-% \mlpkg{} defines a \pkg{listings} language called \mllng{}, which can be
-% invoked in the user-level macros and environments provided by the \lstpkg{}
-% package.
-% 
-% The \mlpkg{} package automatically highlights
-% %
+% The \mlpkg{} package defines a \pkg{listings} language called \mllng{},
+% which can be invoked in the user-level macros and environments provided by
+% the \lstpkg{} package. \mllng{} automatically highlights
+% ^^A
 % \begin{itemize}
 %   \item context-insensitive keywords ("for", "while", "break", etc.),
 %   \item context-sensitive keywords ("end", "properties", "events", etc.),
@@ -167,21 +180,21 @@
 %   \item line-continuation token (i.e.~"...") and associated one-line comment,
 %   \item code-section titles.
 % \end{itemize}
-% %
+% ^^A
 % Additional features include
-% %
+% ^^A
 % \begin{itemize}
-%   \item a key-value interface extending that of the listings package,
+%   \item a key-value interface extending that of the \lstpkg{} package,
 %   \item automatic scaling of inline code according to its surroundings,
 %   \item manual highlighting of variables with shared scope,
 %   \item a macro for easily typesetting placeholders in code snippets,
 %   \item three predefined styles.
 % \end{itemize}
-% %
+% ^^A
 %
 % \subsection{Comparison with other packages}
 %
-% TODO
+% TODO; use a matrix with features of each; speed benchmark
 % 
 % \section{Installation}
 %
@@ -189,77 +202,171 @@
 %
 % \mlpkg{} requires relatively up-to-date versions of packages \pkg{textcomp},
 % \pkg{xcolor}, and \lstpkg{}, all three of which ship with popular \TeX{}
-% distributions.
+% distributions. It loads those three packages without any options.
 %
 % \subsection{Installing \texorpdfstring{\mlpkg{}}{matlab-prettifier}}
 %
+% TODO
 % To install \mlpkg{} manually, run
+% ^^A
 % \begin{verbatim}
-%   latex matlab-prettifier.ins
-% \end{verbatim}
+%   latex matlab-prettifier.ins\end{verbatim}
+% ^^A
 % and copy \mlpkg{}.sty to a path where \LaTeX{} can find it.
 % To generate the documentation, run
-% %
+% ^^A
 % \begin{verbatim}
 %   pdflatex matlab-prettifier.dtx
 %   makeindex -s gglo.ist -o matlab-prettifier.gls matlab-prettifier.glo
 %   makeindex -s gind.ist -o matlab-prettifier.ind matlab-prettifier.idx
 %   pdflatex matlab-prettifier.dtx
-%   pdflatex matlab-prettifier.dtx
-% \end{verbatim}
+%   pdflatex matlab-prettifier.dtx\end{verbatim}
+% ^^A
 %
-% \section{Basic usage}
+% \section{User's guide}
+%
+% As stated above, the \mlpkg{} package is built on top of the \lstpkg{}
+% package.
+% If you already are a seasoned \lstpkg{} user, you should feel right at home.
+% If you're not, be aware that this user's guide makes use of some \lstpkg{}
+% functionalities (such as key-value options) without describing their usage.
+% For more details on those functionalities, you should consult the \lstpkg{}
+% documentation.
 %
 % \subsection{Loading \texorpdfstring{\mlpkg{}}{matlab-prettifier}}
 %
 % Simply write
+% ^^A
 % \begin{verbatim}
-%   \usepackage{matlab-prettifier}
-% \end{verbatim}
+%   \usepackage{matlab-prettifier}\end{verbatim}
+% ^^A
 % somewhere in your preamble. You may want to load the \lstpkg{} and
-% \pkg{xcolor} packages \emph{with options}; in that case, do so \emph{before}
-% loading the \mlpkg{} package.
+% \pkg{xcolor} packages with some options; in that case, make sure those
+% options are passed to those two packages \emph{before} loading the \mlpkg{}
+% package.
 %
 % The \mlpkg{} package currently offers no package options.
 %
-% \subsection{Embedded listings}
+% \subsection{Displayed code}
 %
-% To typeset a \matlab{} listing that is embedded in your \LaTeX{} document,
-% use an |lstlisting| environment and pass the value \mllng{} to the
-% |language| key.
-%
-% \begin{lstsample}[lstlisting]{}{}
-%    \begin{lstlisting}[language=Matlab-pretty]
-%    for k = 1:100
-%      k_multiple_of_three = (mod(k,3) == 0);
-%      k_multiple_of_five  = (mod(k,5) == 0);
-%      if k_multiple_of_three && k_multiple_of_five
-%        disp('FizzBuzz')
-%      elseif k_multiple_of_three
-%        disp('Fizz')
-%      elseif k_multiple_of_five
-%        disp('Buzz')
-%      else
-%        disp(num2str(k))
-%      end
-%    end
-%    \end{lstlisting}
-% \end{lstsample}
-% 
+% To typeset a \matlab{} listing embedded in your |tex| file, simply enclose
+% it in an |lstlisting| environment, and specify |language=|\mllng{} in the
+% environment's optional argument.
+% ^^A
+% \begin{verbatim}
+%   \begin{lstlisting}[language=Matlab-pretty]
+%     ...
+%   \end{lstlisting}\end{verbatim}
+% ^^A
 %
 % \subsection{Standalone listings}
 %
+% In practice, though, you probably want, for maintainability reasons,
+% to keep, whenever possible, your \matlab{} listings in external files^^A
+% ---rather than embedding them in your |tex|~file.
+% To typeset a \matlab{} listing residing in an m-file, simply invoke the
+% |\lstinputlisting| macro; specify |language=|\mllng{} in the macro's
+% optional argument, and pass the file's path to the mandatory argument.
+% ^^A
+% \begin{verbatim}
+%   \lstinputlisting[language=Matlab-pretty]{sample.m}\end{verbatim}
+% ^^A
+%
 % \subsection{Inline listings}
+%
+% However, writing |\lstinline[language=Matlab-pretty]| for each instance of inline Matlab code in your document can rapidly become tedious. You could of course define a shorthand macro for that, but listings provides a way of defining … shorthand for ...
+% recommended shortinlinechar: |"| doesn’t occur in LaTeX code any way
+% you can use the same character for escapechar and for makeshortinline.
 %
 % \subsection{Placeholders}
 %
-% \section{More advanced tweaks}
+% The \mlpkg{} package defines a macro, called |\snippetPlaceholder|, for
+% typesetting code-snippet placeholders. For instance, to typeset
+% \ph{initial-value}, you would write
+% ^^A
+% \begin{verbatim}
+%   \snippetPlaceholder{initial-value}\end{verbatim}
+% ^^A
+% This macro proves particularly useful for educational purposes, e.g.\ for
+% describing the syntax of control-flow constructs, such as the \matlab{}
+% "while"~loop (see \cref{plhold}).
+% ^^A
+%	\lstinputlisting[style      = Matlab-stdstyle,escapechar = `,caption    = {Placeholders},label      = plhold]{placeholder.m}
+% ^^A
+% To use |\snippetPlaceholder| inside listings, you must invoke it within an
+% \emph{escape to \LaTeX{}}; see section~4.14 of the \lstpkg{} manual.
+% If you choose to define a single character for escaping to \LaTeX{} (by
+% using the |escapechar|~key), I recommend you define either the double
+% quote~(|"|) or the left quote~(|`|) as escape character, because the latter
+% are not allowed in \matlab{} statements and expressions^^A
+% ---although they may occur in \matlab{} string literals.
+% To be safe, though, you may prefer to use the more general
+% |escapeinside|~key.
 %
-% \section{Known issues}
+% \subsection{More advanced tweaks}
+%
+% \begin{itemize}
+%   \item uses listings keys in the background; 
+%   \item if you mix listings key and matlab-prettifier, unpredictable behaviour; like crossing the streams
+%   \item use the ml version, if any exists
+%   \item The number of nonlocal var you use must be small… otherwise, there’s probably a problem with your code :)
+% \end{itemize}
+%
+% \subsection{Tips and tricks}
+%
+% Opinionated.
+% Arguably, ``|\snippetPlaceholder|'' is a mouthful, but nothing prevents you from defining a shorthand for it. For instance:
+% ^^A
+% \begin{verbatim}
+%   \newcommand\ph\snippetPlaceholder\end{verbatim}
+% ^^A
+% Of course, you can also define macros for oft-used placeholders, e.g.
+% \ph{condition}.
+% ^^A
+% \begin{verbatim}
+%   \newcommand\phcond{\snippetPlaceholder{condition}}\end{verbatim}
+% ^^A
+% \begin{itemize}
+%  \item strongly discouraged (when code wraps in LaTeX, linebreaks are copied as well, and break syntax), too difficult, behaviour varies from one viewer to another
+%  \item in beamer: use fragile
+%  \item if you use a computer modern, load lmodern and [T1]fontenc (recommended)
+%  \item[Extended characters] are not allowed in listings. use listingsutf8
+%  \item[Language based on \mllng{}] Defining a language based on \mllng{} is possible but is likely to
+%     break everything, because \mlpkg{} needs to initialize some things at
+%     the beginning of each listing, and this only happens if the name of the
+%     language used be \mllng{}.
+%     See \cref{hooks-mlpretty} for more details. you define a new language based on Matlab-pretty, won’t get correct syntax highlighting, because the matlab-prettifier package applies patches at the beginning of listings depending on whether the current language is that defined by the package
+%  \item inline won't work in footnote, because verbatim content is not normally allowed in footnotes. One way to is allow for this is to load the bigfoot package. inline in footnotes is discouraged because might occur after a listing pagebreak and might be confusing
+%   \item depending on the font you're using, you may have problems with the tilde character (too high); \href{http://tex.stackexchange.com/questions/312/correctly-typesetting-a-tilde}{workaround}
+%   \item why a dedicated package? other functionalities, has quite a bit of housekeeping to do in the background
+%   \item bold typewriter
+%   \item Automatic linewrapping: possible via breaklines, but discouraged because might mislead students of the Matlab language; can also produce invalid matlab syntax (for instance, there can be no linebreak between if and the logical condition)
+%   \item preset literate replacements: the lack of preset literate replacements (e.g.\ for typesetting~\(\leq\) in place of~"<=") is a conscious decision.   mcode provides predefined literate replacements, but matlab-prettifier doesn’t. you can still use the literate key, but I discourage it. matlab simply doesn’t typeset it that way; source code, not pseudocode; no point in making it easy to read if you’re going to red it as is in Matlab; source of confusion to the newcomer, looking to reproduce that symbol in Matlab
+%   \item Copy \& paste
+% \end{itemize}
+%
+% \section{To-do list}
+%
+% \begin{itemize}
+%   \item More closely mimick the style applied to digits by Pygments' MatlabLexer.
+%   \item unquoted strings
+% \end{itemize}
+% not perfect,
+% reverse engineer \matlab{} lexer for correct highlighting of unquoted strings
+%
+% \section{Known issues and missing features}
+%
+% Although \mlpkg{} does a reasonably good job at replicating the syntax highlighting performed by the \matlab{} editor, some problems remain. Here is a list of known, currently unresolved problems. TODO show where it fails
 % 
-%  Extended characters are not allowed in listings. use listingsutf8
+% \begin{description}
+%   \item[non-local variables] Nonlocal variables (global, persistent, or variables that are used in at least two functions that share scope) (\href{http://blogs.mathworks.com/community/2011/04/25/highlighting-global-and-persistent-variables/}{ref}) Automatic highlighting would require multiple passes, which the listings package cannot do.
+%   \item[Unterminated strings] I haven't found a way that doesn't break the way quoted strings are handled.
+%   \item[Block comments]
+%   \item Illegal syntax not highlighted properly in all cases "if=end"
+%   \item Invalid characters (red)
+% \end{description}%
 %
-% \section{Bug reports and missing features}
+% \section{Bug reports and feature suggestions}
 %
 % \StopEventually{\clearpage\PrintChanges\PrintIndex}
 %
@@ -316,9 +423,9 @@
 % \subsection{Required packages}
 % 
 % We require three packages without any package option.
-% We need \pkg{textcomp} in order to use the \lstpkg{}' |upquote|
-% key; we need the \pkg{xcolor} package in order to color our \matlab{} code;
-% and, of course, we need the ``big daddy'': the \lstpkg{} package.
+% We need \pkg{textcomp} in order to use the \lstpkg{}' |upquote|~key;
+% we need the \pkg{xcolor} package in order to color our \matlab{} code;
+% and, of course, we need the \lstpkg{} package.
 %    \begin{macrocode}
 \RequirePackage{textcomp}[2005/09/27]
 \RequirePackage{xcolor}[2007/01/21]
@@ -330,8 +437,8 @@
 % TODO: \mlpkg{} does a lot behind the scenes; using the listings key wouldn't do. several classes of keyword for conveninence, but the user really wants to affect the style of all those keyword in one go.
 % We extend \lstpkg{}' key-value interface by defining several additional
 % keys, which we will use for defining a new \lstpkg{} language and three
-% \lstpkg{} styles, further down. Most of those new keys start by the prefix
-% |ml|, so that the user easily distinguish them from \emph{bona fide}
+% \lstpkg{} styles, further down. Most of those new keys start by the
+% prefix~|ml|, so that the user easily distinguish them from \emph{bona fide}
 % \lstpkg{} keys.
 %
 % \begin{macro}{mlkeywordstyle}
@@ -462,7 +569,7 @@
 %    \end{macrocode}
 %
 % The |upquote| key is set so that right single quotes be straight,
-% as in \matlab{}; no offense to gay right single quotes.
+% as in \matlab{}.
 %    \begin{macrocode}
   upquote = true,
 %    \end{macrocode}
@@ -504,6 +611,10 @@
 % For precaution, we use relatively large class numbers.
 %
 % \subsubsection{Keywords}
+%
+% The keywords defined below are based on the list returned by the
+% \matlabver{} "iskeyword" function and the four class-definition keywords,
+% which the "iskeyword" function omits.
 %
 % The following keywords open a block that has nothing to do with class
 % definition. We defer the definition of |\processOpRegKW@mlpretty| to
@@ -564,6 +675,7 @@
 % but it omits the four keywords that can only be used within a "classdef"
 % block, namely "events", "enumeration", "methods", and "properties". We
 % dedicate a class of pkg{listings} keywords those four \matlab{} keywords.
+% Those identifiers only get highlighted as keywords if they occur after a classdef keyword and before an end keyword matching that classdef, if any.
 %    \begin{macrocode}
   morekeywords=[261]% `middle' keywords related to classdef
   {%
@@ -624,6 +736,8 @@
 % --- State variables ---
 % Counters and switches used as ``state variables''
 % (used to keep track of context)
+% although all our operations on counters will be global,
+% the package currently use TeX counters rather than LaTeX ones.
 \newcount\netBracketCount@mlpretty  % net running count of brackets
                                     % ([{ count for +1, )]} count for -1 
 \newcount\blkLvl@mlpretty             % block nesting level
@@ -956,9 +1070,12 @@
       \sharedvarStyle@mlpretty%
   \fi%
 }
+%    \end{macrocode}
 
+% \subsection{Hooking into listings}
+% \label{hooks-mlpretty}
 
-% ----- Hooking into listings -----
+%    \begin{macrocode}
 
 % --- InitVarsEOL hook ---
 \newcommand\addedToInitVarsEOL@mlpretty{} % polymorphic macro for InitVarsEOL
@@ -1082,9 +1199,9 @@
 %
 % \subsubsection{Standard style}
 %
-% \begin{macro}{Matlab-standard-style}
+% \begin{macro}{Matlab-stdstyle}
 %    \begin{macrocode}
-\lstdefinestyle{Matlab-standard-style}
+\lstdefinestyle{Matlab-stdstyle}
 {
   language   = \languageNormedDefd@mlpretty,
   frame      = single,
@@ -1096,9 +1213,9 @@
 %
 % \subsubsection{Black \& white style}
 %
-% \begin{macro}{Matlab-bw-style}
+% \begin{macro}{Matlab-bwstyle}
 %    \begin{macrocode}
-\lstdefinestyle{Matlab-bw-style}
+\lstdefinestyle{Matlab-bwstyle}
 {
   language            = \languageNormedDefd@mlpretty,
   mlkeywordstyle      = \color[gray]{0}  \bfseries          ,
@@ -1122,9 +1239,9 @@
 % listings. This last \mlpkg{} style closely mimics that of the Pygments
 % lexer for \matlab{} called `MatlabLexer'.
 %
-% \begin{macro}{Matlab-pygsty-style}
+% \begin{macro}{Matlab-pygstyle}
 %    \begin{macrocode}
-\lstdefinestyle{Matlab-pygsty-style}
+\lstdefinestyle{Matlab-pygstyle}
 {
   language            = \languageNormedDefd@mlpretty,
   mllastelementstyle  = \color[RGB]{127,000,000}                   ,
