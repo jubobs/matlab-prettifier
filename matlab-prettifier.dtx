@@ -338,7 +338,7 @@ end
 %     See \cref{hooks-mlpretty} for more details. you define a new language based on Matlab-pretty, won’t get correct syntax highlighting, because the matlab-prettifier package applies patches at the beginning of listings depending on whether the current language is that defined by the package
 %  \item inline won't work in footnote, because verbatim content is not normally allowed in footnotes. One way to is allow for this is to load the bigfoot package. inline in footnotes is discouraged because might occur after a listing pagebreak and might be confusing
 %   \item depending on the font you're using, you may have problems with the tilde character (too high); \href{http://tex.stackexchange.com/questions/312/correctly-typesetting-a-tilde}{workaround}
-%   \item why a dedicated package? other functionalities, has quite a bit of housekeeping to do in the background
+%   \item 
 %   \item bold typewriter
 %   \item Automatic linewrapping: possible via breaklines, but discouraged because might mislead students of the Matlab language; can also produce invalid matlab syntax (for instance, there can be no linebreak between if and the logical condition)
 %   \item preset literate replacements: the lack of preset literate replacements (e.g.\ for typesetting~\(\leq\) in place of~"<=") is a conscious decision.   mcode provides predefined literate replacements, but matlab-prettifier doesn’t. you can still use the literate key, but I discourage it. matlab simply doesn’t typeset it that way; source code, not pseudocode; no point in making it easy to read if you’re going to red it as is in Matlab; source of confusion to the newcomer, looking to reproduce that symbol in Matlab
@@ -778,7 +778,7 @@ end
   \ttfamily%
   \lst@ifdisplaystyle%
     \normalsize%
-  \fi%
+  \fi
 }
 \newcommand\keywordFontSpecs@mlpretty{}
 \newcommand\lastElemFontSpecs@mlpretty{}
@@ -891,7 +891,7 @@ end
     \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
       \global\ClosingEndKW@mlpretty@false%
       \global\advance\netBracketCount@mlpretty by \@ne%
-    \fi%
+    \fi
   }%  
 }
 
@@ -903,14 +903,14 @@ end
     \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
       \ifClosingEndKW@mlpretty@%    % If end is already a blue keyword... 
         \resetBracketCount@mlpretty % ... we can safely reset the count.
-      \else%
+      \else
         \global\advance\netBracketCount@mlpretty by \m@ne%
         \ifnum\netBracketCount@mlpretty>0%
-        \else%
+        \else
           \global\ClosingEndKW@mlpretty@true%
-        \fi%
-      \fi%
-    \fi%
+        \fi
+      \fi
+    \fi
   }%  
 }
 
@@ -918,20 +918,20 @@ end
 \newcommand\processOpRegKW@mlpretty
 {%
   \ifWithinSectionTitle@mlpretty@%
-  \else%
+  \else
     \resetEndKW@mlpretty%
     \global\advance\blkLvl@mlpretty\@ne%
     \keywordStyle@mlpretty%
-  \fi%
+  \fi
 }
 
 \newcommand\processMidKW@mlpretty
 {%
   \ifWithinSectionTitle@mlpretty@%
-  \else%
+  \else
     \resetEndKW@mlpretty%
     \keywordStyle@mlpretty%
-  \fi%
+  \fi
 }
 
 % No difference between standalone keywords and middle keywords
@@ -941,29 +941,29 @@ end
 {%
   \ifWithinSectionTitle@mlpretty@%
     \keywordStyle@mlpretty%
-  \else%
+  \else
     \resetEndKW@mlpretty%
     \global\InClassdef@mlpretty@true%
     \global\blkLvlAtClassdef@mlpretty=\blkLvl@mlpretty%
     \global\advance\blkLvl@mlpretty\@ne%
     \keywordStyle@mlpretty%
-  \fi%
+  \fi
 }
 
 \newcommand\processMidClassdefKW@mlpretty
 {%
   %only for typesetting those as keywords in inline code
   \ifOverridecontext@mlpretty@% 
-  \else%
+  \else
     \ifWithinSectionTitle@mlpretty@%
-    \else%
+    \else
       \ifInClassdef@mlpretty@%
         \resetEndKW@mlpretty%
         \global\advance\blkLvl@mlpretty\@ne%
         \keywordStyle@mlpretty%
-      \fi%
-    \fi%
-  \fi%
+      \fi
+    \fi
+  \fi
 }
 
 \newcommand\processEndKW@mlpretty
@@ -971,25 +971,25 @@ end
   % only for typesetting those as ``last element'' in inline code
   \ifOverridecontext@mlpretty@% 
     \lastElemStyle@mlpretty%
-  \else%
+  \else
     \ifWithinSectionTitle@mlpretty@%
-    \else%
+    \else
       \ifClosingEndKW@mlpretty@%
         \ifInLineCom@mlpretty@%
-        \else%
+        \else
           \ifnum\blkLvl@mlpretty>0%
             \global\advance\blkLvl@mlpretty\m@ne%
-          \fi%
+          \fi
           \ifnum\blkLvl@mlpretty=\blkLvlAtClassdef@mlpretty%
             \global\InClassdef@mlpretty@false%
-          \fi%
+          \fi
           \keywordStyle@mlpretty%
-        \fi%
-      \else%
+        \fi
+      \else
         \lastElemStyle@mlpretty%
-      \fi%
-    \fi%
-  \fi%
+      \fi
+    \fi
+  \fi
 }
 
 
@@ -997,9 +997,9 @@ end
 \newcommand\processString@mlpretty
 {%
   \ifWithinSectionTitle@mlpretty@%
-  \else%
+  \else
     \stringStyle@mlpretty%  
-  \fi%
+  \fi
 }
 
 % --- macro for handling line continuation ---
@@ -1008,15 +1008,15 @@ end
   \lst@CalcLostSpaceAndOutput%
   \ifWithinSectionTitle@mlpretty@%
     ...%
-  \else%
+  \else
     \ifInLineCom@mlpretty@%
       ...%
-    \else%
+    \else
       \global\InLineCom@mlpretty@true%
       {\keywordStyle@mlpretty...}%
-    \fi%
+    \fi
     \commentStyle@mlpretty%
-  \fi%
+  \fi
 }
 
 % --- macro for processing section title ---
@@ -1029,12 +1029,12 @@ end
 \newcommand\processSectionTitle@mlpretty
 {%
   \ifWithinSectionTitle@mlpretty@% to avoid drawing the rule multiple times
-  \else%
+  \else
     \global\WithinSectionTitle@mlpretty@true%
     \resetEndKW@mlpretty%
     \commentStyle@mlpretty%
     \ifTooLateForSectionTitle@mlpretty@%
-    \else%
+    \else
       \bgroup%
         % calculate the vertical offset for the rule
         \setlength\emHeight@mlpretty{\fontcharht\font`M}%
@@ -1056,19 +1056,19 @@ end
             \raisebox{\sectionRuleOffset@mlpretty}[0pt][0pt]%
               {\rule{\lst@linewidth}{\sectionRuleThickness@mlpretty}}%
           }%
-        \fi%
+        \fi
       \egroup%
       \sectionTitleStyle@mlpretty%
-    \fi%
-  \fi%
+    \fi
+  \fi
 }
 
 \newcommand\processSharedVar@mlpretty
 {%
   \ifWithinSectionTitle@mlpretty@%
-  \else%
+  \else
       \sharedvarStyle@mlpretty%
-  \fi%
+  \fi
 }
 %    \end{macrocode}
 
@@ -1087,7 +1087,7 @@ end
   \ifInStr@mlpretty@%
     \global\InStr@mlpretty@false%
     \lst@LeaveMode%
-  \fi%
+  \fi
   % we're not in a section title...
   \global\WithinSectionTitle@mlpretty@false%
   % ...but a section title is allowed to start here
@@ -1102,7 +1102,7 @@ end
   % if we were inside a string, we're now getting out of it
   \ifInStr@mlpretty@%
     \global\InStr@mlpretty@false%
-  \fi%
+  \fi
 }
 \lst@AddToHook{EndGroup}{\addedToEndGroup@mlpretty}
 
@@ -1125,7 +1125,7 @@ end
     \renewcommand\addedToInitVarsEOL@mlpretty\@ddedToInitVarsEOL@mlpretty%
     \renewcommand\addedToEndGroup@mlpretty\@ddedToEndGroup@mlpretty%
     \renewcommand\addedToPostOutput@mlpretty\@ddedToPostOutput@mlpretty%
-  \fi%
+  \fi
 }
 \lst@AddToHook{PreInit}{\addedToPreInitHook}
 
@@ -1138,7 +1138,7 @@ end
   \ifx\lst@language\languageNormedDefd@mlpretty%
     \resetEndKW@mlpretty%
     \resetClassdefKW@mlpretty%
-  \fi%
+  \fi
 }
 \lst@AddToHook{DeInit}{\addedToDeInitHook}
 %    \end{macrocode}
@@ -1165,11 +1165,11 @@ end
 {%
   \ifx\f@shape\it@mlpretty%
     \/%
-  \else%
+  \else
     \ifx\f@shape\sl@mlpretty%
       \/%
-    \fi%
-  \fi%
+    \fi
+  \fi
 }
 %    \end{macrocode}
 % \end{macro}
