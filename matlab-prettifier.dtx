@@ -120,31 +120,34 @@ end
 %
 % \subsection{Why this package?}
 %
-% \href{http://www.mathworks.co.uk/products/matlab/}{\trademark{\matlab}}
-% is a high-level language and interactive environment for numerical
-% computation, visualization, and programming.
-% Despite being proprietary^^A
-%   \footnote{\matlab{} is a \trademark{\mathworks} product.}
-% and occasionally frustrating, \matlab{} remains a great tool for
-% prototyping matrix-oriented, number-crunching programs.
+% \trademark{\matlab} is a high-level language and interactive environment for
+% numerical computation, visualization, and programming.^^A
+%   \footnote{Source: \url{http://www.mathworks.co.uk/products/matlab/}}
+% Despite being proprietary and occasionally frustrating, \matlab{} remains a
+% great tool for prototyping matrix-oriented, number-crunching programs.
 % As such, it enjoys widespread popularity, especially in academia,
 % where, in particular, it is often used for teaching numerical methods.
 %
-% For improved code readability, the \matlab{} editor performs on-the-fly
-% syntax highlighting of \matlab{} source files, which simply consists of
-% text files with an ``m''~extension.
+% Users of both \matlab{} and \LaTeX{} (and friends) often want to typeset
+% \matlab{} listings in \LaTeX{} documents, usually with some syntax
+% highlighting, for improved code readability;
+% the relatively large number of relevant questions posted on
+% \href{http://tex.stackexchange.com/search?q=matlab+code+is%3Aquestion}^^A
+% {tex.stackexchange.com} attests to that need.
+%
+% Recent version of \matlab{} provide a built-in function, called "publish",
+%  that can generate \LaTeX{} code for typesetting \matlab{} listings, but
+% that function uses a |verbatim| environment, which doesn't allow for any
+% fancy formatting.
 % Several \LaTeX{} packages^^A
 % ---vanilla \lstpkg{}, \pkg{mcode}, and \pkg{minted}, among others---^^A
 % allow for automatic syntax highlighting of \matlab{} listings in \LaTeX{}
 % documents.
-% However, none of those packages do a great job at replicating the
-% syntax-highlighting style of the \matlab{} editor.^^A
+% However, none of those packages do a great job at replicating the very
+% specific syntax-highlighting style performed on the fly by the \matlab{}
+% editor.^^A
 %   \footnote{see ... for a comparison.}
-% Besides, although \matlab{} provides a built-in function, called "publish",
-% that can be used to generate \LaTeX{} code for typesetting \matlab{}
-% listings, that function uses the rudimentary |verbatim| environment,
-% which, in particular, doesn't allow for any fancy formatting.
-%
+%  
 % The lack of tools for faithfully mimicking the style of the \matlab{}
 % editor is unfortunate, especially from an educational standpoint, for the
 % following reason.
