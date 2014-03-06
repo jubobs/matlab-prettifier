@@ -4,6 +4,7 @@
 *.gls
 *.idx
 *.ilg
+*.ind
 *.log
 *.m
 *.out

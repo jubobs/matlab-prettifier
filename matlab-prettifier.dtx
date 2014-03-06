@@ -86,7 +86,35 @@ end
 %
 % \GetFileInfo{matlab-prettifier.sty}
 %
-% \DoNotIndex{\fi}
+% \DoNotIndex{\@ifpackagewith,\@ne}
+% \DoNotIndex{\advance}
+% \DoNotIndex{\baselinskip,\bfseries,\bgroup}
+% \DoNotIndex{\ClosingEndKW@mlpretty@false,\ClosingEndKW@mlpretty@true,^^A
+%   \color,\colorlet,\CurrentOption}
+% \DoNotIndex{\DeclareOption,\definecolor,\dimexpr}
+% \DoNotIndex{\edef,\egroup,\else,\expandafter}
+% \DoNotIndex{\f@shape,\fi,\font,\fontchardp,\fontcharht}
+% \DoNotIndex{\global}
+% \DoNotIndex{\ifnum,\ifx,\InClassdef@mlpretty@false,^^A
+%   \InClassdef@mlpretty@true,\InLineCom@mlpretty@false,^^A
+%   \InLineCom@mlpretty@true,\InStr@mlpretty@false,\InStr@mlpretty@true,^^A
+%   \itdefault,\itshape}
+% \DoNotIndex{\long,\lst@AddToHook,\lst@CalcLostSpaceAndOutput,^^A
+%   \lst@DefSaveDef,\lst@DelimKey,\lst@ifdisplaystyle,\lst@InstallKeywords,^^A
+%   \lst@Key,\lst@language,\lst@LeaveMode,\lst@linewidth,\lst@mode,^^A
+%   \lst@NormedDef,\lst@Pmode,\lstdefinelanguage,\lstdefinestyle,^^A
+%   \lstKV@SetIf}
+% \DoNotIndex{\m@ne,\makebox,\newcommand,\newcount,\newif,\newlength,^^A
+%   normalfont,\normalsize}
+% \DoNotIndex{\OptionNotUsed}
+% \DoNotIndex{\PackageError,\PackageWarning,\ProcessOptions}
+% \DoNotIndex{\raisebox,\relax,\renewcommand,\RequirePackage,\rule}
+% \DoNotIndex{\setlength,\sldefault,\textlangle,\textrangle,\ttfamily}
+% \DoNotIndex{\TooLateForSectionTitle@mlpretty@false,^^A
+%   \TooLateForSectionTitle@mlpretty@true}
+% \DoNotIndex{\upshape}
+% \DoNotIndex{\WithinSectionTitle@mlpretty@false,^^A
+%   \WithinSectionTitle@mlpretty@true}
 %
 % \title^^A
 % {^^A
@@ -329,7 +357,7 @@ end
 % \begin{verbatim}
 %   \newcommand\phcond{\snippetPlaceholder{condition}}\end{verbatim}
 % ^^A
-% \begin{itemize}
+% \begin{description}
 %  \item strongly discouraged (when code wraps in LaTeX, linebreaks are copied as well, and break syntax), too difficult, behaviour varies from one viewer to another
 %  \item in beamer: use fragile
 %  \item if you use a computer modern, load lmodern and [T1]fontenc (recommended)
@@ -346,7 +374,7 @@ end
 %   \item Automatic linewrapping: possible via breaklines, but discouraged because might mislead students of the Matlab language; can also produce invalid matlab syntax (for instance, there can be no linebreak between if and the logical condition)
 %   \item preset literate replacements: the lack of preset literate replacements (e.g.\ for typesetting~\(\leq\) in place of~"<=") is a conscious decision.   mcode provides predefined literate replacements, but matlab-prettifier doesn’t. you can still use the literate key, but I discourage it. matlab simply doesn’t typeset it that way; source code, not pseudocode; no point in making it easy to read if you’re going to red it as is in Matlab; source of confusion to the newcomer, looking to reproduce that symbol in Matlab
 %   \item Copy \& paste
-% \end{itemize}
+% \end{description}
 %
 % \section{To-do list}
 %
@@ -371,7 +399,7 @@ end
 %
 % \section{Bug reports and feature suggestions}
 %
-% \StopEventually{\clearpage\PrintChanges\PrintIndex}
+% \StopEventually{\clearpage\PrintChanges\setcounter{IndexColumns}{2}\PrintIndex}
 %
 % \section{Implementation}
 %
@@ -444,7 +472,7 @@ end
 % prefix~|ml|, so that the user easily distinguish them from \emph{bona fide}
 % \lstpkg{} keys.
 %
-% \begin{macro}{mlkeywordstyle}
+% \begin{lstkey}{mlkeywordstyle}
 %   In the upcoming language definition, we use several classes of \lstpkg{}
 % keywords to handle the different \matlab{} keywords. However, we need one
 % style key to ``rule them all''.
@@ -452,8 +480,8 @@ end
 \lst@Key{mlkeywordstyle}\relax%
   {\renewcommand\keywordStyle@mlpretty{#1}}
 %    \end{macrocode}
-% \end{macro}
-% \begin{macro}{mllastelementstyle}
+% \end{lstkey}
+% \begin{lstkey}{mllastelementstyle}
 % The "end" keyword has different meanings depending on the context in which
 % it occurs: it may be used to close a code block (e.g.\ a "while" loop), or
 % it may stand for the last element of an array. In the first case, it's
@@ -466,8 +494,8 @@ end
 \lst@Key{mllastelementstyle}\relax%
   {\renewcommand\lastElemStyle@mlpretty{#1}}
 %    \end{macrocode}
-% \end{macro}
-% \begin{macro}{mloverride}
+% \end{lstkey}
+% \begin{lstkey}{mloverride}
 % By default, in inline code, \mlpkg{} typesets the "end" keyword as closing
 % keyword (\emph{not} as ``last element''), and typesets the four
 % class-definition identifiers, "events", "enumeration", "methods", and
@@ -484,15 +512,15 @@ end
 \lst@Key{mloverride}{false}[t]%
   {\lstKV@SetIf{#1}\ifOverridecontext@mlpretty@}
 %    \end{macrocode}
-% \end{macro}
+% \end{lstkey}
 %
-% \begin{macro}{mlstringstyle}
+% \begin{lstkey}{mlstringstyle}
 % This key controls the style of \matlab{} strings. TODO
 %    \begin{macrocode}
 \lst@Key{mlstringstyle}\relax%
   {\renewcommand\stringStyle@mlpretty{#1}}
 %    \end{macrocode}
-% \end{macro}
+% \end{lstkey}
 %    \begin{macrocode}
 \lst@Key{mlcommentstyle}\relax%
   {\renewcommand\commentStyle@mlpretty{#1}}
@@ -508,9 +536,9 @@ end
 \lst@Key{mlsyscomstyle}\relax%
   {\renewcommand\syscomStyle@mlpretty{#1}}
 %    \end{macrocode}
-%  \begin{macro}{mlsharedvars}
-%  \begin{macro}{moremlsharedvars}
-%  \begin{macro}{deletemlsharedvars}
+%  \begin{lstkey}{mlsharedvars}
+%  \begin{lstkey}{moremlsharedvars}
+%  \begin{lstkey}{deletemlsharedvars}
 % For convenience, we create a brand new class of \lstpkg{} ``keywords'' for
 % allowing the user to define \matlab{} variables with shared scope. The
 % following invocation of \lstpkg{}' internal macro |\lst@InstallKeywords|
@@ -520,9 +548,9 @@ end
 \lst@InstallKeywords k{mlsharedvars}{mlsharedvarStyle@mlpretty}\relax%
   {mlsharedvarStyle@mlpretty}{}ld
 %    \end{macrocode}
-%  \end{macro}
-%  \end{macro}
-%  \end{macro}
+%  \end{lstkey}
+%  \end{lstkey}
+%  \end{lstkey}
 % 
 % The style of those variables with shared scope is controlled via the
 % |mlsharedvarstyle| key.
