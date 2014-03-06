@@ -590,14 +590,16 @@
 
 % Macro for conditional italic correction
 % (in case the font shape is either italic or slanted)
-\newcommand*{\it@mlpretty}{it} 
-\newcommand*{\sl@mlpretty}{sl}
 \newcommand\condItalicCorrection@mlpretty
 {%
-  \ifx\f@shape\it@mlpretty%
+  % After checking that \long@f@shape@mlpretty is definable, we
+  % define it as a long macro that expands to the current font shape.
+  \newcommand\long@f@shape@mlpretty{}%
+  \long\edef\long@f@shape@mlpretty{\f@shape}%
+  \ifx\long@f@shape@mlpretty\itdefault%
     \/%
   \else
-    \ifx\f@shape\sl@mlpretty%
+    \ifx\long@f@shape@mlpretty\sldefault%
       \/%
     \fi
   \fi

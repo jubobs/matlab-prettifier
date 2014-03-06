@@ -64,7 +64,7 @@ end
 %</driver>
 % \fi
 %
-% \CheckSum{580}
+% \CheckSum{583}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -1148,28 +1148,20 @@ end
 %
 % \subsection{Placeholders in code snippets}
 %
-% \begin{macro}{\it@mlpretty}
-% This macro simply expands to the \LaTeX{} name for italic shape.
-%    \begin{macrocode}
-\newcommand\it@mlpretty{it}
-%    \end{macrocode}
-% \end{macro}
-% \begin{macro}{\sl@mlpretty}
-% This macro simply expands to the \LaTeX{} name for slanted shape.
-%    \begin{macrocode}
-\newcommand\sl@mlpretty{sl}
-%    \end{macrocode}
-% \end{macro}
 % \begin{macro}{\itcorr@mlpretty}
 % This macro is used for inserting italic correction in case the font shape is
 % italic or slanted.
 %    \begin{macrocode}
 \newcommand\itcorr@mlpretty
 {%
-  \ifx\f@shape\it@mlpretty%
+  % After checking that \long@f@shape@mlpretty is definable, we
+  % define it as a long macro that expands to the current font shape.
+  \newcommand\long@f@shape@mlpretty{}%
+  \long\edef\long@f@shape@mlpretty{\f@shape}%
+  \ifx\long@f@shape@mlpretty\itdefault%
     \/%
   \else
-    \ifx\f@shape\sl@mlpretty%
+    \ifx\long@f@shape@mlpretty\sldefault%
       \/%
     \fi
   \fi
