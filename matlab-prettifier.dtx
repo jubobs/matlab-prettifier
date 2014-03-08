@@ -64,7 +64,7 @@ end
 %</driver>
 % \fi
 %
-% \CheckSum{583}
+% \CheckSum{584}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -85,6 +85,21 @@ end
 % \changes{v0.1}{2014/02/21}{Initial release.}
 %
 % \GetFileInfo{matlab-prettifier.sty}
+%
+%  ^^A see http://www.latex-project.org/cgi-bin/ltxbugs2html?pr=latex%2F3540
+%  \begingroup
+%    \def\x{\#,\$,\%,\^,\_,\~,\&,\{,\},\/}%^^A
+%    \makeatletter
+%    \@onelevel@sanitize\x
+%  \expandafter\endgroup\expandafter\DoNotIndex\expandafter{\x}
+%
+% \begingroup
+%    \makeatletter
+%    \lccode`9=32\relax
+%    \lowercase{%^^A
+%      \edef\x{\noexpand\DoNotIndex{\@backslashchar9}}%^^A
+%    }%^^A
+%  \expandafter\endgroup\x
 %
 % \DoNotIndex{\@ifpackagewith,\@ne}
 % \DoNotIndex{\advance}
@@ -619,6 +634,10 @@ end
 % specification to the |rulecolor| key.
 %    \begin{macrocode}
   rulecolor = \color{black},
+%    \end{macrocode}
+% TODO
+%    \begin{macrocode}
+  alsoother={\$@}, % chars not valid in identifiers
 %    \end{macrocode}
 %
 % In order to keep track of the context, we need to modify the character
