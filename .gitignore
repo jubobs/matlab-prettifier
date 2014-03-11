@@ -1,5 +1,7 @@
 *.DS_store
 *.aux
+*.fls
+*.fdb_latexmk
 *.glo
 *.gls
 *.idx
