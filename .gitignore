@@ -9,8 +9,10 @@
 *.ind
 *.log
 *.m
+*.makefile.swp
 *.out
 *.tmp
 *.toc
+*.zip
 
 matlab-prettifier.pdf

@@ -1,15 +1,12 @@
 TEXFLAGS = -e '$$pdflatex=q/pdflatex %O %S/' -pdf
 LATEXMK  = latexmk
-RM = rm -f
-
-PKGNAME = matlab-prettifier
-PACKAGE = $(PKGNAME).dtx \
-          $(PKGNAME).ins \
-          $(PKGNAME).pdf \
-          README.txt     \
-          makefile
-
-.PHONY: $(PKGNAME) all doc dist clean cleanall
+RM       = rm -f
+PKGNAME  = matlab-prettifier
+PACKAGE  = $(PKGNAME).dtx \
+           $(PKGNAME).ins \
+           $(PKGNAME).pdf \
+           README         \
+           makefile
 
 doc: $(PKGNAME).pdf
 
@@ -31,6 +28,16 @@ $(PKGNAME).ind: $(PKGNAME).idx
 $(PKGNAME).glo: $(PKGNAME).dtx $(PKGNAME).sty
 	$(LATEXMK) $(TEXFLAGS) $(PKGNAME).dtx
 
+dist: $(PACKAGE)
+	$(RM) $(PKGNAME).zip
+	zip $(PKGNAME).zip $(PACKAGE)
+
 clean:
 	$(RM) *.aux *.fdb_latexmk *.fls *.ind *.idx *.ilg *.glo *.gls \
           *.log *.lol *.m *.out *.tmp *.toc
+
+cleanall: clean
+	$(RM) $(PKGNAME).pdf $(PKGNAME).zip
+
+.PHONY: all doc dist clean cleanall
+
