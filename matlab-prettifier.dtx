@@ -25,22 +25,12 @@
 
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage{filecontents}
 \usepackage{lstdoc}
 \usepackage{matlab-prettifier}
 \usepackage{hyperref}
 \usepackage{cleveref}
 
-\begin{filecontents*}{placeholder.m}
-while `\ph{condition}`
-  if `\ph{something-bad-happens}`
-    break
-  else
-    % do something useful
-  end
-end
-\end{filecontents*}
-
+\lstset{upquote=true}
 \lstMakeShortInline[language=Matlab-pretty,mloverride]"
 \let\ph\snippetPlaceholder
 \newcommand*{\pkg}[1]{\textsf{#1}}
@@ -178,7 +168,7 @@ end
 % \href{http://tex.stackexchange.com/search?q=matlab+code+is%3Aquestion}^^A
 % {tex.stackexchange.com} attests to that need.
 %
-% Recent version of \matlab{} provide a built-in function, called "publish",
+% Recent versions of \matlab{} provide a built-in function, called "publish",
 %  that can generate \LaTeX{} code for typesetting \matlab{} listings, but
 % that function uses a |verbatim| environment, which doesn't allow for any
 % fancy formatting.
@@ -195,8 +185,8 @@ end
 % editor is unfortunate, especially from an educational standpoint, for the
 % following reason.
 % Most newcomers to \matlab{} read and write code in the \matlab{} editor
-% and are therefore continually exposed to the its highlighting style.
-% According to the theory of associative learning, visual cues^^A
+% and are, therefore, continually exposed to its highlighting style.
+% Visual cues^^A
 % ---such as those provided by syntax highlighting---^^A
 % play an important role for recognising patterns.
 % Therefore, students of a programming language are more likely to quickly
@@ -219,11 +209,12 @@ end
 % the \lstpkg{} package. \mllng{} automatically highlights
 % ^^A
 % \begin{itemize}
-%   \item context-insensitive keywords ("for", "while", "break", etc.),
-%   \item context-sensitive keywords ("end", "properties", "events", etc.),
+%   \item context-insensitive keywords (e.g.\ "for", "while", etc.),
+%   \item context-sensitive keywords (e.g.\ "end", "properties", etc.),
 %   \item (quoted) strings,
-%   \item one-line and block comments,
-%   \item line-continuation token (i.e.~"...") and associated one-line comment,
+%   \item to-end-of-line and block comments,
+%   \item line-continuation token (i.e.~"...")
+%     and associated to-end-of-line comment,
 %   \item code-section titles.
 % \end{itemize}
 % ^^A
@@ -307,12 +298,13 @@ end
 %
 % \subsection{Standalone listings}
 %
-% In practice, though, you probably want, for maintainability reasons,
-% to keep, whenever possible, your \matlab{} listings in external files^^A
-% ---rather than embedding them in your |tex|~file.
+% In practice, though, keeping your \matlab{} listings in external files^^A
+% ---rather than embedding them in a |tex|~file---^^A
+% is preferable, for maintainability reasons.
 % To typeset a \matlab{} listing residing in an m-file, simply invoke the
 % |\lstinputlisting| macro; specify |language=|\mllng{} in the macro's
-% optional argument, and pass the file's path to the mandatory argument.
+% optional argument, and pass the path to the m-file in question to the
+% mandatory argument.
 % ^^A
 % \begin{verbatim}
 %   \lstinputlisting[language=Matlab-pretty]{sample.m}\end{verbatim}
@@ -320,34 +312,91 @@ end
 %
 % \subsection{Inline listings}
 %
-% However, writing |\lstinline[language=Matlab-pretty]| for each instance of inline Matlab code in your document can rapidly become tedious. You could of course define a shorthand macro for that, but listings provides a way of defining … shorthand for ...
-% recommended shortinlinechar: |"| doesn’t occur in LaTeX code any way
-% you can use the same character for escapechar and for makeshortinline.
+% You may want to typeset fragments of \matlab{} code within the main text of
+% your document. For instance, you may want to typeset the keyword "break" in a
+% sentence, in order to explain it usage.
+% The |\lstinline| macro can be used for typesetting such.
+% ^^A
+% \begin{verbatim}
+%   \lstinline[language=Matlab-pretty]!break!\end{verbatim}
+% ^^A
+% Well, that's quite a mouthful for such a simple \matlab{} keyword!
+% Writing |\lstinline| for each instance of inline Matlab code in your
+% document can rapidly become tedious.
+% Fortunately, \lstpkg{} allows its users to define a character as a shorthand
+% for inline code via the |\lstMakeShortInline| macro.
+% The following line defines the~|"| character as a shorthand for \matlab{}
+% code.
+% ^^A
+% \begin{verbatim}
+%   \lstMakeShortInline[language=Matlab-pretty]"\end{verbatim}
+% ^^A
+% After such a definition, "break" can be typeset by simply writing |"break"|.
+% 
+% You should choose a character that does not occur either elsewhere in your
+% |tex| file or in the inline \matlab{} code itself.
+% I find that the double quote character (|"|), although not ideal
+% (some \TeX{} macros, such as |\char| may use it),
+% offers a good compromise.
+% If necessary, you can undefine a character as a shorthand for inline code,
+% via the |\lstDeleteShortInline| macro.
+% For more details, see subsection~4.17 in the \lstpkg{} manual.
 %
 % \subsection{Placeholders}
 %
-% The \mlpkg{} package defines a macro, called |\snippetPlaceholder|, for
-% typesetting code-snippet placeholders. For instance, to typeset
-% \ph{initial-value}, you would write
+% The \mlpkg{} package defines a macro, called |\snippetPlaceholder|,
+% for typesetting code-snippet placeholders.
+% Such placeholders are particularly useful for educational purposes,
+% e.g.\ to describe elements of \matlab{} syntax.
+% Here is an example: \ph{initial-value}.
+% In order to typeset that placeholder, you could use
 % ^^A
 % \begin{verbatim}
-%   \snippetPlaceholder{initial-value}\end{verbatim}
+%   \placeholder{initial-value}\end{verbatim}
 % ^^A
-% This macro proves particularly useful for educational purposes, e.g.\ for
-% describing the syntax of control-flow constructs, such as the \matlab{}
-% "while"~loop (see \cref{plhold}).
+%
+% I purposefully chose a rather long name for this user macro,
+% in order to minimise the risk of conflict with other macros.
+% However, for convenience, you can of course define a custom, shorter macro for
+% typesetting placeholders, e.g.~|\ph|:
 % ^^A
-%	\lstinputlisting[style      = Matlab-stdstyle,escapechar = `,caption    = {Placeholders},label      = plhold]{placeholder.m}
+% \begin{verbatim}
+%   \let\ph\snippetPlaceholder\end{verbatim}
 % ^^A
+%
 % To use |\snippetPlaceholder| inside listings, you must invoke it within an
-% \emph{escape to \LaTeX{}}; see section~4.14 of the \lstpkg{} manual.
-% If you choose to define a single character for escaping to \LaTeX{} (by
-% using the |escapechar|~key), I recommend you define either the double
-% quote~(|"|) or the left quote~(|`|) as escape character, because the latter
-% are not allowed in \matlab{} statements and expressions^^A
+% \emph{escape to \LaTeX{}}; see subsection~4.14 of the \lstpkg{} manual.
+% If you choose to define a single character for escaping to \LaTeX{} (via
+% the |escapechar|~key), I recommend you define
+% either the double quote character~(|"|)
+% or the left-quote character~(\texttt{\`{}}) as escape character,
+% because the latter are not allowed in \matlab{} statements and expressions^^A
 % ---although they may occur in \matlab{} string literals.
-% To be safe, though, you may prefer to use the more general
-% |escapeinside|~key.
+% The following example illustrates how placeholders may be used to describe
+% the syntax of the \matlab{} "while"~loop.
+% ^^A
+% \begin{lstsample}^^A
+% {^^A
+%   \lstset^^A
+%   {^^A
+%     language=Matlab-pretty,^^A
+%     escapechar=`,^^A
+%   }^^A
+% }{}^^A
+%    \begin{lstlisting}[
+%       language   = Matlab-pretty,
+%       escapechar = `,
+%    ]
+%    while `\ph{condition}`
+%      if `\ph{something-bad-happens}`
+%        break
+%      else
+%        % do something useful
+%      end
+%    end
+%    \end{lstlisting}
+% \end{lstsample}
+% ^^A
 %
 % \subsection{More advanced tweaks}
 %
@@ -360,20 +409,18 @@ end
 %
 % \subsection{Tips and tricks}
 %
-% Opinionated.
-% Arguably, ``|\snippetPlaceholder|'' is a mouthful, but nothing prevents you from defining a shorthand for it. For instance:
-% ^^A
-% \begin{verbatim}
-%   \newcommand\ph\snippetPlaceholder\end{verbatim}
-% ^^A
-% Of course, you can also define macros for oft-used placeholders, e.g.
-% \ph{condition}.
+% \begin{itemize}
+%   \item For maintainability reasons, define macros for oft-used placeholders,
+%     \e.g.
 % ^^A
 % \begin{verbatim}
 %   \newcommand\phcond{\snippetPlaceholder{condition}}\end{verbatim}
 % ^^A
-% \begin{description}
-%  \item strongly discouraged (when code wraps in LaTeX, linebreaks are copied as well, and break syntax), too difficult, behaviour varies from one viewer to another
+%   \item You should be able to use the same character as escape character
+%     and as shorthand for inline code without any problem.
+%   \item Do not encourage your readers to copy listings from the PDF and paste 
+%     them in their \matlab{} editor;
+%     it is not a reliable way of distributing code.  unpredictable trongly discouraged (when code wraps in LaTeX, linebreaks are copied as well, and break syntax), too difficult, behaviour varies from one viewer to another
 %  \item in beamer: use fragile
 %  \item if you use a computer modern, load lmodern and [T1]fontenc (recommended)
 %  \item[Extended characters] are not allowed in listings. use listingsutf8
@@ -384,7 +431,6 @@ end
 %     See \cref{hooks-mlpretty} for more details. you define a new language based on Matlab-pretty, won’t get correct syntax highlighting, because the matlab-prettifier package applies patches at the beginning of listings depending on whether the current language is that defined by the package
 %  \item inline won't work in footnote, because verbatim content is not normally allowed in footnotes. One way to is allow for this is to load the bigfoot package. inline in footnotes is discouraged because might occur after a listing pagebreak and might be confusing
 %   \item depending on the font you're using, you may have problems with the tilde character (too high); \href{http://tex.stackexchange.com/questions/312/correctly-typesetting-a-tilde}{workaround}
-%   \item 
 %   \item bold typewriter
 %   \item Automatic linewrapping: possible via breaklines, but discouraged because might mislead students of the Matlab language; can also produce invalid matlab syntax (for instance, there can be no linebreak between if and the logical condition)
 %   \item preset literate replacements: the lack of preset literate replacements (e.g.\ for typesetting~\(\leq\) in place of~"<=") is a conscious decision.   mcode provides predefined literate replacements, but matlab-prettifier doesn’t. you can still use the literate key, but I discourage it. matlab simply doesn’t typeset it that way; source code, not pseudocode; no point in making it easy to read if you’re going to red it as is in Matlab; source of confusion to the newcomer, looking to reproduce that symbol in Matlab
