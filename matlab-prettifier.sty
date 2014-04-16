@@ -434,7 +434,10 @@
           \keywordStyle@mlpretty%
         \fi
       \else
-        \lastElemStyle@mlpretty%
+        \ifInLineCom@mlpretty@%
+        \else
+          \lastElemStyle@mlpretty%
+        \fi
       \fi
     \fi
   \fi

@@ -60,7 +60,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{620}
+% \CheckSum{629}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -415,41 +415,104 @@
 %    end
 %    \end{lstlisting}
 % \end{lstsample}
+%^^A
 %
 %
 % \subsection{Predefined styles}
 %
 % Although the primary goal of \mlpkg{} is to allow you to mimic the syntax
 % highlighting performed by the \matlab{} editor, the package also defines
-% the following three \lstpkg{} \emph{styles} for \matlab{} listings.
-%^^A
-% \begin{description}
-%   \item[|Matlab-stdstyle|] Standard style of the \matlab{} editor.
-%   \item[|Matlab-bwstyle|] Black \& white, printer-friendly style.
-%   \item[|Matlab-pygstyle|] Style that closely mimicks that Pygments's
-%     `MatlabLexer'.
-% \end{description}
-%^^A
-% Those three styles differ in the color scheme they use, but all have the
-% following effects on each \matlab{} listing that uses them:
-%^^A
-% \begin{itemize}
-%   \item a surrounding frame is drawn;
-%   \item line numbers are printed on the left;
-%   \item automatic linebreaking is activated.
-% \end{itemize}
-%^^A
-% To apply any of those three styles to a listing, just pass the style name to
-% the |style| key in the listing's optional argument, e.g.
-% --- verbatim stuff ----
-% No need to specify |language=Matlab-pretty|, here.
+% the three \lstpkg{} \emph{styles} for \matlab{} listings: 
+% |Matlab-stdstyle|, |Matlab-bwstyle|, and |Matlab-pygstyle|.
+
+% Those styles differ in terms of color scheme, but all have the following
+% effects on each \matlab{} listing that uses them:
+% a dark gray surrounding frame is drawn;
+% line numbers are printed in light gray on the left;
+% and automatic line-breaking is activated.
+%
+% To apply any of those three styles to a listing, simply pass the style name
+% to the |style| key in the listing's optional argument (see below).
+% Note that you don't need to specify |language=Matlab-pretty| if you load
+% one of the three predefined styles.
 % 
 % Here is a comparison of the three styles defined by \mlpkg{}.
 %
-% showcase
+% \paragraph{Matlab-stdstyle}
+% Standard style of the \matlab{} editor.
+%^^A
+% \begin{lstsample}[Matlab-stdstyle]
+    {\lstset{alsoletter=-, emph=Matlab-stdstyle, emphstyle=\rstyle}}{}
+%    \begin{lstlisting}[
+%      style = Matlab-stdstyle,
+%    ]
+%    %% Sample Matlab code
+%    !mv test.txt test2.txt
+%    A = [1, 2, 3;... foo
+%         4, 5, 6];
+%    s = 'abcd';
+%    for k = 1:4
+%      disp(s(k)) % bar
+%    end
+%    %{
+%    create x,
+%    then reverse it
+%    %}
+%    x = linspace(0,1,101);
+%    y = x(end:-1:1);
+%    \end{lstlisting}
+% \end{lstsample}
 %
-% You can also define your own style on the basis of one of those three
-% styles (see subsection~4.5 in the \lstpkg{} documentation).
+% \paragraph{Matlab-bwstyle}
+% Black \& white, printer-friendly style.
+%
+% \begin{lstsample}
+    {\lstset{alsoletter=-, emph=Matlab-bwstyle, emphstyle=\rstyle}}{}
+%    \begin{lstlisting}[
+%      style = Matlab-bwstyle,
+%    ]
+%    %% Sample Matlab code
+%    !mv test.txt test2.txt
+%    A = [1, 2, 3;... foo
+%         4, 5, 6];
+%    s = 'abcd';
+%    for k = 1:4
+%      disp(s(k)) % bar
+%    end
+%    %{
+%    create x,
+%    then reverse it
+%    %}
+%    x = linspace(0,1,101);
+%    y = x(end:-1:1);
+%    \end{lstlisting}
+% \end{lstsample}
+%
+% \paragraph{Matlab-pygstyle}
+% Style that closely mimicks that Pygments's `MatlabLexer'.
+%
+% \begin{lstsample}[Matlab-pygstyle]
+    {\lstset{alsoletter=-, emph=Matlab-pygstyle, emphstyle=\rstyle}}{}
+%    \begin{lstlisting}[
+%      style = Matlab-pygstyle,
+%    ]
+%    %% Sample Matlab code
+%    !mv test.txt test2.txt
+%    A = [1, 2, 3;... foo
+%         4, 5, 6];
+%    s = 'abcd';
+%    for k = 1:4
+%      disp(s(k)) % bar
+%    end
+%    %{
+%    create x,
+%    then reverse it
+%    %}
+%    x = linspace(0,1,101);
+%    y = x(end:-1:1);
+%    \end{lstlisting}
+% \end{lstsample}
+%^^A
 % 
 %
 % \section{Key-value interface}
@@ -630,9 +693,15 @@
 % ---some more opinionated than others---^^A
 % that, if followed, should make your experience with \mlpkg{} more pleasant.
 %
+% \paragraph{Define your own style.}
+% For maintainability reasons, if you're not completely satisfied with any of
+% the predefined styles, you should define your own \lstpkg{} style.
+% You can even base your custom style on one of the predefined styles and
+% tweak it (see subsection~4.5 in the \lstpkg{} documentation).
+% 
 % \paragraph{Define macros for recurring placeholders.}
-% For good maintainability, you should define macros for oft-used placeholders,
-% e.g.
+% For maintainability reasons, you should define macros for oft-used
+% placeholders, e.g.
 %^^A
 % \begin{verbatim}
 %   \newcommand\phcond{\snippetPlaceholder{condition}}\end{verbatim}
@@ -648,7 +717,8 @@
 %   \item the results of copying content from a PDF for
 %     subsequent pasting vary widely from one PDF viewer to another;
 %   \item line breaks introduced by \lstpkg{} for typesetting a \matlab{}
-%     listing may translate to invalid \matlab{} syntax.
+%     listing may translate to invalid \matlab{} syntax, if copied and pasted
+%     \emph{verbatim}.
 % \end{itemize}
 %
 % \paragraph{In \beamercls{}, use the \opt{fragile} option.}
@@ -698,7 +768,7 @@
 % where you will find a list of ad-hoc solutions.
 %
 % \paragraph{Avoid literate replacements like the plague!}
-% The \pkg{mcode} package provides preset so-called literate replacements
+% The \pkg{mcode} package provides predefines so-called literate replacements
 % (see subsection~5.4 in the \lstpkg{} manual),
 % e.g.\ for printing~\(\leq\) in place of each instance of~"<=".
 % I deliberately chose not to define any such literate replacements in the
@@ -766,9 +836,10 @@
 % \paragraph{Incorrect highlighting of ``runaway'' block comments} 
 % \matlab{} requires opening and closing delimiters of block comments to each
 % be on a line of their own, without any non-white character, but \mlpkg{}
-% incorrectly considers block comments closed even in cases where this rule is
-% infringed. For example, in the listing below, the \matlab{} editor would
-% typeset "a = 1" in comment style.
+% incorrectly considers block comments closed even in some cases where this
+% rule is infringed.
+% For example, in the listing below, the \matlab{} editor would typeset
+% "a = 1" in comment style.
 %^^A
 % \begin{lstsample}{}{}
 %    \begin{lstlisting}[
@@ -1479,12 +1550,14 @@
           \keywordStyle@mlpretty%
         \fi
       \else
-        \lastElemStyle@mlpretty%
+        \ifInLineCom@mlpretty@%
+        \else
+          \lastElemStyle@mlpretty%
+        \fi
       \fi
     \fi
   \fi
 }
-
 
 % --- strings ---
 \newcommand\processString@mlpretty
