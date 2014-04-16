@@ -60,7 +60,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{584}
+% \CheckSum{620}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -78,7 +78,7 @@
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
 %
-% \changes{v0.1}{2014/02/21}{Initial release.}
+% \changes{v0.1}{2014/04/16}{Initial release.}
 %
 % \GetFileInfo{matlab-prettifier.sty}
 %
@@ -169,7 +169,7 @@
 % As such, it enjoys widespread popularity, especially in academia,
 % where, in particular, it is often used for teaching numerical methods.
 %
-% Users of both \matlab{} and \LaTeX{} (and friends) often want to typeset
+% Users of both \matlab{} and \LaTeX{} (and friends) often need to typeset
 % \matlab{} listings in \LaTeX{} documents, usually with some syntax
 % highlighting, for improved code readability;
 % the relatively large number of relevant questions posted on
@@ -196,11 +196,11 @@
 % and are, therefore, continually exposed to its highlighting style.
 % Visual cues^^A
 % ---such as those provided by syntax highlighting---^^A
-% play an important role for recognising patterns.
-% Therefore, students of a programming language are more likely to quickly
-% and effectively learn and recognise its syntax if they see it highlighted
-% in a consistent manner, whether it be in a text editor or in some course
-% material (handout, assignment paper, etc.).
+% play an important role for recognising patterns,
+% and students of a programming language are more likely to quickly and
+% effectively learn and recognise its syntax if they see it highlighted in a
+% consistent manner, whether it be in a text editor or in some course material
+% (lab handout, assignment paper, etc.).
 %
 % The \mlpkg{} package is intended to fill that gap.
 % Built on top of the feature-rich \lstpkg{} package, \mlpkg{} allows you to
@@ -353,7 +353,8 @@
 % \begin{verbatim}
 %   \lstMakeShortInline[language=Matlab-pretty]"\end{verbatim}
 %^^A
-% After such a definition, "break" can be typeset by simply writing |"break"|.
+% After such a definition, the |break| keyword can be typeset inline as
+% "break" simply by writing |"break"|.
 % 
 % You should choose a character that does not otherwise occur in your
 % |tex| file, especially in the inline \matlab{} code itself,
@@ -414,9 +415,42 @@
 %    end
 %    \end{lstlisting}
 % \end{lstsample}
-%^^A
-% TODO styles
 %
+%
+% \subsection{Predefined styles}
+%
+% Although the primary goal of \mlpkg{} is to allow you to mimic the syntax
+% highlighting performed by the \matlab{} editor, the package also defines
+% the following three \lstpkg{} \emph{styles} for \matlab{} listings.
+%^^A
+% \begin{description}
+%   \item[|Matlab-stdstyle|] Standard style of the \matlab{} editor.
+%   \item[|Matlab-bwstyle|] Black \& white, printer-friendly style.
+%   \item[|Matlab-pygstyle|] Style that closely mimicks that Pygments's
+%     `MatlabLexer'.
+% \end{description}
+%^^A
+% Those three styles differ in the color scheme they use, but all have the
+% following effects on each \matlab{} listing that uses them:
+%^^A
+% \begin{itemize}
+%   \item a surrounding frame is drawn;
+%   \item line numbers are printed on the left;
+%   \item automatic linebreaking is activated.
+% \end{itemize}
+%^^A
+% To apply any of those three styles to a listing, just pass the style name to
+% the |style| key in the listing's optional argument, e.g.
+% --- verbatim stuff ----
+% No need to specify |language=Matlab-pretty|, here.
+% 
+% Here is a comparison of the three styles defined by \mlpkg{}.
+%
+% showcase
+%
+% You can also define your own style on the basis of one of those three
+% styles (see subsection~4.5 in the \lstpkg{} documentation).
+% 
 %
 % \section{Key-value interface}
 %
@@ -660,17 +694,17 @@
 % Unfortunately, the tilde character ("~") does not get typeset vertically
 % centered in all fonts, as it does in the \matlab{} editor.
 % Because a font-independent workaround seems out of reach, I refer you to
-% \url{http://tex.stackexchange.com/q/312/21891}
+% \url{http://tex.stackexchange.com/q/312/21891},
 % where you will find a list of ad-hoc solutions.
 %
 % \paragraph{Avoid literate replacements like the plague!}
-% The \pkg{mcode}, for instance, provides preset literate replacements
+% The \pkg{mcode} package provides preset so-called literate replacements
 % (see subsection~5.4 in the \lstpkg{} manual),
 % e.g.\ for printing~\(\leq\) in place of each instance of~"<=".
 % I deliberately chose not to define any such literate replacements in the
 % \mlpkg{} package, because I think that,
 % rather than improving code readability,
-% they have a potential to confuse your readers.
+% they have a potential to confuse and mislead your readers.
 % In particular, a newcomer to the programming language may not immediately
 % realise that those symbols are not part of the language's syntax;
 % she may ascribe literal meaning to them and attempt to reproduce them in her
@@ -936,16 +970,34 @@
 % \begin{lstkey}{deletemlsharedvars}
 %   For convenience, we create a brand new class of \lstpkg{} ``keywords'' for
 %   allowing the user to define \matlab{} ``variables with shared scope''.
-%   The following invocation of \lstpkg{}' internal macro
-%   |\lst@InstallKeywords| defines three keys:
+%   We first define a helper macro based on \lstpkg{}' |\lst@InstallKeywords|,
+%   which will let us defines three keys in one go, all prefixed by |ml|.
+%    \begin{macrocode}
+\gdef\InstallKeywords@mlpretty#1#2#3#4#5%
+{%
+  \lst@Key{ml#2}\relax
+    {\lst@UseFamily{#2}[\@ne]##1\relax\lst@MakeKeywords}%
+  \lst@Key{mlmore#2}\relax
+    {\lst@UseFamily{#2}[\@ne]##1\relax\lst@MakeMoreKeywords}%
+  \lst@Key{mldelete#2}\relax
+    {\lst@UseFamily{#2}[\@ne]##1\relax\lst@DeleteKeywords}%
+  \ifx\@empty#3\@empty\else
+     \lst@Key{#3}{#4}{\@namedef{lst@#3}{##1}}%
+  \fi
+  \expandafter\lst@InstallFamily@
+     \csname\@lst @#2@data\expandafter\endcsname
+     \csname\@lst @#5\endcsname {#1}{#2}{#3}
+}
+%    \end{macrocode}
+%   We know use that macro to define the three keys in question:
 %   \rkeyname{mlsharedvars}, which can be used to define a list of \matlab{}
 %   variables with shared scope;
-%   \rkeyname{moremlsharedvars}, which can be used to add elements to the
+%   \rkeyname{mlmoresharedvars}, which can be used to add elements to the
 %   current list of such variables;
-%   and \rkeyname{deletemlsharedvars}, which can be used to remove elements
+%   and \rkeyname{mldeletesharedvars}, which can be used to remove elements
 %   from that list.
 %    \begin{macrocode}
-\lst@InstallKeywords k{mlsharedvars}{mlsharedvarStyle@mlpretty}\relax%
+\InstallKeywords@mlpretty k{sharedvars}{mlsharedvarStyle@mlpretty}\relax%
   {mlsharedvarStyle@mlpretty}{}ld
 %    \end{macrocode}
 % \end{lstkey}
@@ -1669,7 +1721,7 @@
 % \paragraph{Pygments-like style}
 % The \pkg{minted}, \pkg{verbments}, and \pkg{pythontex} packages all use
 % \href{http://pygments.org}{Pygments} lexers for syntax highlighting of
-% listings. This last \mlpkg{} style closely mimics that of the Pygments
+% listings. This \mlpkg{} style closely mimics that of the Pygments
 % lexer for \matlab{} called `MatlabLexer'.
 %
 % \begin{macro}{Matlab-pygstyle}

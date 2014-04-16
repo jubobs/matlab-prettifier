@@ -61,7 +61,23 @@
 
 % we create a new ``keyword'' class for variables with shared scope
 % by using the very convenient internal listings macro \lst@InstallKeywords
-\lst@InstallKeywords k{mlsharedvars}{mlsharedvarStyle@mlpretty}\relax%
+\gdef\InstallKeywords@mlpretty#1#2#3#4#5%
+{%
+  \lst@Key{ml#2}\relax
+    {\lst@UseFamily{#2}[\@ne]##1\relax\lst@MakeKeywords}%
+  \lst@Key{mlmore#2}\relax
+    {\lst@UseFamily{#2}[\@ne]##1\relax\lst@MakeMoreKeywords}%
+  \lst@Key{mldelete#2}\relax
+    {\lst@UseFamily{#2}[\@ne]##1\relax\lst@DeleteKeywords}%
+  \ifx\@empty#3\@empty\else
+     \lst@Key{#3}{#4}{\@namedef{lst@#3}{##1}}%
+  \fi
+  \expandafter\lst@InstallFamily@
+     \csname\@lst @#2@data\expandafter\endcsname
+     \csname\@lst @#5\endcsname {#1}{#2}{#3}
+}
+
+\InstallKeywords@mlpretty k{sharedvars}{mlsharedvarStyle@mlpretty}\relax%
   {mlsharedvarStyle@mlpretty}{}ld
 
 \lst@Key{mlkeywordstyle}\relax{\renewcommand\keywordStyle@mlpretty{#1}}
