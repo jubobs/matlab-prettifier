@@ -28,15 +28,17 @@
 \usepackage{xcolor}
 \usepackage{lstdoc}
 \usepackage{matlab-prettifier}
+\usepackage{lstautogobble}
 \usepackage{hyperref}
 \usepackage{cleveref}
 
 \lstset
 {
+  language = Matlab-pretty,
   upquote = true,
   mlunquotedstringdelim = {/*}{*/},
 }
-\lstMakeShortInline[language=Matlab-pretty]"
+\lstMakeShortInline"
 \let\ph\snippetPlaceholder
 \newcommand*{\pkg}[1]{\textsf{#1}}
 \newcommand*{\opt}[1]{\texttt{#1}}
@@ -60,7 +62,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{629}
+% \CheckSum{632}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -97,15 +99,16 @@
 %    }%^^A
 %  \expandafter\endgroup\x
 %
-% \DoNotIndex{\@ifpackagewith,\@ne}
+% \DoNotIndex{\@empty,\@ifpackagewith,\@lst,\@namedef,\@ne}
 % \DoNotIndex{\advance}
-% \DoNotIndex{\baselinskip,\bfseries,\bgroup}
+% \DoNotIndex{\baselineskip,\bfseries,\bgroup}
 % \DoNotIndex{\ClosingEndKW@mlpretty@false,\ClosingEndKW@mlpretty@true,^^A
-%   \color,\colorlet,\CurrentOption}
-% \DoNotIndex{\DeclareOption,\definecolor,\dimexpr}
-% \DoNotIndex{\edef,\egroup,\else,\expandafter}
-% \DoNotIndex{\f@shape,\fi,\font,\fontchardp,\fontcharht}
-% \DoNotIndex{\global}
+%   \color,\colorlet,\csname,\CurrentOption}
+% \DoNotIndex{\DeclareOption,\def,\definecolor,\dimexpr}
+% \DoNotIndex{\edef,\egroup,\else,\endcsname,\expandafter}
+% \DoNotIndex{\f@shape,\fi,\font,\fontchardp,\fontcharht,\fontfamily,^^A
+%   \fvm@Scale}
+% \DoNotIndex{\gdef,\global}
 % \DoNotIndex{\ifnum,\ifx,\InClassdef@mlpretty@false,^^A
 %   \InClassdef@mlpretty@true,\InLineCom@mlpretty@false,^^A
 %   \InLineCom@mlpretty@true,\InStr@mlpretty@false,\InStr@mlpretty@true,^^A
@@ -113,14 +116,16 @@
 % \DoNotIndex{\long,\lst@AddToHook,\lst@CalcLostSpaceAndOutput,^^A
 %   \lst@DefSaveDef,\lst@DelimKey,\lst@ifdisplaystyle,\lst@InstallKeywords,^^A
 %   \lst@Key,\lst@language,\lst@LeaveMode,\lst@linewidth,\lst@mode,^^A
-%   \lst@NormedDef,\lst@Pmode,\lstdefinelanguage,\lstdefinestyle,^^A
-%   \lstKV@SetIf}
+%   \lst@NormedDef,\lst@Pmode,\lst@DeleteKeywords,\lst@InstallFamily@,^^A
+%   \lst@MakeKeywords,\lst@MakeMoreKeywords,\lst@UseFamily,^^A
+%   \lstdefinelanguage,\lstdefinestyle,\lstKV@SetIf}
 % \DoNotIndex{\m@ne,\makebox,\newcommand,\newcount,\newif,\newlength,^^A
 %   \normalsize}
 % \DoNotIndex{\OptionNotUsed}
 % \DoNotIndex{\PackageError,\PackageWarning,\ProcessOptions}
 % \DoNotIndex{\raisebox,\relax,\renewcommand,\RequirePackage,\rule,\rmfamily}
-% \DoNotIndex{\setlength,\sldefault,\textlangle,\textrangle,\ttfamily}
+% \DoNotIndex{\selectfont,\setlength,\sldefault,\textlangle,\textrangle,^^A
+%   \ttfamily}
 % \DoNotIndex{\TooLateForSectionTitle@mlpretty@false,^^A
 %   \TooLateForSectionTitle@mlpretty@true}
 % \DoNotIndex{\upshape}
@@ -213,21 +218,70 @@
 %
 % \subsection{Automatic syntax highlighting}
 % 
-% The \mlpkg{} package defines a \pkg{listings} language called \mllng{},
-% which can be invoked in the user-level macros and environments provided by
-% the \lstpkg{} package. \mllng{} automatically highlights the following.
+% The \mlpkg{} package defines a \pkg{listings} \emph{language} called
+% \mllng{}, which can be invoked in the user-level macros and environments
+% provided by the \lstpkg{} package. This \mllng{} language automatically
+% highlights the \matlab{} syntax, as describe below.
 % 
 % \paragraph{Context-insensitive keywords}
+% "while", "for", "break", etc.
 %
 % \paragraph{Context-sensitive keywords}
+% "end", "events", "properties", etc.
 % 
 % \paragraph{Quoted strings}
+% \mbox{}
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+'I''m a (quoted) string.'
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
 %
 % \paragraph{To-end-of-line and block comments}
+% \mbox{}
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+% I'm a to-end-of-line comment.
+a = pi
+%{
+I'm a block comment.
+%}
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
 % 
 % \paragraph{Line-continuation token (and associated to-end-of-line comment)}
+% \mbox{}
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+A = [ 1, 2, 3,... (I'm a comment)
+      4, 5, 6];
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
 %
 % \paragraph{Code-section titles}
+% \mbox{}
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+%% I'm the title of a code section.
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
+
 %
 %
 % \subsection{Other features}
@@ -732,13 +786,6 @@
 % which loads the very similar but much better Latin Modern fonts.
 % I also recommend you load \pkg{fontenc} with the \opt{T1}, if possible.
 %
-% \paragraph{Use a font that comes with bold typewriter version.}
-% If you seem unable to use bold typewriter font in your listings,
-% the reason probably is that the font you're using does not come with bold
-% typewriter version; \TeX{} fonts (such as Computer Modern) are a notable
-% example. You may want to use a monospace font that does provide a bold
-% typewriter version, such as Bera Mono or Courier.
-%
 % \paragraph{Printing visible-space characters}
 % By default, no visible characters are printed anywhere in \matlab{} code.
 % However, you can always override that by setting |showspaces|
@@ -755,16 +802,20 @@
 % the language name differs from \mllng{}
 % (see \cref{hooks-mlpretty} for more details).
 %
-% \paragraph{Inline code in footnotes}
+% \paragraph{Allowing for inline code in footnotes}
 % Using inline code in footnotes may generate an error,
 % because verbatim content is not normally allowed in footnotes.
 % One workaround is to load the \pkg{bigfoot} package.
 %
-% \paragraph{Vertically centered tilde}
-% Unfortunately, the tilde character ("~") does not get typeset vertically
-% centered in all fonts, as it does in the \matlab{} editor.
-% Because a font-independent workaround seems out of reach, I refer you to
-% \url{http://tex.stackexchange.com/q/312/21891},
+% \paragraph{Typesetting vertically centered tilde}
+% Unfortunately, not all fonts typeset the tilde character ("~") vertically
+% centered (as it is in the \matlab{} editor).
+% Be aware that, if you set a font for your \matlab{} listings
+% (via \lstpkg{}'s |basicstyle| key) that is different to \mlpkg{}'s default
+% (a scaled-down version of Bera Mono), tilde characters occuring in your
+% listings may get typeset vertically off-center.
+% Because a good, font-independent workaround seems out of reach,
+% I refer you to \url{http://tex.stackexchange.com/q/312/21891},
 % where you will find a list of ad-hoc solutions.
 %
 % \paragraph{Avoid literate replacements like the plague!}
@@ -867,9 +918,14 @@
 % documentation could be improved, please add an entry to the Bitbucket
 % repository's issue tracker; alternatively, you can send me an email at
 % \href{mailto:jubobs.matlab.prettifier@gmail.com}
-%   {jubobs.matlab.prettifier at gmail.com}
+%   {jubobs.matlab.prettifier@gmail.com}
 %
-% \StopEventually{\clearpage\PrintChanges\setcounter{IndexColumns}{2}\PrintIndex}
+% \StopEventually{^^A
+%   \clearpage^^A
+%   \PrintChanges^^A
+%   \setcounter{IndexColumns}{1}^^A
+%   \PrintIndex^^A
+% }
 %
 %
 % \section{Implementation}
@@ -931,7 +987,7 @@
 % \subsection{Required packages}
 % 
 % The \mlpkg{} package require three packages without any package option:
-% the \pkg{textcomp} package, in order to use the \lstpkg{}' |upquote|~key;
+% the \pkg{textcomp} package, in order to use \lstpkg{}' |upquote|~key;
 % the \pkg{xcolor} package, in order to color our \matlab{} code;
 % and, of course, the \lstpkg{} package.
 %    \begin{macrocode}
@@ -943,12 +999,11 @@
 %
 % \subsection{Key-value interface}
 %
-% TODO: \mlpkg{} does a lot behind the scenes; using the listings key wouldn't do. several classes of keyword for convenience, but the user really wants to affect the style of all those keyword in one go.
 % We extend \lstpkg{}' key-value interface by defining several additional
 % keys, which we will use for defining a new \lstpkg{} language and three
-% \lstpkg{} styles, further down. Most of those new keys start by the
-% prefix~|ml|, so that the user easily distinguish them from ``native''
-% \lstpkg{} keys.
+% \lstpkg{} styles, further down.
+% All those new keys start by the prefix~|ml|, so that the user can easily
+% distinguish them from ``native'' \lstpkg{} keys.
 %
 % \begin{lstkey}{mlkeywordstyle}
 %   In the upcoming language definition, we use several classes of \lstpkg{}
@@ -1037,8 +1092,8 @@
 % \end{lstkey}
 %
 % \begin{lstkey}{mlsharedvars}
-% \begin{lstkey}{moremlsharedvars}
-% \begin{lstkey}{deletemlsharedvars}
+% \begin{lstkey}{mlmoresharedvars}
+% \begin{lstkey}{mldeletesharedvars}
 %   For convenience, we create a brand new class of \lstpkg{} ``keywords'' for
 %   allowing the user to define \matlab{} ``variables with shared scope''.
 %   We first define a helper macro based on \lstpkg{}' |\lst@InstallKeywords|,
@@ -1339,7 +1394,8 @@
 % Font family, series, shape, and size (color is defined separately)
 \newcommand\basicFontSpecs@mlpretty
 {%
-  \ttfamily%
+  \def\fvm@Scale{.85}%
+  \fontfamily{fvm}\selectfont%
   \lst@ifdisplaystyle%
     \normalsize%
   \fi
@@ -1686,7 +1742,7 @@
 % Now we apply all those patches at the PreInit hook,
 % under the condition that \lst@language and \languageNormedDefd@mlpretty
 % expand (once) to the same replacement text.
-\newcommand\addedToPreInitHook
+\newcommand\addedToPreInitHook@mlpretty
 {%
   \ifx\lst@language\languageNormedDefd@mlpretty%
     \renewcommand\addedToInitVarsEOL@mlpretty\@ddedToInitVarsEOL@mlpretty%
@@ -1694,20 +1750,20 @@
     \renewcommand\addedToPostOutput@mlpretty\@ddedToPostOutput@mlpretty%
   \fi
 }
-\lst@AddToHook{PreInit}{\addedToPreInitHook}
+\lst@AddToHook{PreInit}{\addedToPreInitHook@mlpretty}
 
 % --- DeInit hook ---
 % We reset counters apply at the DeInit hook,
 % under the condition that \lst@language and \languageNormedDefd@mlpretty
 % expand (once) to the same replacement text.
-\newcommand\addedToDeInitHook
+\newcommand\addedToDeInitHook@mlpretty
 {%
   \ifx\lst@language\languageNormedDefd@mlpretty%
     \resetEndKW@mlpretty%
     \resetClassdefKW@mlpretty%
   \fi
 }
-\lst@AddToHook{DeInit}{\addedToDeInitHook}
+\lst@AddToHook{DeInit}{\addedToDeInitHook@mlpretty}
 %    \end{macrocode}
 %
 %

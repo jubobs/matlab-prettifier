@@ -55,7 +55,6 @@
 \RequirePackage{xcolor}[2007/01/21]
 \RequirePackage{listings}[2013/08/26]
 
-
 % ----------- key=value interface ---
 % Before we can define the language, we define additional keys
 
@@ -235,7 +234,8 @@
 % Font family, series, shape, and size (color is defined separately)
 \newcommand\basicFontSpecs@mlpretty
 {%
-  \ttfamily%
+  \def\fvm@Scale{.85}%
+  \fontfamily{fvm}\selectfont%
   \lst@ifdisplaystyle%
     \normalsize%
   \fi
@@ -567,7 +567,7 @@
 % Now we apply all those patches at the PreInit hook,
 % under the condition that \lst@language and \languageNormedDefd@mlpretty
 % expand (once) to the same replacement text.
-\newcommand\addedToPreInitHook
+\newcommand\addedToPreInitHook@mlpretty
 {%
   \ifx\lst@language\languageNormedDefd@mlpretty%
     \renewcommand\addedToInitVarsEOL@mlpretty\@ddedToInitVarsEOL@mlpretty%
@@ -575,20 +575,20 @@
     \renewcommand\addedToPostOutput@mlpretty\@ddedToPostOutput@mlpretty%
   \fi
 }
-\lst@AddToHook{PreInit}{\addedToPreInitHook}
+\lst@AddToHook{PreInit}{\addedToPreInitHook@mlpretty}
 
 % --- DeInit hook ---
 % We reset counters apply at the DeInit hook,
 % under the condition that \lst@language and \languageNormedDefd@mlpretty
 % expand (once) to the same replacement text.
-\newcommand\addedToDeInitHook
+\newcommand\addedToDeInitHook@mlpretty
 {%
   \ifx\lst@language\languageNormedDefd@mlpretty%
     \resetEndKW@mlpretty%
     \resetClassdefKW@mlpretty%
   \fi
 }
-\lst@AddToHook{DeInit}{\addedToDeInitHook}
+\lst@AddToHook{DeInit}{\addedToDeInitHook@mlpretty}
 
 
 % --- Macros for placeholders ---
