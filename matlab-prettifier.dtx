@@ -62,7 +62,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{632}
+% \CheckSum{626}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -110,8 +110,7 @@
 %   \fvm@Scale}
 % \DoNotIndex{\gdef,\global}
 % \DoNotIndex{\ifnum,\ifx,\InClassdef@mlpr@false,^^A
-%   \InClassdef@mlpr@true,\InLineCom@mlpr@false,^^A
-%   \InLineCom@mlpr@true,\InStr@mlpr@false,\InStr@mlpretty@true,^^A
+%   \InClassdef@mlpr@true,\InStr@mlpr@false,\InStr@mlpretty@true,^^A
 %   \itdefault,\itshape}
 % \DoNotIndex{\long,\lst@AddToHook,\lst@CalcLostSpaceAndOutput,^^A
 %   \lst@DefSaveDef,\lst@DelimKey,\lst@ifdisplaystyle,\lst@InstallKeywords,^^A
@@ -1365,13 +1364,11 @@ A = [ 1, 2, 3,... (I'm a comment)
 \newcount\blkLvl@mlpr             % block nesting level
 \newcount\blkLvlAtClassdef@mlpr     % block nesting level at last classdef
 
-\newif\ifClosingEndKW@mlpr@            \ClosingEndKW@mlpr@true
-\newif\ifInClassdef@mlpr@                \InClassdef@mlpr@false
-\newif\ifInStr@mlpr@                          \InStr@mlpr@false
-\newif\ifInLineCom@mlpr@                  \InLineCom@mlpr@false
-\newif\ifTooLateForSectionTitle@mlpr@%
-                                 \TooLateForSectionTitle@mlpr@false
-\newif\ifWithinSectionTitle@mlpr@\WithinSectionTitle@mlpr@false
+\newif\ifClosingEndKW@mlpr@                      \ClosingEndKW@mlpr@true
+\newif\ifInClassdef@mlpr@                          \InClassdef@mlpr@false
+\newif\ifInStr@mlpr@                                    \InStr@mlpr@false
+\newif\ifTooLateForSectionTitle@mlpr@  \TooLateForSectionTitle@mlpr@false
+\newif\ifWithinSectionTitle@mlpr@          \WithinSectionTitle@mlpr@false
 
 
 % --- Macros for resetting counters and switches ---
@@ -1598,7 +1595,7 @@ A = [ 1, 2, 3,... (I'm a comment)
     \ifWithinSectionTitle@mlpr@%
     \else
       \ifClosingEndKW@mlpr@%
-        \ifInLineCom@mlpr@%
+        \lst@ifLmode%
         \else
           \ifnum\blkLvl@mlpr>0%
             \global\advance\blkLvl@mlpr\m@ne%
@@ -1609,7 +1606,7 @@ A = [ 1, 2, 3,... (I'm a comment)
           \keywordStyle@mlpr%
         \fi
       \else
-        \ifInLineCom@mlpr@%
+        \lst@ifLmode%
         \else
           \lastElemStyle@mlpr%
         \fi
@@ -1634,11 +1631,11 @@ A = [ 1, 2, 3,... (I'm a comment)
   \ifWithinSectionTitle@mlpr@%
     ...%
   \else
-    \ifInLineCom@mlpr@%
+    \lst@ifLmode%
       ...%
     \else
-      \global\InLineCom@mlpr@true%
       {\keywordStyle@mlpr...}%
+      \lst@Lmodetrue%
     \fi
     \commentStyle@mlpr%
   \fi
@@ -1707,8 +1704,6 @@ A = [ 1, 2, 3,... (I'm a comment)
 \newcommand\addedToInitVarsEOL@mlpr{} % polymorphic macro for InitVarsEOL
 \newcommand\@ddedToInitVarsEOL@mlpr
 {%
-  % at the start of a line, we're not inside a one-line comment
-  \global\InLineCom@mlpr@false%
   % This avoids continuation of unterminated string literals on next line.
   \ifInStr@mlpr@%
     \global\InStr@mlpr@false%
@@ -1818,7 +1813,6 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \subsection{Predefined \texorpdfstring{\mlpkg{}}{matlab-prettifier} styles}
 %
 % \paragraph{Standard style}
-% \begin{macro}{Matlab-stdstyle}
 %    \begin{macrocode}
 \lstdefinestyle{Matlab-stdstyle}
 {
@@ -1830,10 +1824,8 @@ A = [ 1, 2, 3,... (I'm a comment)
   breaklines  = true,
 }
 %    \end{macrocode}
-% \end{macro}
 %
 % \paragraph{Black \& white style}
-% \begin{macro}{Matlab-bwstyle}
 %    \begin{macrocode}
 \lstdefinestyle{Matlab-bwstyle}
 {
@@ -1852,15 +1844,12 @@ A = [ 1, 2, 3,... (I'm a comment)
   breaklines          = true,
 }
 %    \end{macrocode}
-% \end{macro}
 %
 % \paragraph{Pygments-like style}
 % The \pkg{minted}, \pkg{verbments}, and \pkg{pythontex} packages all use
 % \href{http://pygments.org}{Pygments} lexers for syntax highlighting of
 % listings. This \mlpkg{} style closely mimics that of the Pygments
 % lexer for \matlab{} called `MatlabLexer'.
-%
-% \begin{macro}{Matlab-pygstyle}
 %    \begin{macrocode}
 \lstdefinestyle{Matlab-pygstyle}
 {
@@ -1880,7 +1869,6 @@ A = [ 1, 2, 3,... (I'm a comment)
   breaklines          = true,
 }
 %    \end{macrocode}
-% \end{macro}
 %
 % \Finale
 \endinput

@@ -203,13 +203,11 @@
 \newcount\blkLvl@mlpr             % block nesting level
 \newcount\blkLvlAtClassdef@mlpr     % block nesting level at last classdef
 
-\newif\ifClosingEndKW@mlpr@            \ClosingEndKW@mlpr@true
-\newif\ifInClassdef@mlpr@                      \InClassdef@mlpr@false
-\newif\ifInStr@mlpr@                          \InStr@mlpr@false
-\newif\ifInLineCom@mlpr@                  \InLineCom@mlpr@false
-\newif\ifTooLateForSectionTitle@mlpr@%
-                                 \TooLateForSectionTitle@mlpr@false
-\newif\ifWithinSectionTitle@mlpr@\WithinSectionTitle@mlpr@false
+\newif\ifClosingEndKW@mlpr@                      \ClosingEndKW@mlpr@true
+\newif\ifInClassdef@mlpr@                          \InClassdef@mlpr@false
+\newif\ifInStr@mlpr@                                    \InStr@mlpr@false
+\newif\ifTooLateForSectionTitle@mlpr@  \TooLateForSectionTitle@mlpr@false
+\newif\ifWithinSectionTitle@mlpr@          \WithinSectionTitle@mlpr@false
 
 
 % --- Macros for resetting counters and switches ---
@@ -423,7 +421,7 @@
     \ifWithinSectionTitle@mlpr@%
     \else
       \ifClosingEndKW@mlpr@%
-        \ifInLineCom@mlpr@%
+        \lst@ifLmode%
         \else
           \ifnum\blkLvl@mlpr>0%
             \global\advance\blkLvl@mlpr\m@ne%
@@ -434,7 +432,7 @@
           \keywordStyle@mlpr%
         \fi
       \else
-        \ifInLineCom@mlpr@%
+        \lst@ifLmode%
         \else
           \lastElemStyle@mlpr%
         \fi
@@ -460,11 +458,11 @@
   \ifWithinSectionTitle@mlpr@%
     ...%
   \else
-    \ifInLineCom@mlpr@%
+    \lst@ifLmode%
       ...%
     \else
-      \global\InLineCom@mlpr@true%
       {\keywordStyle@mlpr...}%
+      \lst@Lmodetrue%
     \fi
     \commentStyle@mlpr%
   \fi
@@ -529,8 +527,6 @@
 \newcommand\addedToInitVarsEOL@mlpr{} % polymorphic macro for InitVarsEOL
 \newcommand\@ddedToInitVarsEOL@mlpr
 {%
-  % at the start of a line, we're not inside a one-line comment
-  \global\InLineCom@mlpr@false%
   % This avoids continuation of unterminated string literals on next line.
   \ifInStr@mlpr@%
     \global\InStr@mlpr@false%
