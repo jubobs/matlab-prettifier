@@ -25,7 +25,7 @@
 
 
 % --- check for incompatible listings options ---
-\newcommand\checkForListingsOption@mlpretty[1]
+\newcommand\checkForListingsOption@mlpr[1]
 {%
   \@ifpackagewith{listings}{#1}%
   {
@@ -35,16 +35,16 @@
   }{}
 }
 
-\checkForListingsOption@mlpretty{noaspects}
-\checkForListingsOption@mlpretty{0.21}
-\checkForListingsOption@mlpretty{savemem}
+\checkForListingsOption@mlpr{noaspects}
+\checkForListingsOption@mlpr{0.21}
+\checkForListingsOption@mlpr{savemem}
 
 
 % --- Discard any option passed to the package ---
 \DeclareOption*%
 {%
   \OptionNotUsed
-  \PackageWarning{\pkgName@mlpretty}{Unknown `\CurrentOption' option}
+  \PackageWarning{\pkgName@mlpr}{Unknown `\CurrentOption' option}
 }  
 
 % --- Process options ---
@@ -60,7 +60,7 @@
 
 % we create a new ``keyword'' class for variables with shared scope
 % by using the very convenient internal listings macro \lst@InstallKeywords
-\gdef\InstallKeywords@mlpretty#1#2#3#4#5%
+\gdef\InstallKeywords@mlpr#1#2#3#4#5%
 {%
   \lst@Key{ml#2}\relax
     {\lst@UseFamily{#2}[\@ne]##1\relax\lst@MakeKeywords}%
@@ -76,50 +76,50 @@
      \csname\@lst @#5\endcsname {#1}{#2}{#3}
 }
 
-\InstallKeywords@mlpretty k{sharedvars}{mlsharedvarStyle@mlpretty}\relax%
-  {mlsharedvarStyle@mlpretty}{}ld
+\InstallKeywords@mlpr k{sharedvars}{mlsharedvarStyle@mlpr}\relax%
+  {mlsharedvarStyle@mlpr}{}ld
 
-\lst@Key{mlkeywordstyle}\relax{\renewcommand\keywordStyle@mlpretty{#1}}
-\lst@Key{mllastelementstyle}\relax{\renewcommand\lastElemStyle@mlpretty{#1}}
-\lst@Key{mlstringstyle}\relax{\renewcommand\stringStyle@mlpretty{#1}}
-\lst@Key{mlcommentstyle}\relax{\renewcommand\commentStyle@mlpretty{#1}}
+\lst@Key{mlkeywordstyle}\relax{\renewcommand\keywordStyle@mlpr{#1}}
+\lst@Key{mllastelementstyle}\relax{\renewcommand\lastElemStyle@mlpr{#1}}
+\lst@Key{mlstringstyle}\relax{\renewcommand\stringStyle@mlpr{#1}}
+\lst@Key{mlcommentstyle}\relax{\renewcommand\commentStyle@mlpr{#1}}
 \lst@Key{mlsectionrulethickness}\relax%
-  {\renewcommand\sectionRuleThicknessRatio@mlpretty{#1}}
+  {\renewcommand\sectionRuleThicknessRatio@mlpr{#1}}
 \lst@Key{mlsectionrulecolor}\relax%
-  {\colorlet{sectionRuleColor@mlpretty}{#1}}
+  {\colorlet{sectionRuleColor@mlpr}{#1}}
 \lst@Key{mlshowsectionrules}{false}[t]%
-  {\lstKV@SetIf{#1}\ifShowCellrules@mlpretty@}
+  {\lstKV@SetIf{#1}\ifShowCellrules@mlpr@}
 \lst@Key{mlsectiontitlestyle}\relax
-  {\renewcommand\sectionTitleStyle@mlpretty{#1}}
+  {\renewcommand\sectionTitleStyle@mlpr{#1}}
 \lst@Key{mloverride}{false}[t]%
-  {\lstKV@SetIf{#1}\ifOverridecontext@mlpretty@}
-\lst@Key{mlsyscomstyle}\relax{\renewcommand\syscomStyle@mlpretty{#1}}
-\lst@Key{mlsharedvarstyle}\relax{\renewcommand\sharedvarStyle@mlpretty{#1}}
+  {\lstKV@SetIf{#1}\ifOverridecontext@mlpr@}
+\lst@Key{mlsyscomstyle}\relax{\renewcommand\syscomStyle@mlpr{#1}}
+\lst@Key{mlsharedvarstyle}\relax{\renewcommand\sharedvarStyle@mlpr{#1}}
 \lst@Key{mlunquotedstringdelim}\relax%
-  {\lst@DelimKey\relax{[is][\stringStyle@mlpretty]{#1}}}
+  {\lst@DelimKey\relax{[is][\stringStyle@mlpr]{#1}}}
 \lst@Key{mlplaceholderstyle}\relax%
- {\renewcommand\placeholderStyle@mlpretty{#1}}
+ {\renewcommand\placeholderStyle@mlpr{#1}}
 
 
 % --- Language definition ---
-\newcommand\language@mlpretty{Matlab-pretty}
+\newcommand\language@mlpr{Matlab-pretty}
 % ``normalised'' language name (listings lowercases language name internally)
 % Note: in \foo\bar{\baz}, to expand \baz once before anything else,
 % write \ex\foo\ex\bar\ex{\baz} (where \let\ex=\expandafter)
-\expandafter\lst@NormedDef\expandafter\languageNormedDefd@mlpretty%
-  \expandafter{\language@mlpretty}
+\expandafter\lst@NormedDef\expandafter\languageNormedDefd@mlpr%
+  \expandafter{\language@mlpr}
 
 \expandafter\expandafter\expandafter\lstdefinelanguage\expandafter%
-{\language@mlpretty}
+{\language@mlpr}
 {
-  MoreSelectCharTable=\SelectCharTable@mlpretty,
+  MoreSelectCharTable=\SelectCharTable@mlpr,
   alsoother={\$@}, % chars not valid in identifiers
   sensitive=true,% Matlab is case-sensitive.
   upquote=true,
   showstringspaces=false,
   rulecolor=\color{black}, % prevents listings bug (nonuniform rule color)
   %
-  basicstyle=\basicStyle@mlpretty,
+  basicstyle=\basicStyle@mlpr,
   %
   morekeywords=[257]% opening keywords unrelated to classdef
   {% 
@@ -132,7 +132,7 @@
     try,
     while,
   },
-  keywordstyle=[257]\processOpRegKW@mlpretty,
+  keywordstyle=[257]\processOpRegKW@mlpr,
   %
   morekeywords=[258]% `middle' keywords unrelated to classdef
   {%
@@ -145,17 +145,17 @@
     function,
     return,
   }, 
-  keywordstyle=[258]\processMidKW@mlpretty,
+  keywordstyle=[258]\processMidKW@mlpr,
   %
   morekeywords=[259]% `standalone' keywords
   {%
     global,
     persistent,
   }, 
-  keywordstyle=[259]\processStdaKW@mlpretty,
+  keywordstyle=[259]\processStdaKW@mlpr,
   %
   morekeywords=[260]{classdef},  
-  keywordstyle=[260]\processClassdefKW@mlpretty,
+  keywordstyle=[260]\processClassdefKW@mlpr,
   %
   morekeywords=[261]% `middle' keywords related to classdef
   {%
@@ -164,28 +164,28 @@
     methods,
     properties,
   },
-  keywordstyle=[261]\processMidClassdefKW@mlpretty,
+  keywordstyle=[261]\processMidClassdefKW@mlpr,
   % 
   morekeywords=[262]{end},
-  keywordstyle=[262]\processEndKW@mlpretty,
+  keywordstyle=[262]\processEndKW@mlpr,
   %
   % strings
   morestring=[m]',
-  stringstyle=\processString@mlpretty,
+  stringstyle=\processString@mlpr,
   %
   % comments
   morecomment=[l]\%,                                       % to-end-of-line
   morecomment=[n]{\%\{\^^M}{\%\}\^^M},                     % block
-  moredelim=**[il][\processDotDotDot@mlpretty]{...},       % line continuation
-  moredelim=**[l][\processSectionTitle@mlpretty]{\%\%},    % code section
-  moredelim=**[l][\processSectionTitle@mlpretty]{\%\%\ },  % code section
-  commentstyle=\commentStyle@mlpretty,
+  moredelim=**[il][\processDotDotDot@mlpr]{...},       % line continuation
+  moredelim=**[l][\processSectionTitle@mlpr]{\%\%},    % code section
+  moredelim=**[l][\processSectionTitle@mlpr]{\%\%\ },  % code section
+  commentstyle=\commentStyle@mlpr,
   %
   % system commands
-  moredelim=[l][\syscomStyle@mlpretty]{!},
+  moredelim=[l][\syscomStyle@mlpr]{!},
   %
   % variables with shared scope
-  mlsharedvarStyle@mlpretty = \processSharedVar@mlpretty,
+  mlsharedvarStyle@mlpr = \processSharedVar@mlpr,
 }
 [% `listings' aspects needed
   keywords,
@@ -198,41 +198,41 @@
 % --- State variables ---
 % Counters and switches used as ``state variables''
 % (used to keep track of context)
-\newcount\netBracketCount@mlpretty  % net running count of brackets
+\newcount\netBracketCount@mlpr  % net running count of brackets
                                     % ([{ count for +1, )]} count for -1 
-\newcount\blkLvl@mlpretty             % block nesting level
-\newcount\blkLvlAtClassdef@mlpretty     % block nesting level at last classdef
+\newcount\blkLvl@mlpr             % block nesting level
+\newcount\blkLvlAtClassdef@mlpr     % block nesting level at last classdef
 
-\newif\ifClosingEndKW@mlpretty@            \ClosingEndKW@mlpretty@true
-\newif\ifInClassdef@mlpretty@                      \InClassdef@mlpretty@false
-\newif\ifInStr@mlpretty@                          \InStr@mlpretty@false
-\newif\ifInLineCom@mlpretty@                  \InLineCom@mlpretty@false
-\newif\ifTooLateForSectionTitle@mlpretty@%
-                                 \TooLateForSectionTitle@mlpretty@false
-\newif\ifWithinSectionTitle@mlpretty@\WithinSectionTitle@mlpretty@false
+\newif\ifClosingEndKW@mlpr@            \ClosingEndKW@mlpr@true
+\newif\ifInClassdef@mlpr@                      \InClassdef@mlpr@false
+\newif\ifInStr@mlpr@                          \InStr@mlpr@false
+\newif\ifInLineCom@mlpr@                  \InLineCom@mlpr@false
+\newif\ifTooLateForSectionTitle@mlpr@%
+                                 \TooLateForSectionTitle@mlpr@false
+\newif\ifWithinSectionTitle@mlpr@\WithinSectionTitle@mlpr@false
 
 
 % --- Macros for resetting counters and switches ---
-\newcommand\resetBracketCount@mlpretty{\global\netBracketCount@mlpretty=0}
+\newcommand\resetBracketCount@mlpr{\global\netBracketCount@mlpr=0}
 
-\newcommand\resetEndKW@mlpretty
+\newcommand\resetEndKW@mlpr
 {%
-  \global\ClosingEndKW@mlpretty@true%
-  \resetBracketCount@mlpretty%
+  \global\ClosingEndKW@mlpr@true%
+  \resetBracketCount@mlpr%
 }
 
-\newcommand\resetClassdefKW@mlpretty
+\newcommand\resetClassdefKW@mlpr
 {%
-  \global\InClassdef@mlpretty@false%
-  \global\blkLvl@mlpretty=0%
-  \global\blkLvlAtClassdef@mlpretty=0%
+  \global\InClassdef@mlpr@false%
+  \global\blkLvl@mlpr=0%
+  \global\blkLvlAtClassdef@mlpr=0%
 }
 
 
 % --- internal style macros ---
 
 % Font family, series, shape, and size (color is defined separately)
-\newcommand\basicFontSpecs@mlpretty
+\newcommand\basicFontSpecs@mlpr
 {%
   \def\fvm@Scale{.85}%
   \fontfamily{fvm}\selectfont%
@@ -240,122 +240,122 @@
     \normalsize%
   \fi
 }
-\newcommand\keywordFontSpecs@mlpretty{}
-\newcommand\lastElemFontSpecs@mlpretty{}
-\newcommand\stringFontSpecs@mlpretty{}
-\newcommand\commentFontSpecs@mlpretty{}
-\newcommand\sectionTitleFontSpecs@mlpretty
-  {\commentFontSpecs@mlpretty\bfseries}
-\newcommand\syscomFontSpecs@mlpretty{}
-\newcommand\sharedvarFontSpecs@mlpretty{}
+\newcommand\keywordFontSpecs@mlpr{}
+\newcommand\lastElemFontSpecs@mlpr{}
+\newcommand\stringFontSpecs@mlpr{}
+\newcommand\commentFontSpecs@mlpr{}
+\newcommand\sectionTitleFontSpecs@mlpr
+  {\commentFontSpecs@mlpr\bfseries}
+\newcommand\syscomFontSpecs@mlpr{}
+\newcommand\sharedvarFontSpecs@mlpr{}
 
 % Matlab syntax highlighting colors
-\colorlet{textColor@mlpretty}{black}                      % text
-\colorlet{lastElemColor@mlpretty}{textColor@mlpretty}     % end
-\definecolor{keywordColor@mlpretty}{RGB}{000,000,255}     % keywords
-\definecolor{stringColor@mlpretty}{RGB}{160,032,240}      % strings
-\definecolor{commentColor@mlpretty}{RGB}{034,139,034}     % comments
-\definecolor{sectionTitleColor@mlpretty}{RGB}{034,139,034}% section titles
-\colorlet{sectionRuleColor@mlpretty}{black!15}            % code-section rule
-\definecolor{syscomColor@mlpretty}{RGB}{178,140,000}      % system commands
-\definecolor{sharedvarColor@mlpretty}{RGB}{000,163,163}   % shared scope
+\colorlet{textColor@mlpr}{black}                      % text
+\colorlet{lastElemColor@mlpr}{textColor@mlpr}     % end
+\definecolor{keywordColor@mlpr}{RGB}{000,000,255}     % keywords
+\definecolor{stringColor@mlpr}{RGB}{160,032,240}      % strings
+\definecolor{commentColor@mlpr}{RGB}{034,139,034}     % comments
+\definecolor{sectionTitleColor@mlpr}{RGB}{034,139,034}% section titles
+\colorlet{sectionRuleColor@mlpr}{black!15}            % code-section rule
+\definecolor{syscomColor@mlpr}{RGB}{178,140,000}      % system commands
+\definecolor{sharedvarColor@mlpr}{RGB}{000,163,163}   % shared scope
 
 % More Matlab colors (currently not used by matlab-prettifier)
-\colorlet{bgColor@mlpretty}{white}                        % background color
-\definecolor{untermStringColor@mlpretty}{RGB}{178,000,000}% unterm. strings
-\definecolor{syntaxErrorColor@mlpretty}{RGB}{255,000,000} % Syntax errors
+\colorlet{bgColor@mlpr}{white}                        % background color
+\definecolor{untermStringColor@mlpr}{RGB}{178,000,000}% unterm. strings
+\definecolor{syntaxErrorColor@mlpr}{RGB}{255,000,000} % Syntax errors
 
 % Additional custom colors
 \colorlet{numbersColor@matlabpretty}{gray}
 
-\newcommand\basicStyle@mlpretty
+\newcommand\basicStyle@mlpr
 {%
-  \basicFontSpecs@mlpretty%
-  \color{textColor@mlpretty}%
+  \basicFontSpecs@mlpr%
+  \color{textColor@mlpr}%
 }
 
-\newcommand\lastElemStyle@mlpretty
+\newcommand\lastElemStyle@mlpr
 {%
-  \lastElemFontSpecs@mlpretty%
-  \color{lastElemColor@mlpretty}%
+  \lastElemFontSpecs@mlpr%
+  \color{lastElemColor@mlpr}%
 }
 
-\newcommand\keywordStyle@mlpretty
+\newcommand\keywordStyle@mlpr
 {%
-  \keywordFontSpecs@mlpretty%
-  \color{keywordColor@mlpretty}%
+  \keywordFontSpecs@mlpr%
+  \color{keywordColor@mlpr}%
 }
 
-\newcommand\stringStyle@mlpretty
+\newcommand\stringStyle@mlpr
 {%
-  \global\InStr@mlpretty@true%
-  \stringFontSpecs@mlpretty%
-  \color{stringColor@mlpretty}%
+  \global\InStr@mlpr@true%
+  \stringFontSpecs@mlpr%
+  \color{stringColor@mlpr}%
 }
 
-\newcommand\commentStyle@mlpretty
+\newcommand\commentStyle@mlpr
 {%
-  \commentFontSpecs@mlpretty%
-  \color{commentColor@mlpretty}%
+  \commentFontSpecs@mlpr%
+  \color{commentColor@mlpr}%
 }
 
-\newcommand\sectionTitleStyle@mlpretty
+\newcommand\sectionTitleStyle@mlpr
 {%
-  \sectionTitleFontSpecs@mlpretty%
-  \color{sectionTitleColor@mlpretty}%
+  \sectionTitleFontSpecs@mlpr%
+  \color{sectionTitleColor@mlpr}%
 }
 
-\newcommand\syscomStyle@mlpretty
+\newcommand\syscomStyle@mlpr
 {%
-  \syscomFontSpecs@mlpretty%
-  \color{syscomColor@mlpretty}%
+  \syscomFontSpecs@mlpr%
+  \color{syscomColor@mlpr}%
 }
 
-\newcommand\sharedvarStyle@mlpretty
+\newcommand\sharedvarStyle@mlpr
 {%
-  \sharedvarFontSpecs@mlpretty%
-  \color{sharedvarColor@mlpretty}%
+  \sharedvarFontSpecs@mlpr%
+  \color{sharedvarColor@mlpr}%
 }
 
 
 % Macro for SelectCharTable key
-\newcommand\SelectCharTable@mlpretty
+\newcommand\SelectCharTable@mlpr
 {%
-  \processOpenBracket@mlpretty{40}{\roundBktOp@mlpretty}%
-  \processOpenBracket@mlpretty{91}{\squareBktOp@mlpretty}%
-  \processOpenBracket@mlpretty{123}{\curlyBktOp@mlpretty}%
-  \processCloseBracket@mlpretty{41}{\roundBktCl@mlpretty}%
-  \processCloseBracket@mlpretty{93}{\squareBktCl@mlpretty}%
-  \processCloseBracket@mlpretty{125}{\curlyBktCl@mlpretty}%
+  \processOpenBracket@mlpr{40}{\roundBktOp@mlpr}%
+  \processOpenBracket@mlpr{91}{\squareBktOp@mlpr}%
+  \processOpenBracket@mlpr{123}{\curlyBktOp@mlpr}%
+  \processCloseBracket@mlpr{41}{\roundBktCl@mlpr}%
+  \processCloseBracket@mlpr{93}{\squareBktCl@mlpr}%
+  \processCloseBracket@mlpr{125}{\curlyBktCl@mlpr}%
 }
 
 
 % --- macros for processing opening and closing brackets ---
-\newcommand\processOpenBracket@mlpretty[2]
+\newcommand\processOpenBracket@mlpr[2]
 {%
   \lst@DefSaveDef{#1}#2%
   {%
     #2%
     \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
-      \global\ClosingEndKW@mlpretty@false%
-      \global\advance\netBracketCount@mlpretty by \@ne%
+      \global\ClosingEndKW@mlpr@false%
+      \global\advance\netBracketCount@mlpr by \@ne%
     \fi
   }%  
 }
 
-\newcommand\processCloseBracket@mlpretty[2]
+\newcommand\processCloseBracket@mlpr[2]
 {%
   \lst@DefSaveDef{#1}#2%
   {%
     #2%
     \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
-      \ifClosingEndKW@mlpretty@%    % If end is already a blue keyword... 
-        \resetBracketCount@mlpretty % ... we can safely reset the count.
+      \ifClosingEndKW@mlpr@%    % If end is already a blue keyword... 
+        \resetBracketCount@mlpr % ... we can safely reset the count.
       \else
-        \global\advance\netBracketCount@mlpretty by \m@ne%
-        \ifnum\netBracketCount@mlpretty>0%
+        \global\advance\netBracketCount@mlpr by \m@ne%
+        \ifnum\netBracketCount@mlpr>0%
         \else
-          \global\ClosingEndKW@mlpretty@true%
+          \global\ClosingEndKW@mlpr@true%
         \fi
       \fi
     \fi
@@ -363,80 +363,80 @@
 }
 
 % --- macros for processing keywords ---
-\newcommand\processOpRegKW@mlpretty
+\newcommand\processOpRegKW@mlpr
 {%
-  \ifWithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpr@%
   \else
-    \resetEndKW@mlpretty%
-    \global\advance\blkLvl@mlpretty\@ne%
-    \keywordStyle@mlpretty%
+    \resetEndKW@mlpr%
+    \global\advance\blkLvl@mlpr\@ne%
+    \keywordStyle@mlpr%
   \fi
 }
 
-\newcommand\processMidKW@mlpretty
+\newcommand\processMidKW@mlpr
 {%
-  \ifWithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpr@%
   \else
-    \resetEndKW@mlpretty%
-    \keywordStyle@mlpretty%
+    \resetEndKW@mlpr%
+    \keywordStyle@mlpr%
   \fi
 }
 
 % No difference between standalone keywords and middle keywords
-\newcommand\processStdaKW@mlpretty\processMidKW@mlpretty
+\newcommand\processStdaKW@mlpr\processMidKW@mlpr
 
-\newcommand\processClassdefKW@mlpretty
+\newcommand\processClassdefKW@mlpr
 {%
-  \ifWithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpr@%
   \else
-    \resetEndKW@mlpretty%
-    \global\InClassdef@mlpretty@true%
-    \global\blkLvlAtClassdef@mlpretty=\blkLvl@mlpretty%
-    \global\advance\blkLvl@mlpretty\@ne%
-    \keywordStyle@mlpretty%
+    \resetEndKW@mlpr%
+    \global\InClassdef@mlpr@true%
+    \global\blkLvlAtClassdef@mlpr=\blkLvl@mlpr%
+    \global\advance\blkLvl@mlpr\@ne%
+    \keywordStyle@mlpr%
   \fi
 }
 
-\newcommand\processMidClassdefKW@mlpretty
+\newcommand\processMidClassdefKW@mlpr
 {%
   %only for typesetting those as keywords in inline code
-  \ifOverridecontext@mlpretty@%
-    \keywordStyle@mlpretty%
+  \ifOverridecontext@mlpr@%
+    \keywordStyle@mlpr%
   \else
-    \ifWithinSectionTitle@mlpretty@%
+    \ifWithinSectionTitle@mlpr@%
     \else
-      \ifInClassdef@mlpretty@%
-        \resetEndKW@mlpretty%
-        \global\advance\blkLvl@mlpretty\@ne%
-        \keywordStyle@mlpretty%
+      \ifInClassdef@mlpr@%
+        \resetEndKW@mlpr%
+        \global\advance\blkLvl@mlpr\@ne%
+        \keywordStyle@mlpr%
       \fi
     \fi
   \fi
 }
 
-\newcommand\processEndKW@mlpretty
+\newcommand\processEndKW@mlpr
 {%
   % only for typesetting those as ``last element'' in inline code
-  \ifOverridecontext@mlpretty@% 
-    \lastElemStyle@mlpretty%
+  \ifOverridecontext@mlpr@% 
+    \lastElemStyle@mlpr%
   \else
-    \ifWithinSectionTitle@mlpretty@%
+    \ifWithinSectionTitle@mlpr@%
     \else
-      \ifClosingEndKW@mlpretty@%
-        \ifInLineCom@mlpretty@%
+      \ifClosingEndKW@mlpr@%
+        \ifInLineCom@mlpr@%
         \else
-          \ifnum\blkLvl@mlpretty>0%
-            \global\advance\blkLvl@mlpretty\m@ne%
+          \ifnum\blkLvl@mlpr>0%
+            \global\advance\blkLvl@mlpr\m@ne%
           \fi
-          \ifnum\blkLvl@mlpretty=\blkLvlAtClassdef@mlpretty%
-            \global\InClassdef@mlpretty@false%
+          \ifnum\blkLvl@mlpr=\blkLvlAtClassdef@mlpr%
+            \global\InClassdef@mlpr@false%
           \fi
-          \keywordStyle@mlpretty%
+          \keywordStyle@mlpr%
         \fi
       \else
-        \ifInLineCom@mlpretty@%
+        \ifInLineCom@mlpr@%
         \else
-          \lastElemStyle@mlpretty%
+          \lastElemStyle@mlpr%
         \fi
       \fi
     \fi
@@ -445,80 +445,80 @@
 
 
 % --- strings ---
-\newcommand\processString@mlpretty
+\newcommand\processString@mlpr
 {%
-  \ifWithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpr@%
   \else
-    \stringStyle@mlpretty%  
+    \stringStyle@mlpr%  
   \fi
 }
 
 % --- macro for handling line continuation ---
-\newcommand\processDotDotDot@mlpretty
+\newcommand\processDotDotDot@mlpr
 {%
   \lst@CalcLostSpaceAndOutput%
-  \ifWithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpr@%
     ...%
   \else
-    \ifInLineCom@mlpretty@%
+    \ifInLineCom@mlpr@%
       ...%
     \else
-      \global\InLineCom@mlpretty@true%
-      {\keywordStyle@mlpretty...}%
+      \global\InLineCom@mlpr@true%
+      {\keywordStyle@mlpr...}%
     \fi
-    \commentStyle@mlpretty%
+    \commentStyle@mlpr%
   \fi
 }
 
 % --- macro for processing section title ---
-\newlength\emHeight@mlpretty
-\newlength\jayDepth@mlpretty
-\newlength\sectionRuleOffset@mlpretty
-\newlength\sectionRuleThickness@mlpretty
-\newcommand\sectionRuleThicknessRatio@mlpretty{.05}
+\newlength\emHeight@mlpr
+\newlength\jayDepth@mlpr
+\newlength\sectionRuleOffset@mlpr
+\newlength\sectionRuleThickness@mlpr
+\newcommand\sectionRuleThicknessRatio@mlpr{.05}
 
-\newcommand\processSectionTitle@mlpretty
+\newcommand\processSectionTitle@mlpr
 {%
-  \ifWithinSectionTitle@mlpretty@% to avoid drawing the rule multiple times
+  \ifWithinSectionTitle@mlpr@% to avoid drawing the rule multiple times
   \else
-    \global\WithinSectionTitle@mlpretty@true%
-    \resetEndKW@mlpretty%
-    \commentStyle@mlpretty%
-    \ifTooLateForSectionTitle@mlpretty@%
+    \global\WithinSectionTitle@mlpr@true%
+    \resetEndKW@mlpr%
+    \commentStyle@mlpr%
+    \ifTooLateForSectionTitle@mlpr@%
     \else
       \bgroup%
         % calculate the vertical offset for the rule
-        \setlength\emHeight@mlpretty{\fontcharht\font`M}%
-        \setlength\jayDepth@mlpretty{\fontchardp\font`j}%
-        \setlength\sectionRuleOffset@mlpretty%
+        \setlength\emHeight@mlpr{\fontcharht\font`M}%
+        \setlength\jayDepth@mlpr{\fontchardp\font`j}%
+        \setlength\sectionRuleOffset@mlpr%
         {%
-          \dimexpr.5\emHeight@mlpretty%
+          \dimexpr.5\emHeight@mlpr%
                  +.5\baselineskip%
-                 -.5\jayDepth@mlpretty\relax%
+                 -.5\jayDepth@mlpr\relax%
         }%
-        \setlength\sectionRuleThickness@mlpretty%
+        \setlength\sectionRuleThickness@mlpr%
         {%
-          \sectionRuleThicknessRatio@mlpretty\baselineskip%
+          \sectionRuleThicknessRatio@mlpr\baselineskip%
         }%
-        \color{sectionRuleColor@mlpretty}%
-        \ifShowCellrules@mlpretty@%
+        \color{sectionRuleColor@mlpr}%
+        \ifShowCellrules@mlpr@%
           \makebox[0em][l]%
           {%
-            \raisebox{\sectionRuleOffset@mlpretty}[0pt][0pt]%
-              {\rule{\lst@linewidth}{\sectionRuleThickness@mlpretty}}%
+            \raisebox{\sectionRuleOffset@mlpr}[0pt][0pt]%
+              {\rule{\lst@linewidth}{\sectionRuleThickness@mlpr}}%
           }%
         \fi
       \egroup%
-      \sectionTitleStyle@mlpretty%
+      \sectionTitleStyle@mlpr%
     \fi
   \fi
 }
 
-\newcommand\processSharedVar@mlpretty
+\newcommand\processSharedVar@mlpr
 {%
-  \ifWithinSectionTitle@mlpretty@%
+  \ifWithinSectionTitle@mlpr@%
   \else
-      \sharedvarStyle@mlpretty%
+      \sharedvarStyle@mlpr%
   \fi
 }
 
@@ -526,100 +526,100 @@
 % ----- Hooking into listings -----
 
 % --- InitVarsEOL hook ---
-\newcommand\addedToInitVarsEOL@mlpretty{} % polymorphic macro for InitVarsEOL
-\newcommand\@ddedToInitVarsEOL@mlpretty
+\newcommand\addedToInitVarsEOL@mlpr{} % polymorphic macro for InitVarsEOL
+\newcommand\@ddedToInitVarsEOL@mlpr
 {%
   % at the start of a line, we're not inside a one-line comment
-  \global\InLineCom@mlpretty@false%
+  \global\InLineCom@mlpr@false%
   % This avoids continuation of unterminated string literals on next line.
-  \ifInStr@mlpretty@%
-    \global\InStr@mlpretty@false%
+  \ifInStr@mlpr@%
+    \global\InStr@mlpr@false%
     \lst@LeaveMode%
   \fi
   % we're not in a section title...
-  \global\WithinSectionTitle@mlpretty@false%
+  \global\WithinSectionTitle@mlpr@false%
   % ...but a section title is allowed to start here
-  \global\TooLateForSectionTitle@mlpretty@false%
+  \global\TooLateForSectionTitle@mlpr@false%
 }
-\lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpretty}
+\lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpr}
 
 % --- EndGroup hook ---
-\newcommand\addedToEndGroup@mlpretty{} % polymorphic macro for EndGroup
-\newcommand\@ddedToEndGroup@mlpretty
+\newcommand\addedToEndGroup@mlpr{} % polymorphic macro for EndGroup
+\newcommand\@ddedToEndGroup@mlpr
 {%
   % if we were inside a string, we're now getting out of it
-  \ifInStr@mlpretty@%
-    \global\InStr@mlpretty@false%
+  \ifInStr@mlpr@%
+    \global\InStr@mlpr@false%
   \fi
 }
-\lst@AddToHook{EndGroup}{\addedToEndGroup@mlpretty}
+\lst@AddToHook{EndGroup}{\addedToEndGroup@mlpr}
 
 % --- PostOutput hook ---
-\newcommand\addedToPostOutput@mlpretty{} % polymorphic macro for PostOuput
-\newcommand\@ddedToPostOutput@mlpretty
+\newcommand\addedToPostOutput@mlpr{} % polymorphic macro for PostOuput
+\newcommand\@ddedToPostOutput@mlpr
 {%
   % At the first PostOutput, it's too late for a section title to start.
-  \global\TooLateForSectionTitle@mlpretty@true%
+  \global\TooLateForSectionTitle@mlpr@true%
 }
-\lst@AddToHook{PostOutput}{\addedToPostOutput@mlpretty}
+\lst@AddToHook{PostOutput}{\addedToPostOutput@mlpr}
 
 % --- PreInit Hook ---
 % Now we apply all those patches at the PreInit hook,
-% under the condition that \lst@language and \languageNormedDefd@mlpretty
+% under the condition that \lst@language and \languageNormedDefd@mlpr
 % expand (once) to the same replacement text.
-\newcommand\addedToPreInitHook@mlpretty
+\newcommand\addedToPreInitHook@mlpr
 {%
-  \ifx\lst@language\languageNormedDefd@mlpretty%
-    \renewcommand\addedToInitVarsEOL@mlpretty\@ddedToInitVarsEOL@mlpretty%
-    \renewcommand\addedToEndGroup@mlpretty\@ddedToEndGroup@mlpretty%
-    \renewcommand\addedToPostOutput@mlpretty\@ddedToPostOutput@mlpretty%
+  \ifx\lst@language\languageNormedDefd@mlpr%
+    \renewcommand\addedToInitVarsEOL@mlpr\@ddedToInitVarsEOL@mlpr%
+    \renewcommand\addedToEndGroup@mlpr\@ddedToEndGroup@mlpr%
+    \renewcommand\addedToPostOutput@mlpr\@ddedToPostOutput@mlpr%
   \fi
 }
-\lst@AddToHook{PreInit}{\addedToPreInitHook@mlpretty}
+\lst@AddToHook{PreInit}{\addedToPreInitHook@mlpr}
 
 % --- DeInit hook ---
 % We reset counters apply at the DeInit hook,
-% under the condition that \lst@language and \languageNormedDefd@mlpretty
+% under the condition that \lst@language and \languageNormedDefd@mlpr
 % expand (once) to the same replacement text.
-\newcommand\addedToDeInitHook@mlpretty
+\newcommand\addedToDeInitHook@mlpr
 {%
-  \ifx\lst@language\languageNormedDefd@mlpretty%
-    \resetEndKW@mlpretty%
-    \resetClassdefKW@mlpretty%
+  \ifx\lst@language\languageNormedDefd@mlpr%
+    \resetEndKW@mlpr%
+    \resetClassdefKW@mlpr%
   \fi
 }
-\lst@AddToHook{DeInit}{\addedToDeInitHook@mlpretty}
+\lst@AddToHook{DeInit}{\addedToDeInitHook@mlpr}
 
 
 % --- Macros for placeholders ---
 
 % Placeholder colors
-\definecolor{placeholderColor@mlpretty}{RGB}{209,0,86}
+\definecolor{placeholderColor@mlpr}{RGB}{209,0,86}
 
 % Macros for placeholder delimiters
-\newcommand\placeholderOpDelim@mlpretty{\textlangle}
-\newcommand\placeholderClDelim@mlpretty{\textrangle}
-\newcommand\placeholderDelimFontSpecs@mlpretty{\rmfamily\upshape}
-\newcommand\placeholderContentFontSpecs@mlpretty{\rmfamily\itshape}
+\newcommand\placeholderOpDelim@mlpr{\textlangle}
+\newcommand\placeholderClDelim@mlpr{\textrangle}
+\newcommand\placeholderDelimFontSpecs@mlpr{\rmfamily\upshape}
+\newcommand\placeholderContentFontSpecs@mlpr{\rmfamily\itshape}
 
-\newcommand\placeholderStyle@mlpretty
+\newcommand\placeholderStyle@mlpr
 {%
-  \placeholderContentFontSpecs@mlpretty%
-  \color{placeholderColor@mlpretty}%
+  \placeholderContentFontSpecs@mlpr%
+  \color{placeholderColor@mlpr}%
 }
 
 % Macro for conditional italic correction
 % (in case the font shape is either italic or slanted)
-\newcommand\condItalicCorrection@mlpretty
+\newcommand\condItalicCorrection@mlpr
 {%
-  % After checking that \long@f@shape@mlpretty is definable, we
+  % After checking that \long@f@shape@mlpr is definable, we
   % define it as a long macro that expands to the current font shape.
-  \newcommand\long@f@shape@mlpretty{}%
-  \long\edef\long@f@shape@mlpretty{\f@shape}%
-  \ifx\long@f@shape@mlpretty\itdefault%
+  \newcommand\long@f@shape@mlpr{}%
+  \long\edef\long@f@shape@mlpr{\f@shape}%
+  \ifx\long@f@shape@mlpr\itdefault%
     \/%
   \else
-    \ifx\long@f@shape@mlpretty\sldefault%
+    \ifx\long@f@shape@mlpr\sldefault%
       \/%
     \fi
   \fi
@@ -629,18 +629,18 @@
 \newcommand\snippetPlaceholder[1]
 {%
   \bgroup%
-    \placeholderStyle@mlpretty%
+    \placeholderStyle@mlpr%
     \bgroup%
       % opening delimiter
-      \placeholderDelimFontSpecs@mlpretty%
-      \placeholderOpDelim@mlpretty%
+      \placeholderDelimFontSpecs@mlpr%
+      \placeholderOpDelim@mlpr%
     \egroup%
     % placeholder content
-    #1\condItalicCorrection@mlpretty%
+    #1\condItalicCorrection@mlpr%
     \bgroup%
       % closing delimiter
-      \placeholderDelimFontSpecs@mlpretty%
-      \placeholderClDelim@mlpretty%
+      \placeholderDelimFontSpecs@mlpr%
+      \placeholderClDelim@mlpr%
     \egroup%
   \egroup%
 }
@@ -651,7 +651,7 @@
 % Quick \& easy style, for those who don't want to bother with customization
 \lstdefinestyle{Matlab-stdstyle}
 {
-  language   = \languageNormedDefd@mlpretty,
+  language   = \languageNormedDefd@mlpr,
   frame       = single,
   rulecolor   = \color{black!67},
   numbers     = left,
@@ -662,7 +662,7 @@
 % Black & white style
 \lstdefinestyle{Matlab-bwstyle}
 {
-  language            = \languageNormedDefd@mlpretty,
+  language            = \languageNormedDefd@mlpr,
   mlkeywordstyle      = \color[gray]{0}             \bfseries        ,
   mlcommentstyle      = \color[gray]{.75}                    \itshape,
   mlstringstyle       = \color[gray]{.5}                             ,
@@ -682,7 +682,7 @@
 % the output you get with the minted, verbments, and pythontex packages.
 \lstdefinestyle{Matlab-pygstyle}
 {
-  language            = \languageNormedDefd@mlpretty,
+  language            = \languageNormedDefd@mlpr,
   mllastelementstyle  = \color[RGB]{127,000,000}                            ,
   mlkeywordstyle      = \color[RGB]{000,127,000}           \bfseries        ,
   mlcommentstyle      = \color[RGB]{063,127,127}                    \itshape,
