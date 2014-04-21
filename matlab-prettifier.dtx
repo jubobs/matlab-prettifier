@@ -62,7 +62,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{628}
+% \CheckSum{604}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -1578,21 +1578,15 @@ A = [ 1, 2, 3,... (I'm a comment)
 % --- macros for processing keywords ---
 \newcommand\processOpRegKW@mlpr
 {%
-  \ifWithinSectionTitle@mlpr@%
-  \else
-    \resetEndKW@mlpr%
-    \global\advance\blkLvl@mlpr\@ne%
-    \keywordStyle@mlpr%
-  \fi
+  \resetEndKW@mlpr%
+  \global\advance\blkLvl@mlpr\@ne%
+  \keywordStyle@mlpr%
 }
 
 \newcommand\processMidKW@mlpr
 {%
-  \ifWithinSectionTitle@mlpr@%
-  \else
-    \resetEndKW@mlpr%
-    \keywordStyle@mlpr%
-  \fi
+  \resetEndKW@mlpr%
+  \keywordStyle@mlpr%
 }
 
 % No difference between standalone keywords and middle keywords
@@ -1600,14 +1594,11 @@ A = [ 1, 2, 3,... (I'm a comment)
 
 \newcommand\processClassdefKW@mlpr
 {%
-  \ifWithinSectionTitle@mlpr@%
-  \else
-    \resetEndKW@mlpr%
-    \global\InClassdef@mlpr@true%
-    \global\blkLvlAtClassdef@mlpr=\blkLvl@mlpr%
-    \global\advance\blkLvl@mlpr\@ne%
-    \keywordStyle@mlpr%
-  \fi
+  \resetEndKW@mlpr%
+  \global\InClassdef@mlpr@true%
+  \global\blkLvlAtClassdef@mlpr=\blkLvl@mlpr%
+  \global\advance\blkLvl@mlpr\@ne%
+  \keywordStyle@mlpr%
 }
 
 \newcommand\processMidClassdefKW@mlpr
@@ -1616,13 +1607,10 @@ A = [ 1, 2, 3,... (I'm a comment)
   \ifOverridecontext@mlpr@%
     \keywordStyle@mlpr%
   \else
-    \ifWithinSectionTitle@mlpr@%
-    \else
-      \ifInClassdef@mlpr@%
-        \resetEndKW@mlpr%
-        \global\advance\blkLvl@mlpr\@ne%
-        \keywordStyle@mlpr%
-      \fi
+    \ifInClassdef@mlpr@%
+      \resetEndKW@mlpr%
+      \global\advance\blkLvl@mlpr\@ne%
+      \keywordStyle@mlpr%
     \fi
   \fi
 }
@@ -1633,24 +1621,21 @@ A = [ 1, 2, 3,... (I'm a comment)
   \ifOverridecontext@mlpr@% 
     \lastElemStyle@mlpr%
   \else
-    \ifWithinSectionTitle@mlpr@%
-    \else
-      \ifClosingEndKW@mlpr@%
-        \lst@ifLmode%
-        \else
-          \ifnum\blkLvl@mlpr>0%
-            \global\advance\blkLvl@mlpr\m@ne%
-          \fi
-          \ifnum\blkLvl@mlpr=\blkLvlAtClassdef@mlpr%
-            \global\InClassdef@mlpr@false%
-          \fi
-          \keywordStyle@mlpr%
-        \fi
+    \ifClosingEndKW@mlpr@%
+      \lst@ifLmode%
       \else
-        \lst@ifLmode%
-        \else
-          \lastElemStyle@mlpr%
+        \ifnum\blkLvl@mlpr>0%
+          \global\advance\blkLvl@mlpr\m@ne%
         \fi
+        \ifnum\blkLvl@mlpr=\blkLvlAtClassdef@mlpr%
+          \global\InClassdef@mlpr@false%
+        \fi
+        \keywordStyle@mlpr%
+      \fi
+    \else
+      \lst@ifLmode%
+      \else
+        \lastElemStyle@mlpr%
       \fi
     \fi
   \fi
@@ -1658,29 +1643,19 @@ A = [ 1, 2, 3,... (I'm a comment)
 
 
 % --- strings ---
-\newcommand\processString@mlpr
-{%
-  \ifWithinSectionTitle@mlpr@%
-  \else
-    \stringStyle@mlpr%  
-  \fi
-}
+\newcommand\processString@mlpr{\stringStyle@mlpr}
 
 % --- macro for handling line continuation ---
 \newcommand\processDotDotDot@mlpr
 {%
   \lst@CalcLostSpaceAndOutput%
-  \ifWithinSectionTitle@mlpr@%
+  \lst@ifLmode%
     ...%
   \else
-    \lst@ifLmode%
-      ...%
-    \else
-      {\keywordStyle@mlpr...}%
-      \lst@Lmodetrue%
-    \fi
-    \commentStyle@mlpr%
+    {\keywordStyle@mlpr...}%
+    \lst@Lmodetrue%
   \fi
+  \commentStyle@mlpr%
 }
 
 % --- macro for processing section title ---
@@ -1735,13 +1710,7 @@ A = [ 1, 2, 3,... (I'm a comment)
   \egroup% 
 }
 
-\newcommand\processSharedVar@mlpr
-{%
-  \ifWithinSectionTitle@mlpr@%
-  \else
-      \sharedvarStyle@mlpr%
-  \fi
-}
+\newcommand\processSharedVar@mlpr{\sharedvarStyle@mlpr}
 
 %    \end{macrocode}
 %

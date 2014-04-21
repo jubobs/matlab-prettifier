@@ -332,35 +332,26 @@
 
 \newcommand\processOpRegKW@mlpr
 {%
-  \ifWithinSectionTitle@mlpr@%
-  \else
-    \resetEndKW@mlpr%
-    \global\advance\blkLvl@mlpr\@ne%
-    \keywordStyle@mlpr%
-  \fi
+  \resetEndKW@mlpr%
+  \global\advance\blkLvl@mlpr\@ne%
+  \keywordStyle@mlpr%
 }
 
 \newcommand\processMidKW@mlpr
 {%
-  \ifWithinSectionTitle@mlpr@%
-  \else
-    \resetEndKW@mlpr%
-    \keywordStyle@mlpr%
-  \fi
+  \resetEndKW@mlpr%
+  \keywordStyle@mlpr%
 }
 
 \newcommand\processStdaKW@mlpr\processMidKW@mlpr
 
 \newcommand\processClassdefKW@mlpr
 {%
-  \ifWithinSectionTitle@mlpr@%
-  \else
-    \resetEndKW@mlpr%
-    \global\InClassdef@mlpr@true%
-    \global\blkLvlAtClassdef@mlpr=\blkLvl@mlpr%
-    \global\advance\blkLvl@mlpr\@ne%
-    \keywordStyle@mlpr%
-  \fi
+  \resetEndKW@mlpr%
+  \global\InClassdef@mlpr@true%
+  \global\blkLvlAtClassdef@mlpr=\blkLvl@mlpr%
+  \global\advance\blkLvl@mlpr\@ne%
+  \keywordStyle@mlpr%
 }
 
 \newcommand\processMidClassdefKW@mlpr
@@ -369,13 +360,10 @@
   \ifOverridecontext@mlpr@%
     \keywordStyle@mlpr%
   \else
-    \ifWithinSectionTitle@mlpr@%
-    \else
-      \ifInClassdef@mlpr@%
-        \resetEndKW@mlpr%
-        \global\advance\blkLvl@mlpr\@ne%
-        \keywordStyle@mlpr%
-      \fi
+    \ifInClassdef@mlpr@%
+      \resetEndKW@mlpr%
+      \global\advance\blkLvl@mlpr\@ne%
+      \keywordStyle@mlpr%
     \fi
   \fi
 }
@@ -386,51 +374,38 @@
   \ifOverridecontext@mlpr@%
     \lastElemStyle@mlpr%
   \else
-    \ifWithinSectionTitle@mlpr@%
-    \else
-      \ifClosingEndKW@mlpr@%
-        \lst@ifLmode%
-        \else
-          \ifnum\blkLvl@mlpr>0%
-            \global\advance\blkLvl@mlpr\m@ne%
-          \fi
-          \ifnum\blkLvl@mlpr=\blkLvlAtClassdef@mlpr%
-            \global\InClassdef@mlpr@false%
-          \fi
-          \keywordStyle@mlpr%
-        \fi
+    \ifClosingEndKW@mlpr@%
+      \lst@ifLmode%
       \else
-        \lst@ifLmode%
-        \else
-          \lastElemStyle@mlpr%
+        \ifnum\blkLvl@mlpr>0%
+          \global\advance\blkLvl@mlpr\m@ne%
         \fi
+        \ifnum\blkLvl@mlpr=\blkLvlAtClassdef@mlpr%
+          \global\InClassdef@mlpr@false%
+        \fi
+        \keywordStyle@mlpr%
+      \fi
+    \else
+      \lst@ifLmode%
+      \else
+        \lastElemStyle@mlpr%
       \fi
     \fi
   \fi
 }
 
-\newcommand\processString@mlpr
-{%
-  \ifWithinSectionTitle@mlpr@%
-  \else
-    \stringStyle@mlpr%
-  \fi
-}
+\newcommand\processString@mlpr{\stringStyle@mlpr}
 
 \newcommand\processDotDotDot@mlpr
 {%
   \lst@CalcLostSpaceAndOutput%
-  \ifWithinSectionTitle@mlpr@%
+  \lst@ifLmode%
     ...%
   \else
-    \lst@ifLmode%
-      ...%
-    \else
-      {\keywordStyle@mlpr...}%
-      \lst@Lmodetrue%
-    \fi
-    \commentStyle@mlpr%
+    {\keywordStyle@mlpr...}%
+    \lst@Lmodetrue%
   \fi
+  \commentStyle@mlpr%
 }
 
 \newlength\emHeight@mlpr
@@ -483,13 +458,7 @@
   \egroup%
 }
 
-\newcommand\processSharedVar@mlpr
-{%
-  \ifWithinSectionTitle@mlpr@%
-  \else
-      \sharedvarStyle@mlpr%
-  \fi
-}
+\newcommand\processSharedVar@mlpr{\sharedvarStyle@mlpr}
 
 
 
