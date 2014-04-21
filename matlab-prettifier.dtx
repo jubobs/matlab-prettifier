@@ -62,7 +62,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{604}
+% \CheckSum{595}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -1622,21 +1622,15 @@ A = [ 1, 2, 3,... (I'm a comment)
     \lastElemStyle@mlpr%
   \else
     \ifClosingEndKW@mlpr@%
-      \lst@ifLmode%
-      \else
-        \ifnum\blkLvl@mlpr>0%
-          \global\advance\blkLvl@mlpr\m@ne%
-        \fi
-        \ifnum\blkLvl@mlpr=\blkLvlAtClassdef@mlpr%
-          \global\InClassdef@mlpr@false%
-        \fi
-        \keywordStyle@mlpr%
+      \ifnum\blkLvl@mlpr>0%
+        \global\advance\blkLvl@mlpr\m@ne%
       \fi
+      \ifnum\blkLvl@mlpr=\blkLvlAtClassdef@mlpr%
+        \global\InClassdef@mlpr@false%
+      \fi
+      \keywordStyle@mlpr%
     \else
-      \lst@ifLmode%
-      \else
-        \lastElemStyle@mlpr%
-      \fi
+      \lastElemStyle@mlpr%
     \fi
   \fi
 }
@@ -1649,12 +1643,8 @@ A = [ 1, 2, 3,... (I'm a comment)
 \newcommand\processDotDotDot@mlpr
 {%
   \lst@CalcLostSpaceAndOutput%
-  \lst@ifLmode%
-    ...%
-  \else
-    {\keywordStyle@mlpr...}%
-    \lst@Lmodetrue%
-  \fi
+  {\keywordStyle@mlpr...}%
+  \lst@Lmodetrue%
   \commentStyle@mlpr%
 }
 

@@ -375,21 +375,15 @@
     \lastElemStyle@mlpr%
   \else
     \ifClosingEndKW@mlpr@%
-      \lst@ifLmode%
-      \else
-        \ifnum\blkLvl@mlpr>0%
-          \global\advance\blkLvl@mlpr\m@ne%
-        \fi
-        \ifnum\blkLvl@mlpr=\blkLvlAtClassdef@mlpr%
-          \global\InClassdef@mlpr@false%
-        \fi
-        \keywordStyle@mlpr%
+      \ifnum\blkLvl@mlpr>0%
+        \global\advance\blkLvl@mlpr\m@ne%
       \fi
+      \ifnum\blkLvl@mlpr=\blkLvlAtClassdef@mlpr%
+        \global\InClassdef@mlpr@false%
+      \fi
+      \keywordStyle@mlpr%
     \else
-      \lst@ifLmode%
-      \else
-        \lastElemStyle@mlpr%
-      \fi
+      \lastElemStyle@mlpr%
     \fi
   \fi
 }
@@ -399,12 +393,8 @@
 \newcommand\processDotDotDot@mlpr
 {%
   \lst@CalcLostSpaceAndOutput%
-  \lst@ifLmode%
-    ...%
-  \else
-    {\keywordStyle@mlpr...}%
-    \lst@Lmodetrue%
-  \fi
+  {\keywordStyle@mlpr...}%
+  \lst@Lmodetrue%
   \commentStyle@mlpr%
 }
 
