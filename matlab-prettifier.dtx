@@ -62,7 +62,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{626}
+% \CheckSum{613}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -118,15 +118,15 @@
 %   \lst@NormedDef,\lst@Pmode,\lst@DeleteKeywords,\lst@InstallFamily@,^^A
 %   \lst@MakeKeywords,\lst@MakeMoreKeywords,\lst@UseFamily,^^A
 %   \lstdefinelanguage,\lstdefinestyle,\lstKV@SetIf}
-% \DoNotIndex{\m@ne,\makebox,\newcommand,\newcount,\newif,\newlength,^^A
-%   \normalsize}
+% \DoNotIndex{\m@ne,\makebox}
+% \DoNotIndex{\newcommand,\newcount,\newif,\newlength,^^A,
+%   \NonWhiteOccured@mlpr@true,\NonWhiteOccured@mlpr@false,\normalsize}
 % \DoNotIndex{\OptionNotUsed}
 % \DoNotIndex{\PackageError,\PackageWarning,\ProcessOptions}
 % \DoNotIndex{\raisebox,\relax,\renewcommand,\RequirePackage,\rule,\rmfamily}
 % \DoNotIndex{\selectfont,\setlength,\sldefault,\textlangle,\textrangle,^^A
 %   \ttfamily}
-% \DoNotIndex{\TooLateForSectionTitle@mlpr@false,^^A
-%   \TooLateForSectionTitle@mlpr@true}
+% \DoNotIndex{}
 % \DoNotIndex{\upshape}
 % \DoNotIndex{\WithinSectionTitle@mlpr@false,^^A
 %   \WithinSectionTitle@mlpr@true}
@@ -269,13 +269,13 @@ A = [ 1, 2, 3,... (I'm a comment)
 %</example>
 % \fi
 %
-% \paragraph{Code-section titles}
+% \paragraph{Section titles}
 % \mbox{}
 % \iffalse
 %<*example>
 % \fi
 \begin{lstlisting}
-%% I'm the title of a code section.
+%% I'm a section title.
 \end{lstlisting}
 % \iffalse
 %</example>
@@ -666,7 +666,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %   \item[0.1,{\bfseries\color[RGB]{34,139,34}}]
 %     \rkeyname{mlsectiontitlestyle}|=|\meta{style}
 %   
-%     This key determines the style for \matlab{} code-section titles.
+%     This key determines the style for \matlab{} section titles.
 %     The last token can be a one-parameter command,
 %     such as |\textbf| or |\underbar|.
 %     
@@ -675,13 +675,13 @@ A = [ 1, 2, 3,... (I'm a comment)
 %     \syntaxor\rkeyname{mlshowsectionrules}
 %
 %     This key determines whether an horizontal rule gets printed above each
-%     \matlab{} code-section title.
+%     \matlab{} section title.
 %
 %   \item[0.1,.05]
 %     \rkeyname{mlsectionrulethickness}|=|\meta{number}
 %     
 %     This key determines the thickness of the horizontal rule above each
-%     \matlab{} code-section title.
+%     \matlab{} section title.
 %     The resulting thickness corresponds to the product of the value passed
 %     to this key and the value of |\baselineskip|.
 %
@@ -689,7 +689,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %     \rkeyname{mlsectionrulecolor}|=|\meta{color}
 %
 %     This key determines the color of the horizontal rule above each
-%     \matlab{} code-section title.
+%     \matlab{} section title.
 %
 %   \item[0.1,{\color[RGB]{178,140,0}}]
 %     \rkeyname{mlsyscomstyle}|=|\meta{style}
@@ -1050,7 +1050,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \end{lstkey}
 %
 % \begin{lstkey}{mlsectiontitlestyle}
-%   This key determines the style of \matlab{} code-section titles.
+%   This key determines the style of \matlab{} section titles.
 %    \begin{macrocode}
 \lst@Key{mlsectiontitlestyle}\relax
   {\renewcommand\sectionTitleStyle@mlpr{#1}}
@@ -1059,7 +1059,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %
 % \begin{lstkey}{mlshowsectionrules}
 %   This key determines whether an horizontal rule gets printed above each
-%   code-section title.
+%   section title.
 %    \begin{macrocode}
 \lst@Key{mlshowsectionrules}{false}[t]%
   {\lstKV@SetIf{#1}\ifShowCellrules@mlpr@}
@@ -1067,7 +1067,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \end{lstkey}
 %
 % \begin{lstkey}{mlsectionrulethickness}
-%   This key determines the relative thickness of code-section rules.
+%   This key determines the relative thickness of section rules.
 %    \begin{macrocode}
 \lst@Key{mlsectionrulethickness}\relax%
   {\renewcommand\sectionRuleThicknessRatio@mlpr{#1}}
@@ -1075,7 +1075,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \end{lstkey}
 %
 % \begin{lstkey}{mlsectionrulecolor}
-%   This key determines the color of code-section rules.
+%   This key determines the color of section rules.
 %    \begin{macrocode}
 \lst@Key{mlsectionrulecolor}\relax%
   {\colorlet{sectionRuleColor@mlpr}{#1}}
@@ -1235,17 +1235,17 @@ A = [ 1, 2, 3,... (I'm a comment)
   basicstyle = \basicStyle@mlpr,
 %    \end{macrocode}
 %
-% TODO Occurence of different \matlab{} keywords change the syntax
-% highlighting performed by \matlab{} editor in different ways.
-% we define several classes of \pkg{listings} keywords
-% The user may want to use the keywords key
-% For precaution, we use relatively large class numbers.
 %
 % \paragraph{Keywords}
 %
 % The keywords defined below are based on the list returned by the
 % \matlabver{} "iskeyword" function and the four class-definition keywords,
 % which the "iskeyword" function omits.
+% Because different \matlab{} keywords affect the context in different ways,
+% we use several classes of \pkg{listings} keywords to handle them.
+% For precaution, we use relatively large class numbers to allow the user to
+% define her own keywords, in addition to \matlab{}'s,
+% should she wish to do so.
 %
 % The following keywords open a block that has nothing to do with class
 % definition. 
@@ -1264,9 +1264,10 @@ A = [ 1, 2, 3,... (I'm a comment)
   keywordstyle = [257]\processOpRegKW@mlpr,
 %    \end{macrocode}
 % Most of the following keywords can only occur within a block opened by the
-% keywords listed above---"function" and "return" are exceptions, but, as far
-% as I can tell, seem to have the same effects on syntax highlighting as the
-% others---and are unrelated to class definition.
+% keywords listed above^^A
+% ---"function" and "return" are exceptions, but, as far as I can tell,
+% seem to have the same effects on syntax highlighting as the others---^^A
+% and are unrelated to class definition.
 %    \begin{macrocode}
   morekeywords = [258]%
   {%
@@ -1281,8 +1282,8 @@ A = [ 1, 2, 3,... (I'm a comment)
   }, 
   keywordstyle=[258]\processMidKW@mlpr,
 %    \end{macrocode}
-% The following two keywords are ``standalone''; they don't open or close any
-% block.
+% The following two keywords are ``standalone'';
+% they don't open or close any block.
 %    \begin{macrocode}
   morekeywords=[259]%
   {%
@@ -1299,11 +1300,13 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 % The \matlab{} "iskeyword" prints a list of some of the \matlab{} keywords,
 % but it omits the four keywords that can only be used within a "classdef"
-% block, namely "events", "enumeration", "methods", and "properties". We
-% dedicate a class of pkg{listings} keywords those four \matlab{} keywords.
-% Those identifiers only get highlighted as keywords if they occur after a classdef keyword and before an end keyword matching that classdef, if any.
+% block, namely \lstinline[mloverride]|events|,
+% \lstinline[mloverride]|enumeration|, \lstinline[mloverride]|methods|, and
+% \lstinline[mloverride]|properties|.
+% We dedicate a class of pkg{listings} keywords to those four \matlab{}
+% keywords.
 %    \begin{macrocode}
-  morekeywords=[261]% `middle' keywords related to classdef
+  morekeywords=[261]%
   {%
     enumeration,
     events,
@@ -1312,63 +1315,99 @@ A = [ 1, 2, 3,... (I'm a comment)
   },
   keywordstyle=[261]\processMidClassdefKW@mlpr,
 %    \end{macrocode}
+% The "end" keyword has a very peculiar behaviour and deserves its own keyword
+% class.
 %    \begin{macrocode}
-  % 
   morekeywords=[262]{end},
   keywordstyle=[262]\processEndKW@mlpr,
 %    \end{macrocode}
 %
 % \paragraph{Strings}
+% We simply use \lstpkg{} built-in mechanism for highlighting \matlab{}
+% (quoted) string.
 %    \begin{macrocode}
   morestring=[m]',
   stringstyle=\processString@mlpr,
 %    \end{macrocode}
 %
 % \paragraph{Comments \& section titles}
+% Delimiters for to-end-of-line and block comments are defined below.
 %    \begin{macrocode}
-  morecomment=[l]\%,                                       % to-end-of-line
-  morecomment=[n]{\%\{\^^M}{\%\}\^^M},                     % block
-  moredelim=**[il][\processDotDotDot@mlpr]{...},       % line continuation
-  moredelim=**[l][\processSectionTitle@mlpr]{\%\%\ },  % code section
+  morecomment=[l]\%,
+  morecomment=[n]{\%\{\^^M}{\%\}\^^M},
   commentstyle=\commentStyle@mlpr,
+%    \end{macrocode}
+% The line-continuation token ("..."), which starts a to-end-of-line comment,
+% is treated separately.
+%    \begin{macrocode}
+  moredelim=**[il][\processDotDotDot@mlpr]{...},
+%    \end{macrocode}
+% Section titles, as special comments that get highlighted in a style
+% different to that of regular comments, must also be handled separately.
+%    \begin{macrocode}
+  moredelim=[l][\processSectionTitle@mlpr]{\%\%},
 %    \end{macrocode}
 %
 % \paragraph{System commands}
+% System commands are handled in a straightforward manner by an |l|-type
+% delimiter.
 %    \begin{macrocode}
   moredelim=[l][\syscomStyle@mlpr]{!},
 %    \end{macrocode}
 %
 % \paragraph{Variables with shared scope}
+% Not much to say about those.
 %    \begin{macrocode}
-  mlsharedvarStyle@mlpr = \processSharedVar@mlpr,
+  mlsharedvarstyle = \processSharedVar@mlpr,
 %    \end{macrocode}
 %
 % \paragraph{\lstpkg{} aspects}
+% We've reached the end of the definition of \mllng{}.
+% We only need to specify the three \lstpkg{} aspects required for our
+% definition of \mllng{}.
 %    \begin{macrocode}
 }[
   keywords,
   strings,
   comments,
 ]
-
-
-
-% --- State variables ---
-% Counters and switches used as ``state variables''
-% (used to keep track of context)
-% although all our operations on counters will be global,
-% the package currently use TeX counters rather than LaTeX ones.
-\newcount\netBracketCount@mlpr  % net running count of brackets
-                                    % ([{ count for +1, )]} count for -1 
-\newcount\blkLvl@mlpr             % block nesting level
-\newcount\blkLvlAtClassdef@mlpr     % block nesting level at last classdef
-
-\newif\ifClosingEndKW@mlpr@                      \ClosingEndKW@mlpr@true
-\newif\ifInClassdef@mlpr@                          \InClassdef@mlpr@false
-\newif\ifInStr@mlpr@                                    \InStr@mlpr@false
-\newif\ifTooLateForSectionTitle@mlpr@  \TooLateForSectionTitle@mlpr@false
-\newif\ifWithinSectionTitle@mlpr@          \WithinSectionTitle@mlpr@false
-
+%    \end{macrocode}
+%
+%
+% \subsection{State variables}
+% We define a number of \TeX{} counters and switches that will be used as
+% ``state variables'', to keep track of the context.
+%
+% \paragraph{Counters}
+% \begin{macro}{\netBracketCount@mlpr}
+% This counter is used to keep a net running count of opening and closing
+% brackets (roughly speaking).
+% When an opening bracket (be it round, square or curly) is encountered,
+% the counter is incremented;
+% conversely, when a closing bracket is encountered, the counter is
+% decremented.
+% I wrote ``roughly speaking'', because that counter gets reset on some
+% occasions (more details follow).
+%    \begin{macrocode}
+\newcount\netBracketCount@mlpr
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\blkLvl@mlpr}
+% The following counter is used to keep track of the block nesting level.
+%    \begin{macrocode}
+\newcount\blkLvl@mlpr
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\blkLevelAtClassdef@mlpr}
+% This counter is used to keep track of the block nesting level at which the
+% last "classdef" keyword occured.
+%    \begin{macrocode}
+\newcount\blkLvlAtClassdef@mlpr
+%    \end{macrocode}
+% \end{macro}
+%
+% \paragraph{Switches}
+%    \begin{macrocode}
 
 % --- Macros for resetting counters and switches ---
 \newcommand\resetBracketCount@mlpr
@@ -1422,12 +1461,12 @@ A = [ 1, 2, 3,... (I'm a comment)
 \colorlet{sectionRuleColor@mlpr}{black!15}
 \definecolor{syscomColor@mlpr}      {RGB}{178,140,000}
 \definecolor{sharedvarColor@mlpr}   {RGB}{000,163,163}
-\definecolor{placeholderColor@mlpr} {RGB}{209,000,86}
+\definecolor{placeholderColor@mlpr} {RGB}{209,000,086}
 
 % More Matlab colors (currently not used by matlab-prettifier)
 \colorlet{bgColor@mlpr}{white}
 \definecolor{untermStringColor@mlpr}{RGB}{178,000,000}
-\definecolor{syntaxErrorColor@mlpr} {RGB}{255,000,000}
+\definecolor{syntaxErrorColor@mlpr}{RGB} {255,000,000}
 
 % Additional custom colors
 \colorlet{numbersColor@matlabpretty}{gray}
@@ -1486,7 +1525,6 @@ A = [ 1, 2, 3,... (I'm a comment)
   \placeholderContentFontSpecs@mlpr%
   \color{placeholderColor@mlpr}%
 }
-
 
 
 % Macro for SelectCharTable key
@@ -1559,7 +1597,6 @@ A = [ 1, 2, 3,... (I'm a comment)
 \newcommand\processClassdefKW@mlpr
 {%
   \ifWithinSectionTitle@mlpr@%
-    \keywordStyle@mlpr%
   \else
     \resetEndKW@mlpr%
     \global\InClassdef@mlpr@true%
@@ -1572,7 +1609,8 @@ A = [ 1, 2, 3,... (I'm a comment)
 \newcommand\processMidClassdefKW@mlpr
 {%
   %only for typesetting those as keywords in inline code
-  \ifOverridecontext@mlpr@% 
+  \ifOverridecontext@mlpr@%
+    \keywordStyle@mlpr%
   \else
     \ifWithinSectionTitle@mlpr@%
     \else
@@ -1614,6 +1652,7 @@ A = [ 1, 2, 3,... (I'm a comment)
   \fi
 }
 
+
 % --- strings ---
 \newcommand\processString@mlpr
 {%
@@ -1649,39 +1688,47 @@ A = [ 1, 2, 3,... (I'm a comment)
 
 \newcommand\processSectionTitle@mlpr
 {%
-  \ifWithinSectionTitle@mlpr@% to avoid drawing the rule multiple times
+  \ifWithinSectionTitle@mlpr@%
+    \sectionTitleStyle@mlpr%
   \else
-    \global\WithinSectionTitle@mlpr@true%
-    \resetEndKW@mlpr%
-    \commentStyle@mlpr%
-    \ifTooLateForSectionTitle@mlpr@%
-    \else
-      \bgroup%
-        % calculate the vertical offset for the rule
-        \setlength\emHeight@mlpr{\fontcharht\font`M}%
-        \setlength\jayDepth@mlpr{\fontchardp\font`j}%
-        \setlength\sectionRuleOffset@mlpr%
-        {%
-          \dimexpr.5\emHeight@mlpr%
-                 +.5\baselineskip%
-                 -.5\jayDepth@mlpr\relax%
-        }%
-        \setlength\sectionRuleThickness@mlpr%
-        {%
-          \sectionRuleThicknessRatio@mlpr\baselineskip%
-        }%
-        \color{sectionRuleColor@mlpr}%
-        \ifShowCellrules@mlpr@%
-          \makebox[0em][l]%
-          {%
-            \raisebox{\sectionRuleOffset@mlpr}[0pt][0pt]%
-              {\rule{\lst@linewidth}{\sectionRuleThickness@mlpr}}%
-          }%
-        \fi
-      \egroup%
+    \ifNonWhiteOccured@mlpr@%
+      \lst@Lmodetrue%
+      \commentStyle@mlpr%
+    \else % a section title is starting here
+      \global\WithinSectionTitle@mlpr@true%
+      \resetEndKW@mlpr%
+      \drawSectionRule@mlpr%
       \sectionTitleStyle@mlpr%
     \fi
   \fi
+}
+
+% helper macro for drawing horizontal rule in \processSectionTitle@mlpr 
+\newcommand\drawSectionRule@mlpr
+{%
+  \bgroup%
+    % calculate the vertical offset for the rule
+    \setlength\emHeight@mlpr{\fontcharht\font`M}%
+    \setlength\jayDepth@mlpr{\fontchardp\font`j}%
+    \setlength\sectionRuleOffset@mlpr%
+    {%
+      \dimexpr.5\emHeight@mlpr%
+             +.5\baselineskip%
+             -.5\jayDepth@mlpr\relax%
+    }%
+    \setlength\sectionRuleThickness@mlpr%
+    {%
+      \sectionRuleThicknessRatio@mlpr\baselineskip%
+    }%
+    \color{sectionRuleColor@mlpr}%
+    \ifShowCellrules@mlpr@%
+      \makebox[0em][l]%
+      {%
+        \raisebox{\sectionRuleOffset@mlpr}[0pt][0pt]%
+          {\rule{\lst@linewidth}{\sectionRuleThickness@mlpr}}%
+      }%
+    \fi
+  \egroup% 
 }
 
 \newcommand\processSharedVar@mlpr
@@ -1691,13 +1738,14 @@ A = [ 1, 2, 3,... (I'm a comment)
       \sharedvarStyle@mlpr%
   \fi
 }
-%    \end{macrocode}
 
+%    \end{macrocode}
 %
 % \subsection{Hooking into listings}
 % \label{hooks-mlpretty}
 
 %    \begin{macrocode}
+% ----- Hooking into listings -----
 
 % --- InitVarsEOL hook ---
 \newcommand\addedToInitVarsEOL@mlpr{} % polymorphic macro for InitVarsEOL
@@ -1711,7 +1759,7 @@ A = [ 1, 2, 3,... (I'm a comment)
   % we're not in a section title...
   \global\WithinSectionTitle@mlpr@false%
   % ...but a section title is allowed to start here
-  \global\TooLateForSectionTitle@mlpr@false%
+  \global\NonWhiteOccured@mlpr@false%
 }
 \lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpr}
 
@@ -1731,7 +1779,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 \newcommand\@ddedToPostOutput@mlpr
 {%
   % At the first PostOutput, it's too late for a section title to start.
-  \global\TooLateForSectionTitle@mlpr@true%
+  \global\NonWhiteOccured@mlpr@true%
 }
 \lst@AddToHook{PostOutput}{\addedToPostOutput@mlpr}
 
@@ -1767,7 +1815,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \subsection{Placeholders in code snippets}
 %
 % \begin{macro}{\itcorr@mlpr}
-% This macro is used for inserting italic correction in case the font shape is
+% This macro is used for applying italic correction in case the font shape is
 % italic or slanted.
 %    \begin{macrocode}
 \newcommand\itcorr@mlpr

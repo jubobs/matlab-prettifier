@@ -176,15 +176,15 @@
   % comments
   morecomment=[l]\%,                                       % to-end-of-line
   morecomment=[n]{\%\{\^^M}{\%\}\^^M},                     % block
-  moredelim=**[il][\processDotDotDot@mlpr]{...},       % line continuation
-  moredelim=**[l][\processSectionTitle@mlpr]{\%\%\ },  % code section
   commentstyle=\commentStyle@mlpr,
+  moredelim=**[il][\processDotDotDot@mlpr]{...},       % line continuation
+  moredelim=[l][\processSectionTitle@mlpr]{\%\%},  % code section
   %
   % system commands
   moredelim=[l][\syscomStyle@mlpr]{!},
   %
   % variables with shared scope
-  mlsharedvarStyle@mlpr = \processSharedVar@mlpr,
+  mlsharedvarstyle = \processSharedVar@mlpr,
 }
 [% `listings' aspects needed
   keywords,
@@ -202,11 +202,11 @@
 \newcount\blkLvl@mlpr             % block nesting level
 \newcount\blkLvlAtClassdef@mlpr     % block nesting level at last classdef
 
-\newif\ifClosingEndKW@mlpr@                      \ClosingEndKW@mlpr@true
-\newif\ifInClassdef@mlpr@                          \InClassdef@mlpr@false
-\newif\ifInStr@mlpr@                                    \InStr@mlpr@false
-\newif\ifTooLateForSectionTitle@mlpr@  \TooLateForSectionTitle@mlpr@false
-\newif\ifWithinSectionTitle@mlpr@          \WithinSectionTitle@mlpr@false
+\newif\ifClosingEndKW@mlpr@             \ClosingEndKW@mlpr@true
+\newif\ifInClassdef@mlpr@                 \InClassdef@mlpr@false
+\newif\ifInStr@mlpr@                           \InStr@mlpr@false
+\newif\ifNonWhiteOccured@mlpr@       \NonWhiteOccured@mlpr@false
+\newif\ifWithinSectionTitle@mlpr@ \WithinSectionTitle@mlpr@false
 
 
 % --- Macros for resetting counters and switches ---
@@ -476,39 +476,47 @@
 
 \newcommand\processSectionTitle@mlpr
 {%
-  \ifWithinSectionTitle@mlpr@% to avoid drawing the rule multiple times
+  \ifWithinSectionTitle@mlpr@%
+    \sectionTitleStyle@mlpr%
   \else
-    \global\WithinSectionTitle@mlpr@true%
-    \resetEndKW@mlpr%
-    \commentStyle@mlpr%
-    \ifTooLateForSectionTitle@mlpr@%
-    \else
-      \bgroup%
-        % calculate the vertical offset for the rule
-        \setlength\emHeight@mlpr{\fontcharht\font`M}%
-        \setlength\jayDepth@mlpr{\fontchardp\font`j}%
-        \setlength\sectionRuleOffset@mlpr%
-        {%
-          \dimexpr.5\emHeight@mlpr%
-                 +.5\baselineskip%
-                 -.5\jayDepth@mlpr\relax%
-        }%
-        \setlength\sectionRuleThickness@mlpr%
-        {%
-          \sectionRuleThicknessRatio@mlpr\baselineskip%
-        }%
-        \color{sectionRuleColor@mlpr}%
-        \ifShowCellrules@mlpr@%
-          \makebox[0em][l]%
-          {%
-            \raisebox{\sectionRuleOffset@mlpr}[0pt][0pt]%
-              {\rule{\lst@linewidth}{\sectionRuleThickness@mlpr}}%
-          }%
-        \fi
-      \egroup%
+    \ifNonWhiteOccured@mlpr@%
+      \lst@Lmodetrue%
+      \commentStyle@mlpr%
+    \else % a section title is starting here
+      \global\WithinSectionTitle@mlpr@true%
+      \resetEndKW@mlpr%
+      \drawSectionRule@mlpr%
       \sectionTitleStyle@mlpr%
     \fi
   \fi
+}
+
+% helper macro for drawing horizontal rule in \processSectionTitle@mlpr 
+\newcommand\drawSectionRule@mlpr
+{%
+  \bgroup%
+    % calculate the vertical offset for the rule
+    \setlength\emHeight@mlpr{\fontcharht\font`M}%
+    \setlength\jayDepth@mlpr{\fontchardp\font`j}%
+    \setlength\sectionRuleOffset@mlpr%
+    {%
+      \dimexpr.5\emHeight@mlpr%
+             +.5\baselineskip%
+             -.5\jayDepth@mlpr\relax%
+    }%
+    \setlength\sectionRuleThickness@mlpr%
+    {%
+      \sectionRuleThicknessRatio@mlpr\baselineskip%
+    }%
+    \color{sectionRuleColor@mlpr}%
+    \ifShowCellrules@mlpr@%
+      \makebox[0em][l]%
+      {%
+        \raisebox{\sectionRuleOffset@mlpr}[0pt][0pt]%
+          {\rule{\lst@linewidth}{\sectionRuleThickness@mlpr}}%
+      }%
+    \fi
+  \egroup% 
 }
 
 \newcommand\processSharedVar@mlpr
@@ -534,7 +542,7 @@
   % we're not in a section title...
   \global\WithinSectionTitle@mlpr@false%
   % ...but a section title is allowed to start here
-  \global\TooLateForSectionTitle@mlpr@false%
+  \global\NonWhiteOccured@mlpr@false%
 }
 \lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpr}
 
@@ -554,7 +562,7 @@
 \newcommand\@ddedToPostOutput@mlpr
 {%
   % At the first PostOutput, it's too late for a section title to start.
-  \global\TooLateForSectionTitle@mlpr@true%
+  \global\NonWhiteOccured@mlpr@true%
 }
 \lst@AddToHook{PostOutput}{\addedToPostOutput@mlpr}
 
