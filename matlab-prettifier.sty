@@ -1,65 +1,82 @@
-%% matlab-prettifier.sty
-% Copyright (C) 2014 by Julien Cretel <jubobs.matlab.prettifier at gmail.com>
-%
-% This work may be distributed and/or modified under the
-% conditions of the LaTeX Project Public License, either version 1.3
-% of this license or (at your option) any later version.
-% The latest version of this license is in
-%
-%     http://www.latex-project.org/lppl.txt
-%
-% and version 1.3 or later is part of all distributions of LaTeX
-% version 2005/12/01 or later.
-%
-% This work has the LPPL maintenance status `maintained'.
-% 
-% The Current Maintainer of this work is Julien Cretel.
-%
-% This work currently consists of the files matlab-prettifier.dtx,
-% matlab-prettifier.ins, and the derived file matlab-prettifier.sty.
-
-% --- Package identification ---
+%%
+%% This is file `matlab-prettifier.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% matlab-prettifier.dtx  (with options: `package')
+%%  
+%% This is a generated file.
+%% 
+%% Copyright (C) 2014 by Julien Cretel <jubobs.matlab.prettifier at gmail.com>
+%% 
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%% 
+%%     http://www.latex-project.org/lppl.txt
+%% 
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%% 
+%% This work has the LPPL maintenance status `maintained'.
+%% 
+%% The Current Maintainer of this work is Julien Cretel.
+%% 
+%% This work currently consists of the files matlab-prettifier.dtx,
+%% matlab-prettifier.ins, and the derived file matlab-prettifier.sty.
+%% 
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
-\ProvidesPackage{matlab-prettifier}%
- [2014/02/21 v0.1 LaTeX package for prettyprinting Matlab source code]
+\ProvidesPackage{matlab-prettifier}
+  [2014/04/15 v0.1 A package for prettyprinting Matlab source code]
 
 
-% --- check for incompatible listings options ---
-\newcommand\checkForListingsOption@mlpr[1]
+\newcommand\lstoptcheck@mlpr[1]
 {%
   \@ifpackagewith{listings}{#1}%
   {
-	  \PackageError{matlab-prettifier}%
-	    {incompatible listings' option #1}%
-	    {Make sure the `listings' package doesn't get loaded with option `#1'}
-  }{}
+    \PackageError{matlab-prettifier}%
+      {incompatible listings' option #1}%
+      {%
+        Make sure the `listings' package
+        doesn't get loaded with option `#1'%
+      }
+  }
+  {}
 }
-
-\checkForListingsOption@mlpr{noaspects}
-\checkForListingsOption@mlpr{0.21}
-\checkForListingsOption@mlpr{savemem}
-
-
-% --- Discard any option passed to the package ---
+\lstoptcheck@mlpr{noaspects}
+\lstoptcheck@mlpr{0.21}
+\lstoptcheck@mlpr{savemem}
 \DeclareOption*%
 {%
   \OptionNotUsed
-  \PackageWarning{\pkgName@mlpr}{Unknown `\CurrentOption' option}
-}  
-
-% --- Process options ---
+  \PackageWarning{matlab-prettifier}{Unknown `\CurrentOption' option}
+}
 \ProcessOptions\relax
-
-% --- Package dependencies ---
 \RequirePackage{textcomp}[2005/09/27]
 \RequirePackage{xcolor}[2007/01/21]
 \RequirePackage{listings}[2013/08/26]
-
-% ----------- key=value interface ---
-% Before we can define the language, we define additional keys
-
-% we create a new ``keyword'' class for variables with shared scope
-% by using the very convenient internal listings macro \lst@InstallKeywords
+\lst@Key{mlkeywordstyle}\relax%
+  {\renewcommand\keywordStyle@mlpr{#1}}
+\lst@Key{mllastelementstyle}\relax%
+  {\renewcommand\lastElemStyle@mlpr{#1}}
+\lst@Key{mloverride}{false}[t]%
+  {\lstKV@SetIf{#1}\ifOverridecontext@mlpr@}
+\lst@Key{mlstringstyle}\relax%
+  {\renewcommand\stringStyle@mlpr{#1}}
+\lst@Key{mlcommentstyle}\relax%
+  {\renewcommand\commentStyle@mlpr{#1}}
+\lst@Key{mlsectiontitlestyle}\relax
+  {\renewcommand\sectionTitleStyle@mlpr{#1}}
+\lst@Key{mlshowsectionrules}{false}[t]%
+  {\lstKV@SetIf{#1}\ifShowCellrules@mlpr@}
+\lst@Key{mlsectionrulethickness}\relax%
+  {\renewcommand\sectionRuleThicknessRatio@mlpr{#1}}
+\lst@Key{mlsectionrulecolor}\relax%
+  {\colorlet{sectionRuleColor@mlpr}{#1}}
+\lst@Key{mlsyscomstyle}\relax%
+  {\renewcommand\syscomStyle@mlpr{#1}}
 \gdef\InstallKeywords@mlpr#1#2#3#4#5%
 {%
   \lst@Key{ml#2}\relax
@@ -75,54 +92,30 @@
      \csname\@lst @#2@data\expandafter\endcsname
      \csname\@lst @#5\endcsname {#1}{#2}{#3}
 }
-
 \InstallKeywords@mlpr k{sharedvars}{mlsharedvarStyle@mlpr}\relax%
   {mlsharedvarStyle@mlpr}{}ld
-
-\lst@Key{mlkeywordstyle}\relax{\renewcommand\keywordStyle@mlpr{#1}}
-\lst@Key{mllastelementstyle}\relax{\renewcommand\lastElemStyle@mlpr{#1}}
-\lst@Key{mlstringstyle}\relax{\renewcommand\stringStyle@mlpr{#1}}
-\lst@Key{mlcommentstyle}\relax{\renewcommand\commentStyle@mlpr{#1}}
-\lst@Key{mlsectionrulethickness}\relax%
-  {\renewcommand\sectionRuleThicknessRatio@mlpr{#1}}
-\lst@Key{mlsectionrulecolor}\relax%
-  {\colorlet{sectionRuleColor@mlpr}{#1}}
-\lst@Key{mlshowsectionrules}{false}[t]%
-  {\lstKV@SetIf{#1}\ifShowCellrules@mlpr@}
-\lst@Key{mlsectiontitlestyle}\relax
-  {\renewcommand\sectionTitleStyle@mlpr{#1}}
-\lst@Key{mloverride}{false}[t]%
-  {\lstKV@SetIf{#1}\ifOverridecontext@mlpr@}
-\lst@Key{mlsyscomstyle}\relax{\renewcommand\syscomStyle@mlpr{#1}}
-\lst@Key{mlsharedvarstyle}\relax{\renewcommand\sharedvarStyle@mlpr{#1}}
+\lst@Key{mlsharedvarstyle}\relax%
+  {\renewcommand\sharedvarStyle@mlpr{#1}}
 \lst@Key{mlunquotedstringdelim}\relax%
   {\lst@DelimKey\relax{[is][\stringStyle@mlpr]{#1}}}
 \lst@Key{mlplaceholderstyle}\relax%
- {\renewcommand\placeholderStyle@mlpr{#1}}
-
-
-% --- Language definition ---
+  {\renewcommand\placeholderStyle@mlpr{#1}}
 \newcommand\language@mlpr{Matlab-pretty}
-% ``normalised'' language name (listings lowercases language name internally)
-% Note: in \foo\bar{\baz}, to expand \baz once before anything else,
-% write \ex\foo\ex\bar\ex{\baz} (where \let\ex=\expandafter)
 \expandafter\lst@NormedDef\expandafter\languageNormedDefd@mlpr%
   \expandafter{\language@mlpr}
-
 \expandafter\expandafter\expandafter\lstdefinelanguage\expandafter%
 {\language@mlpr}
-{
-  MoreSelectCharTable=\SelectCharTable@mlpr,
-  alsoother={\$@}, % chars not valid in identifiers
-  sensitive=true,% Matlab is case-sensitive.
-  upquote=true,
-  showstringspaces=false,
-  rulecolor=\color{black}, % prevents listings bug (nonuniform rule color)
-  %
-  basicstyle=\basicStyle@mlpr,
-  %
-  morekeywords=[257]% opening keywords unrelated to classdef
-  {% 
+{%
+  sensitive = true,
+  upquote = true,
+  showspaces       = false,
+  showstringspaces = false,
+  rulecolor = \color{black},
+  alsoother={\$@},
+  MoreSelectCharTable = \SelectCharTable@mlpr,
+  basicstyle = \basicStyle@mlpr,
+  morekeywords = [257]%
+  {%
     for,
     if,
     otherwise,
@@ -132,9 +125,8 @@
     try,
     while,
   },
-  keywordstyle=[257]\processOpRegKW@mlpr,
-  %
-  morekeywords=[258]% `middle' keywords unrelated to classdef
+  keywordstyle = [257]\processOpRegKW@mlpr,
+  morekeywords = [258]%
   {%
     break,
     case,
@@ -144,20 +136,17 @@
     elseif,
     function,
     return,
-  }, 
+  },
   keywordstyle=[258]\processMidKW@mlpr,
-  %
-  morekeywords=[259]% `standalone' keywords
+  morekeywords=[259]%
   {%
     global,
     persistent,
-  }, 
+  },
   keywordstyle=[259]\processStdaKW@mlpr,
-  %
-  morekeywords=[260]{classdef},  
+  morekeywords=[260]{classdef},
   keywordstyle=[260]\processClassdefKW@mlpr,
-  %
-  morekeywords=[261]% `middle' keywords related to classdef
+  morekeywords=[261]%
   {%
     enumeration,
     events,
@@ -165,52 +154,33 @@
     properties,
   },
   keywordstyle=[261]\processMidClassdefKW@mlpr,
-  % 
   morekeywords=[262]{end},
   keywordstyle=[262]\processEndKW@mlpr,
-  %
-  % strings
   morestring=[m]',
   stringstyle=\processString@mlpr,
-  %
-  % comments
-  morecomment=[l]\%,                                       % to-end-of-line
-  morecomment=[n]{\%\{\^^M}{\%\}\^^M},                     % block
+  morecomment=[l]\%,
+  morecomment=[n]{\%\{\^^M}{\%\}\^^M},
   commentstyle=\commentStyle@mlpr,
-  moredelim=**[il][\processDotDotDot@mlpr]{...},       % line continuation
-  moredelim=[l][\processSectionTitle@mlpr]{\%\%},  % code section
-  %
-  % system commands
+  moredelim=**[il][\processDotDotDot@mlpr]{...},
+  moredelim=[l][\processSectionTitle@mlpr]{\%\%},
   moredelim=[l][\syscomStyle@mlpr]{!},
-  %
-  % variables with shared scope
   mlsharedvarstyle = \processSharedVar@mlpr,
-}
-[% `listings' aspects needed
+}[
   keywords,
   strings,
   comments,
 ]
-
-
-
-% --- State variables ---
-% Counters and switches used as ``state variables''
-% (used to keep track of context)
-\newcount\netBracketCount@mlpr  % net running count of brackets
-                                    % ([{ count for +1, )]} count for -1 
-\newcount\blkLvl@mlpr             % block nesting level
-\newcount\blkLvlAtClassdef@mlpr     % block nesting level at last classdef
-
+\newcount\netBracketCount@mlpr
+\newcount\blkLvl@mlpr
+\newcount\blkLvlAtClassdef@mlpr
 \newif\ifClosingEndKW@mlpr@             \ClosingEndKW@mlpr@true
 \newif\ifInClassdef@mlpr@                 \InClassdef@mlpr@false
 \newif\ifInStr@mlpr@                           \InStr@mlpr@false
 \newif\ifNonWhiteOccured@mlpr@       \NonWhiteOccured@mlpr@false
 \newif\ifWithinSectionTitle@mlpr@ \WithinSectionTitle@mlpr@false
 
-
-% --- Macros for resetting counters and switches ---
-\newcommand\resetBracketCount@mlpr{\global\netBracketCount@mlpr=0}
+\newcommand\resetBracketCount@mlpr
+  {\global\netBracketCount@mlpr=0}
 
 \newcommand\resetEndKW@mlpr
 {%
@@ -226,9 +196,6 @@
 }
 
 
-% --- internal style macros ---
-
-% Font family, series, shape, and size (color is defined separately)
 \newcommand\basicFontSpecs@mlpr
 {%
   \def\fvm@Scale{.85}%
@@ -245,24 +212,26 @@
   {\commentFontSpecs@mlpr\bfseries}
 \newcommand\syscomFontSpecs@mlpr{}
 \newcommand\sharedvarFontSpecs@mlpr{}
+\newcommand\placeholderOpDelim@mlpr{\textlangle}
+\newcommand\placeholderClDelim@mlpr{\textrangle}
+\newcommand\placeholderDelimFontSpecs@mlpr{\rmfamily\upshape}
+\newcommand\placeholderContentFontSpecs@mlpr{\rmfamily\itshape}
 
-% Matlab syntax highlighting colors
-\colorlet{textColor@mlpr}{black}                      % text
-\colorlet{lastElemColor@mlpr}{textColor@mlpr}     % end
-\definecolor{keywordColor@mlpr}{RGB}{000,000,255}     % keywords
-\definecolor{stringColor@mlpr}{RGB}{160,032,240}      % strings
-\definecolor{commentColor@mlpr}{RGB}{034,139,034}     % comments
-\definecolor{sectionTitleColor@mlpr}{RGB}{034,139,034}% section titles
-\colorlet{sectionRuleColor@mlpr}{black!15}            % code-section rule
-\definecolor{syscomColor@mlpr}{RGB}{178,140,000}      % system commands
-\definecolor{sharedvarColor@mlpr}{RGB}{000,163,163}   % shared scope
+\colorlet{textColor@mlpr}{black}
+\colorlet{lastElemColor@mlpr}{textColor@mlpr}
+\definecolor{keywordColor@mlpr}     {RGB}{000,000,255}
+\definecolor{stringColor@mlpr}      {RGB}{160,032,240}
+\definecolor{commentColor@mlpr}     {RGB}{034,139,034}
+\definecolor{sectionTitleColor@mlpr}{RGB}{034,139,034}
+\colorlet{sectionRuleColor@mlpr}{black!15}
+\definecolor{syscomColor@mlpr}      {RGB}{178,140,000}
+\definecolor{sharedvarColor@mlpr}   {RGB}{000,163,163}
+\definecolor{placeholderColor@mlpr} {RGB}{209,000,086}
 
-% More Matlab colors (currently not used by matlab-prettifier)
-\colorlet{bgColor@mlpr}{white}                        % background color
-\definecolor{untermStringColor@mlpr}{RGB}{178,000,000}% unterm. strings
-\definecolor{syntaxErrorColor@mlpr}{RGB}{255,000,000} % Syntax errors
+\colorlet{bgColor@mlpr}{white}
+\definecolor{untermStringColor@mlpr}{RGB}{178,000,000}
+\definecolor{syntaxErrorColor@mlpr}{RGB} {255,000,000}
 
-% Additional custom colors
 \colorlet{numbersColor@matlabpretty}{gray}
 
 \newcommand\basicStyle@mlpr
@@ -314,8 +283,12 @@
   \color{sharedvarColor@mlpr}%
 }
 
+\newcommand\placeholderStyle@mlpr
+{%
+  \placeholderContentFontSpecs@mlpr%
+  \color{placeholderColor@mlpr}%
+}
 
-% Macro for SelectCharTable key
 \newcommand\SelectCharTable@mlpr
 {%
   \processOpenBracket@mlpr{40}{\roundBktOp@mlpr}%
@@ -326,8 +299,6 @@
   \processCloseBracket@mlpr{125}{\curlyBktCl@mlpr}%
 }
 
-
-% --- macros for processing opening and closing brackets ---
 \newcommand\processOpenBracket@mlpr[2]
 {%
   \lst@DefSaveDef{#1}#2%
@@ -337,7 +308,7 @@
       \global\ClosingEndKW@mlpr@false%
       \global\advance\netBracketCount@mlpr by \@ne%
     \fi
-  }%  
+  }%
 }
 
 \newcommand\processCloseBracket@mlpr[2]
@@ -346,7 +317,7 @@
   {%
     #2%
     \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
-      \ifClosingEndKW@mlpr@%    % If end is already a blue keyword... 
+      \ifClosingEndKW@mlpr@%    % If end is already a blue keyword...
         \resetBracketCount@mlpr % ... we can safely reset the count.
       \else
         \global\advance\netBracketCount@mlpr by \m@ne%
@@ -356,10 +327,9 @@
         \fi
       \fi
     \fi
-  }%  
+  }%
 }
 
-% --- macros for processing keywords ---
 \newcommand\processOpRegKW@mlpr
 {%
   \ifWithinSectionTitle@mlpr@%
@@ -379,7 +349,6 @@
   \fi
 }
 
-% No difference between standalone keywords and middle keywords
 \newcommand\processStdaKW@mlpr\processMidKW@mlpr
 
 \newcommand\processClassdefKW@mlpr
@@ -414,7 +383,7 @@
 \newcommand\processEndKW@mlpr
 {%
   % only for typesetting those as ``last element'' in inline code
-  \ifOverridecontext@mlpr@% 
+  \ifOverridecontext@mlpr@%
     \lastElemStyle@mlpr%
   \else
     \ifWithinSectionTitle@mlpr@%
@@ -440,17 +409,14 @@
   \fi
 }
 
-
-% --- strings ---
 \newcommand\processString@mlpr
 {%
   \ifWithinSectionTitle@mlpr@%
   \else
-    \stringStyle@mlpr%  
+    \stringStyle@mlpr%
   \fi
 }
 
-% --- macro for handling line continuation ---
 \newcommand\processDotDotDot@mlpr
 {%
   \lst@CalcLostSpaceAndOutput%
@@ -467,7 +433,6 @@
   \fi
 }
 
-% --- macro for processing section title ---
 \newlength\emHeight@mlpr
 \newlength\jayDepth@mlpr
 \newlength\sectionRuleOffset@mlpr
@@ -491,7 +456,6 @@
   \fi
 }
 
-% helper macro for drawing horizontal rule in \processSectionTitle@mlpr 
 \newcommand\drawSectionRule@mlpr
 {%
   \bgroup%
@@ -516,7 +480,7 @@
           {\rule{\lst@linewidth}{\sectionRuleThickness@mlpr}}%
       }%
     \fi
-  \egroup% 
+  \egroup%
 }
 
 \newcommand\processSharedVar@mlpr
@@ -528,9 +492,7 @@
 }
 
 
-% ----- Hooking into listings -----
 
-% --- InitVarsEOL hook ---
 \newcommand\addedToInitVarsEOL@mlpr{} % polymorphic macro for InitVarsEOL
 \newcommand\@ddedToInitVarsEOL@mlpr
 {%
@@ -546,7 +508,6 @@
 }
 \lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpr}
 
-% --- EndGroup hook ---
 \newcommand\addedToEndGroup@mlpr{} % polymorphic macro for EndGroup
 \newcommand\@ddedToEndGroup@mlpr
 {%
@@ -557,7 +518,6 @@
 }
 \lst@AddToHook{EndGroup}{\addedToEndGroup@mlpr}
 
-% --- PostOutput hook ---
 \newcommand\addedToPostOutput@mlpr{} % polymorphic macro for PostOuput
 \newcommand\@ddedToPostOutput@mlpr
 {%
@@ -566,10 +526,6 @@
 }
 \lst@AddToHook{PostOutput}{\addedToPostOutput@mlpr}
 
-% --- PreInit Hook ---
-% Now we apply all those patches at the PreInit hook,
-% under the condition that \lst@language and \languageNormedDefd@mlpr
-% expand (once) to the same replacement text.
 \newcommand\addedToPreInitHook@mlpr
 {%
   \ifx\lst@language\languageNormedDefd@mlpr%
@@ -580,10 +536,6 @@
 }
 \lst@AddToHook{PreInit}{\addedToPreInitHook@mlpr}
 
-% --- DeInit hook ---
-% We reset counters apply at the DeInit hook,
-% under the condition that \lst@language and \languageNormedDefd@mlpr
-% expand (once) to the same replacement text.
 \newcommand\addedToDeInitHook@mlpr
 {%
   \ifx\lst@language\languageNormedDefd@mlpr%
@@ -592,28 +544,7 @@
   \fi
 }
 \lst@AddToHook{DeInit}{\addedToDeInitHook@mlpr}
-
-
-% --- Macros for placeholders ---
-
-% Placeholder colors
-\definecolor{placeholderColor@mlpr}{RGB}{209,0,86}
-
-% Macros for placeholder delimiters
-\newcommand\placeholderOpDelim@mlpr{\textlangle}
-\newcommand\placeholderClDelim@mlpr{\textrangle}
-\newcommand\placeholderDelimFontSpecs@mlpr{\rmfamily\upshape}
-\newcommand\placeholderContentFontSpecs@mlpr{\rmfamily\itshape}
-
-\newcommand\placeholderStyle@mlpr
-{%
-  \placeholderContentFontSpecs@mlpr%
-  \color{placeholderColor@mlpr}%
-}
-
-% Macro for conditional italic correction
-% (in case the font shape is either italic or slanted)
-\newcommand\condItalicCorrection@mlpr
+\newcommand\itcorr@mlpr
 {%
   % After checking that \long@f@shape@mlpr is definable, we
   % define it as a long macro that expands to the current font shape.
@@ -627,79 +558,63 @@
     \fi
   \fi
 }
-
-% --- User macro for typesetting snippet placeholders ---
 \newcommand\snippetPlaceholder[1]
 {%
   \bgroup%
     \placeholderStyle@mlpr%
     \bgroup%
-      % opening delimiter
       \placeholderDelimFontSpecs@mlpr%
       \placeholderOpDelim@mlpr%
     \egroup%
-    % placeholder content
-    #1\condItalicCorrection@mlpr%
+    #1\itcorr@mlpr%
     \bgroup%
-      % closing delimiter
       \placeholderDelimFontSpecs@mlpr%
       \placeholderClDelim@mlpr%
     \egroup%
   \egroup%
 }
-
-
-% --- built-in matlab-prettifier styles ---
-
-% Quick \& easy style, for those who don't want to bother with customization
 \lstdefinestyle{Matlab-stdstyle}
 {
-  language   = \languageNormedDefd@mlpr,
+  language    = \languageNormedDefd@mlpr,
   frame       = single,
   rulecolor   = \color{black!67},
   numbers     = left,
-  numberstyle = \color{black!33}\footnotesize,
+  numberstyle = \color{black!33},
   breaklines  = true,
 }
-
-% Black & white style
 \lstdefinestyle{Matlab-bwstyle}
 {
   language            = \languageNormedDefd@mlpr,
-  mlkeywordstyle      = \color[gray]{0}             \bfseries        ,
-  mlcommentstyle      = \color[gray]{.75}                    \itshape,
-  mlstringstyle       = \color[gray]{.5}                             ,
-  mlsyscomstyle       = \color[gray]{.25}                            ,
-  mlsectiontitlestyle = \color[gray]{.75}           \bfseries\itshape,
-  mlsharedvarstyle    = \color[gray]{0}                              ,
-  mlplaceholderstyle  = \color[gray]{0}  \rmfamily           \itshape,
+  mlkeywordstyle      = \color[gray]{0}  \bfseries          ,
+  mlcommentstyle      = \color[gray]{.75}           \itshape,
+  mlstringstyle       = \color[gray]{.5}                    ,
+  mlsyscomstyle       = \color[gray]{.25}                   ,
+  mlsectiontitlestyle = \color[gray]{.75}\bfseries  \itshape,
+  mlsharedvarstyle    = \color[gray]{0}                     ,
+  mlplaceholderstyle  = \color[gray]{0}  \rmfamily  \itshape,
   frame               = single,
   rulecolor           = \color{black!67},
   numbers             = left,
   numberstyle         = \color{black!33},
   breaklines          = true,
 }
-
-% Style very similar to that of the Pygments lexer called `MatlabLexer',
-% (see http://pygments.org/docs/lexers/). This style basically mimics
-% the output you get with the minted, verbments, and pythontex packages.
 \lstdefinestyle{Matlab-pygstyle}
 {
   language            = \languageNormedDefd@mlpr,
-  mllastelementstyle  = \color[RGB]{127,000,000}                            ,
-  mlkeywordstyle      = \color[RGB]{000,127,000}           \bfseries        ,
-  mlcommentstyle      = \color[RGB]{063,127,127}                    \itshape,
-  mlstringstyle       = \color[RGB]{186,034,034}                            ,
-  mlsyscomstyle       = \color[RGB]{000,127,000}                            ,
-  mlsectiontitlestyle = \color[RGB]{063,127,127}                    \itshape,
-  mlsharedvarstyle    = \color[RGB]{034,034,186}                            ,
-  mlplaceholderstyle  = \color[RGB]{127,063,127}\rmfamily           \itshape,
+  mllastelementstyle  = \color[RGB]{127,000,000}                   ,
+  mlkeywordstyle      = \color[RGB]{000,127,000}\bfseries          ,
+  mlcommentstyle      = \color[RGB]{063,127,127}           \itshape,
+  mlstringstyle       = \color[RGB]{186,034,034}                   ,
+  mlsyscomstyle       = \color[RGB]{000,127,000}                   ,
+  mlsectiontitlestyle = \color[RGB]{063,127,127}           \itshape,
+  mlsharedvarstyle    = \color[RGB]{034,034,186}                   ,
+  mlplaceholderstyle  = \color[RGB]{127,063,127}\rmfamily  \itshape,
   frame               = single,
   rulecolor           = \color{black!67},
   numbers             = left,
   numberstyle         = \color{black!33},
   breaklines          = true,
 }
-%TODO % digit color is [RGB]{102,102,102}
-
 \endinput
+%%
+%% End of file `matlab-prettifier.sty'.

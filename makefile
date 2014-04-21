@@ -8,9 +8,9 @@ PACKAGE  = $(PKGNAME).dtx \
            README         \
            makefile
 
-doc: $(PKGNAME).pdf
-
 all: doc
+
+doc: $(PKGNAME).pdf
 
 $(PKGNAME).pdf: $(PKGNAME).sty \
                 $(PKGNAME).gls \
@@ -18,6 +18,10 @@ $(PKGNAME).pdf: $(PKGNAME).sty \
                 $(PKGNAME).dtx
 	$(LATEXMK) $(TEXFLAGS) $(PKGNAME).dtx
 	open -a Preview $(PKGNAME).pdf
+
+$(PKGNAME).sty: $(PKGNAME).ins \
+                $(PKGNAME).dtx
+	tex $(PKGNAME).ins
 
 $(PKGNAME).gls: $(PKGNAME).glo 
 	makeindex -s gglo.ist -o $(PKGNAME).gls $(PKGNAME).glo

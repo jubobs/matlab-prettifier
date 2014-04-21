@@ -62,7 +62,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{613}
+% \CheckSum{628}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -456,8 +456,8 @@ A = [ 1, 2, 3,... (I'm a comment)
 %^^A
 % \begin{lstsample}{}{}
 %    \begin{lstlisting}[
-%       language   = Matlab-pretty,
-%       escapechar = `,
+%      language   = Matlab-pretty,
+%      escapechar = `,
 %    ]
 %    while `\ph{condition}`
 %      if `\ph{something-bad-happens}`
@@ -491,13 +491,13 @@ A = [ 1, 2, 3,... (I'm a comment)
 % 
 % Here is a comparison of the three styles defined by \mlpkg{}.
 %
+% \clearpage
 % \paragraph{Matlab-stdstyle}
 % Standard style of the \matlab{} editor.
 %^^A
-% \begin{lstsample}[Matlab-stdstyle]
-    {\lstset{alsoletter=-, emph=Matlab-stdstyle, emphstyle=\rstyle}}{}
+% \begin{lstsample}{}{}
 %    \begin{lstlisting}[
-%      style = Matlab-stdstyle,
+%      style=Matlab-stdstyle,
 %    ]
 %    %% Sample Matlab code
 %    !mv test.txt test2.txt
@@ -519,8 +519,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \paragraph{Matlab-bwstyle}
 % Black \& white, printer-friendly style.
 %
-% \begin{lstsample}
-    {\lstset{alsoletter=-, emph=Matlab-bwstyle, emphstyle=\rstyle}}{}
+% \begin{lstsample}{}{}
 %    \begin{lstlisting}[
 %      style = Matlab-bwstyle,
 %    ]
@@ -541,11 +540,11 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{lstlisting}
 % \end{lstsample}
 %
+% \clearpage
 % \paragraph{Matlab-pygstyle}
-% Style that closely mimicks that Pygments's `MatlabLexer'.
+% Style that closely mimicks that of Pygments's `MatlabLexer'.
 %
-% \begin{lstsample}[Matlab-pygstyle]
-    {\lstset{alsoletter=-, emph=Matlab-pygstyle, emphstyle=\rstyle}}{}
+% \begin{lstsample}{}{}
 %    \begin{lstlisting}[
 %      style = Matlab-pygstyle,
 %    ]
@@ -1408,6 +1407,11 @@ A = [ 1, 2, 3,... (I'm a comment)
 %
 % \paragraph{Switches}
 %    \begin{macrocode}
+\newif\ifClosingEndKW@mlpr@             \ClosingEndKW@mlpr@true
+\newif\ifInClassdef@mlpr@                 \InClassdef@mlpr@false
+\newif\ifInStr@mlpr@                           \InStr@mlpr@false
+\newif\ifNonWhiteOccured@mlpr@       \NonWhiteOccured@mlpr@false
+\newif\ifWithinSectionTitle@mlpr@ \WithinSectionTitle@mlpr@false
 
 % --- Macros for resetting counters and switches ---
 \newcommand\resetBracketCount@mlpr
