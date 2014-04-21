@@ -178,24 +178,19 @@
 \newif\ifInStr@mlpr@                           \InStr@mlpr@false
 \newif\ifNonWhiteOccured@mlpr@       \NonWhiteOccured@mlpr@false
 \newif\ifWithinSectionTitle@mlpr@ \WithinSectionTitle@mlpr@false
-
-\newcommand\resetBracketCount@mlpr
-  {\global\netBracketCount@mlpr=0}
-
+\newcommand\resetBracketCount@mlpr{\global\netBracketCount@mlpr=0}
 \newcommand\resetEndKW@mlpr
 {%
   \global\ClosingEndKW@mlpr@true%
   \resetBracketCount@mlpr%
 }
-
 \newcommand\resetClassdefKW@mlpr
 {%
   \global\InClassdef@mlpr@false%
   \global\blkLvl@mlpr=0%
   \global\blkLvlAtClassdef@mlpr=0%
 }
-
-
+%%
 \newcommand\basicFontSpecs@mlpr
 {%
   \def\fvm@Scale{.85}%
@@ -208,15 +203,13 @@
 \newcommand\lastElemFontSpecs@mlpr{}
 \newcommand\stringFontSpecs@mlpr{}
 \newcommand\commentFontSpecs@mlpr{}
-\newcommand\sectionTitleFontSpecs@mlpr
-  {\commentFontSpecs@mlpr\bfseries}
+\newcommand\sectionTitleFontSpecs@mlpr{\commentFontSpecs@mlpr\bfseries}
 \newcommand\syscomFontSpecs@mlpr{}
 \newcommand\sharedvarFontSpecs@mlpr{}
 \newcommand\placeholderOpDelim@mlpr{\textlangle}
 \newcommand\placeholderClDelim@mlpr{\textrangle}
 \newcommand\placeholderDelimFontSpecs@mlpr{\rmfamily\upshape}
 \newcommand\placeholderContentFontSpecs@mlpr{\rmfamily\itshape}
-
 \colorlet{textColor@mlpr}{black}
 \colorlet{lastElemColor@mlpr}{textColor@mlpr}
 \definecolor{keywordColor@mlpr}     {RGB}{000,000,255}
@@ -227,76 +220,64 @@
 \definecolor{syscomColor@mlpr}      {RGB}{178,140,000}
 \definecolor{sharedvarColor@mlpr}   {RGB}{000,163,163}
 \definecolor{placeholderColor@mlpr} {RGB}{209,000,086}
-
+\colorlet{numbersColor@matlabpretty}{gray}
 \colorlet{bgColor@mlpr}{white}
 \definecolor{untermStringColor@mlpr}{RGB}{178,000,000}
 \definecolor{syntaxErrorColor@mlpr}{RGB} {255,000,000}
-
-\colorlet{numbersColor@matlabpretty}{gray}
-
 \newcommand\basicStyle@mlpr
 {%
   \basicFontSpecs@mlpr%
   \color{textColor@mlpr}%
 }
-
 \newcommand\lastElemStyle@mlpr
 {%
   \lastElemFontSpecs@mlpr%
   \color{lastElemColor@mlpr}%
 }
-
 \newcommand\keywordStyle@mlpr
 {%
   \keywordFontSpecs@mlpr%
   \color{keywordColor@mlpr}%
 }
-
 \newcommand\stringStyle@mlpr
 {%
   \global\InStr@mlpr@true%
   \stringFontSpecs@mlpr%
   \color{stringColor@mlpr}%
 }
-
 \newcommand\commentStyle@mlpr
 {%
   \commentFontSpecs@mlpr%
   \color{commentColor@mlpr}%
 }
-
 \newcommand\sectionTitleStyle@mlpr
 {%
   \sectionTitleFontSpecs@mlpr%
   \color{sectionTitleColor@mlpr}%
 }
-
 \newcommand\syscomStyle@mlpr
 {%
   \syscomFontSpecs@mlpr%
   \color{syscomColor@mlpr}%
 }
-
 \newcommand\sharedvarStyle@mlpr
 {%
   \sharedvarFontSpecs@mlpr%
   \color{sharedvarColor@mlpr}%
 }
-
 \newcommand\placeholderStyle@mlpr
 {%
   \placeholderContentFontSpecs@mlpr%
   \color{placeholderColor@mlpr}%
 }
-
 \newcommand\SelectCharTable@mlpr
 {%
-  \processOpenBracket@mlpr{40}{\roundBktOp@mlpr}%
-  \processOpenBracket@mlpr{91}{\squareBktOp@mlpr}%
-  \processOpenBracket@mlpr{123}{\curlyBktOp@mlpr}%
-  \processCloseBracket@mlpr{41}{\roundBktCl@mlpr}%
-  \processCloseBracket@mlpr{93}{\squareBktCl@mlpr}%
-  \processCloseBracket@mlpr{125}{\curlyBktCl@mlpr}%
+  \processOpenBracket@mlpr{`(}{\roundBktOp@mlpr}%
+  \processOpenBracket@mlpr{`[}{\squareBktOp@mlpr}%
+  \processOpenBracket@mlpr{`\{}{\curlyBktOp@mlpr}%
+  \processCloseBracket@mlpr{`)}{\roundBktCl@mlpr}%
+  \processCloseBracket@mlpr{`]}{\squareBktCl@mlpr}%
+  \processCloseBracket@mlpr{`\}}{\curlyBktCl@mlpr}%
 }
 
 \newcommand\processOpenBracket@mlpr[2]
@@ -450,23 +431,17 @@
 
 \newcommand\processSharedVar@mlpr{\sharedvarStyle@mlpr}
 
-
-
-\newcommand\addedToInitVarsEOL@mlpr{} % polymorphic macro for InitVarsEOL
+\newcommand\addedToInitVarsEOL@mlpr{}
+\lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpr}
 \newcommand\@ddedToInitVarsEOL@mlpr
 {%
-  % This avoids continuation of unterminated string literals on next line.
   \ifInStr@mlpr@%
     \global\InStr@mlpr@false%
     \lst@LeaveMode%
   \fi
-  % we're not in a section title...
   \global\WithinSectionTitle@mlpr@false%
-  % ...but a section title is allowed to start here
   \global\NonWhiteOccured@mlpr@false%
 }
-\lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpr}
-
 \newcommand\addedToEndGroup@mlpr{} % polymorphic macro for EndGroup
 \newcommand\@ddedToEndGroup@mlpr
 {%
@@ -503,20 +478,6 @@
   \fi
 }
 \lst@AddToHook{DeInit}{\addedToDeInitHook@mlpr}
-\newcommand\itcorr@mlpr
-{%
-  % After checking that \long@f@shape@mlpr is definable, we
-  % define it as a long macro that expands to the current font shape.
-  \newcommand\long@f@shape@mlpr{}%
-  \long\edef\long@f@shape@mlpr{\f@shape}%
-  \ifx\long@f@shape@mlpr\itdefault%
-    \/%
-  \else
-    \ifx\long@f@shape@mlpr\sldefault%
-      \/%
-    \fi
-  \fi
-}
 \newcommand\snippetPlaceholder[1]
 {%
   \bgroup%
@@ -532,6 +493,18 @@
     \egroup%
   \egroup%
 }
+\newcommand\itcorr@mlpr
+{%
+  \newcommand\long@f@shape@mlpr{}%
+  \long\edef\long@f@shape@mlpr{\f@shape}%
+  \ifx\long@f@shape@mlpr\itdefault%
+    \/%
+  \else
+    \ifx\long@f@shape@mlpr\sldefault%
+      \/%
+    \fi
+  \fi
+}
 \lstdefinestyle{Matlab-stdstyle}
 {
   language    = \languageNormedDefd@mlpr,
@@ -540,6 +513,7 @@
   numbers     = left,
   numberstyle = \color{black!33},
   breaklines  = true,
+  keepspaces  = true,
 }
 \lstdefinestyle{Matlab-bwstyle}
 {
@@ -556,6 +530,7 @@
   numbers             = left,
   numberstyle         = \color{black!33},
   breaklines          = true,
+  keepspaces          = true,
 }
 \lstdefinestyle{Matlab-pygstyle}
 {
@@ -573,6 +548,7 @@
   numbers             = left,
   numberstyle         = \color{black!33},
   breaklines          = true,
+  keepspaces          = true,
 }
 \endinput
 %%

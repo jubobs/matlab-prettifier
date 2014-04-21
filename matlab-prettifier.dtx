@@ -62,7 +62,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{595}
+% \CheckSum{597}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -317,7 +317,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % To install \mlpkg{} manually, run
 %^^A
 % \begin{verbatim}
-%   latex matlab-prettifier.ins\end{verbatim}
+%   tex matlab-prettifier.ins\end{verbatim}
 %^^A
 % and copy \mlpkg{}.sty to a path where \LaTeX{} can find it.
 % To generate the documentation, run
@@ -428,13 +428,13 @@ A = [ 1, 2, 3,... (I'm a comment)
 % In order to typeset that placeholder, you could use
 %^^A
 % \begin{verbatim}
-%   \placeholder{initial-value}\end{verbatim}
+%   \snippetPlaceholder{initial-value}\end{verbatim}
 %^^A
 %
 % I purposefully chose a rather long name for this user macro,
 % in order to minimise the risk of conflict with other macros.
 % However, for convenience, you can of course define a custom macro with a
-% shorter macro for typesetting placeholders, e.g.~|\ph|:
+% shorter name for typesetting placeholders, e.g.~|\ph|:
 %^^A
 % \begin{verbatim}
 %   \let\ph\snippetPlaceholder\end{verbatim}
@@ -449,7 +449,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % as escape character,
 % because the latter are not allowed in \matlab{} statements and expressions^^A
 % ---although they may occur in \matlab{} string literals.
-% Note that using |"| both as shorthand for inline code (see \cref{inline})
+% Note that using~|"| both as shorthand for inline code (see \cref{inline})
 % and as an escape-to-\LaTeX{} character inside listings is perfectly allowed.
 % The following example illustrates how placeholders may be used to describe
 % the syntax of the \matlab{} while loop.
@@ -1406,56 +1406,156 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \end{macro}
 %
 % \paragraph{Switches}
+% \begin{macro}{\ifClosingEndKW@mlpr}
+% This switch determines whether the |end| keyword acts as a closing keyword
+% or as ``last element'' in the current context.
 %    \begin{macrocode}
 \newif\ifClosingEndKW@mlpr@             \ClosingEndKW@mlpr@true
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\ifInClassdef@mlpr}
+% This macro determines whether we're within a class-definition block or not.
+%    \begin{macrocode}
 \newif\ifInClassdef@mlpr@                 \InClassdef@mlpr@false
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\ifInStr@mlpr}
+% This switch determines whether we're inside a string or not.
+%    \begin{macrocode}
 \newif\ifInStr@mlpr@                           \InStr@mlpr@false
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\ifNonWhiteOccured@mlpr}
+% This switch is used to keep track of whether visible characters have
+% occured on the current line.
+%    \begin{macrocode}
 \newif\ifNonWhiteOccured@mlpr@       \NonWhiteOccured@mlpr@false
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\ifWithinSectionTitle@mlpr}
+% This switch determines whether we're inside a section title or not.
+%    \begin{macrocode}
 \newif\ifWithinSectionTitle@mlpr@ \WithinSectionTitle@mlpr@false
-
-% --- Macros for resetting counters and switches ---
-\newcommand\resetBracketCount@mlpr
-  {\global\netBracketCount@mlpr=0}
-
+%    \end{macrocode}
+% \end{macro}
+%
+% \paragraph{Helper macros for resetting state variables}
+% The following macros are used to reset counters and switches.
+% \begin{macro}{\resetBracketCount@mlpr}
+% This macro simply resets the |\netBracketCount@mlpr| counter.
+%    \begin{macrocode}
+\newcommand\resetBracketCount@mlpr{\global\netBracketCount@mlpr=0}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\resetEndKW@mlpr}
+% This macro restores the |end| keyword as a closing keyword.
+%    \begin{macrocode}
 \newcommand\resetEndKW@mlpr
 {%
   \global\ClosingEndKW@mlpr@true%
   \resetBracketCount@mlpr%
 }
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\resetClassdefKW@mlpr}
+% This macro reinitialises state variables related to class definition.
+%    \begin{macrocode}
 \newcommand\resetClassdefKW@mlpr
 {%
   \global\InClassdef@mlpr@false%
   \global\blkLvl@mlpr=0%
   \global\blkLvlAtClassdef@mlpr=0%
 }
-
-
-% --- internal style macros ---
-
-% Font family, series, shape, and size (color is defined separately)
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{Default font and color settings}
+%%
+% \paragraph{Default fonts (family, series, shape, size)}
+% Default font settings for the different elements of \matlab{} syntax are 
+% stored in the following macros.
+% \begin{macro}{\basicFontSpecs@mlpr}
+% The following macro holds the default font specs for the ``basic style''
+% of our listings.
+% We use a scaled-down version of the Bera Mono font, because, contrary to
+% typewriter \TeX{} fonts, it comes with a bold series.
+%    \begin{macrocode}
 \newcommand\basicFontSpecs@mlpr
 {%
   \def\fvm@Scale{.85}%
   \fontfamily{fvm}\selectfont%
+%    \end{macrocode}
+% Also, we set the font size of inline code to the size of its surroundings.
+%    \begin{macrocode}
   \lst@ifdisplaystyle%
     \normalsize%
   \fi
 }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\keywordFontSpecs@mlpr}
+% The following macro holds the default font specs for keywords.
+%    \begin{macrocode}
 \newcommand\keywordFontSpecs@mlpr{}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\lastElemFontSpecs@mlpr}
+% The following macro holds the default font specs for keywords.
+%    \begin{macrocode}
 \newcommand\lastElemFontSpecs@mlpr{}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\stringFontSpecs@mlpr}
+%    \begin{macrocode}
 \newcommand\stringFontSpecs@mlpr{}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\commentFontSpecs@mlpr}
+%    \begin{macrocode}
 \newcommand\commentFontSpecs@mlpr{}
-\newcommand\sectionTitleFontSpecs@mlpr
-  {\commentFontSpecs@mlpr\bfseries}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\sectionTitleFontSpecs@mlpr}
+%    \begin{macrocode}
+\newcommand\sectionTitleFontSpecs@mlpr{\commentFontSpecs@mlpr\bfseries}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\syscomFontSpecs@mlpr}
+%    \begin{macrocode}
 \newcommand\syscomFontSpecs@mlpr{}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\sharedvarFontSpecs@mlpr}
+%    \begin{macrocode}
 \newcommand\sharedvarFontSpecs@mlpr{}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\placeholderOpDelim@mlpr}
+%    \begin{macrocode}
 \newcommand\placeholderOpDelim@mlpr{\textlangle}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\placeholderClDelim@mlpr}
+%    \begin{macrocode}
 \newcommand\placeholderClDelim@mlpr{\textrangle}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\placeholderDelimFontSpecs@mlpr}
+%    \begin{macrocode}
 \newcommand\placeholderDelimFontSpecs@mlpr{\rmfamily\upshape}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\placeholderContentFontSpecs@mlpr}
+%    \begin{macrocode}
 \newcommand\placeholderContentFontSpecs@mlpr{\rmfamily\itshape}
-
-% Matlab syntax highlighting colors
+%    \end{macrocode}
+% \end{macro}
+%
+% \paragraph{Matlab syntax highlighting colors}
+% Default colors for the different elements of \matlab{} syntax are defined 
+% below.
+%    \begin{macrocode}
 \colorlet{textColor@mlpr}{black}
 \colorlet{lastElemColor@mlpr}{textColor@mlpr}
 \definecolor{keywordColor@mlpr}     {RGB}{000,000,255}
@@ -1466,81 +1566,143 @@ A = [ 1, 2, 3,... (I'm a comment)
 \definecolor{syscomColor@mlpr}      {RGB}{178,140,000}
 \definecolor{sharedvarColor@mlpr}   {RGB}{000,163,163}
 \definecolor{placeholderColor@mlpr} {RGB}{209,000,086}
-
-% More Matlab colors (currently not used by matlab-prettifier)
+%    \end{macrocode}
+% The default color for line numbers in the three predefined styles is defined
+% below.
+%    \begin{macrocode}
+\colorlet{numbersColor@matlabpretty}{gray}
+%    \end{macrocode}
+% The following color definitions are not currently used by \mlpkg{}, but may
+% be in the future.
+%    \begin{macrocode}
 \colorlet{bgColor@mlpr}{white}
 \definecolor{untermStringColor@mlpr}{RGB}{178,000,000}
 \definecolor{syntaxErrorColor@mlpr}{RGB} {255,000,000}
-
-% Additional custom colors
-\colorlet{numbersColor@matlabpretty}{gray}
-
+%    \end{macrocode}
+%
+%
+% \subsection{Helper macro for style settings}
+% Those helper macros are used to hold the current style settings for
+% keywords, comments, strings, etc.
+% \begin{macro}{\basicStyle@mlpr}
+% This macro holds the basic style of \matlab{} listings.
+%    \begin{macrocode}
 \newcommand\basicStyle@mlpr
 {%
   \basicFontSpecs@mlpr%
   \color{textColor@mlpr}%
 }
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\lastElemStyle@mlpr}
+% This macro holds the style of the |end| keyword acting as ``last element''.
+%    \begin{macrocode}
 \newcommand\lastElemStyle@mlpr
 {%
   \lastElemFontSpecs@mlpr%
   \color{lastElemColor@mlpr}%
 }
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\keywordStyle@mlpr}
+% This macro holds the style of \matlab{} keywords.
+%    \begin{macrocode}
 \newcommand\keywordStyle@mlpr
 {%
   \keywordFontSpecs@mlpr%
   \color{keywordColor@mlpr}%
 }
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\stringStyle@mlpr}
+% This macro holds the style of \matlab{} strings.
+%    \begin{macrocode}
 \newcommand\stringStyle@mlpr
 {%
   \global\InStr@mlpr@true%
   \stringFontSpecs@mlpr%
   \color{stringColor@mlpr}%
 }
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\commentStyle@mlpr}
+% This macro holds the style of \matlab{} comments.
+%    \begin{macrocode}
 \newcommand\commentStyle@mlpr
 {%
   \commentFontSpecs@mlpr%
   \color{commentColor@mlpr}%
 }
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\sectionTitleStyle@mlpr}
+% This macro holds the style of \matlab{} section titles.
+%    \begin{macrocode}
 \newcommand\sectionTitleStyle@mlpr
 {%
   \sectionTitleFontSpecs@mlpr%
   \color{sectionTitleColor@mlpr}%
 }
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\syscomStyle@mlpr}
+% This macro holds the style of \matlab{} section titles.
+%    \begin{macrocode}
 \newcommand\syscomStyle@mlpr
 {%
   \syscomFontSpecs@mlpr%
   \color{syscomColor@mlpr}%
 }
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\sharedvarStyle@mlpr}
+% This macro holds the style of \matlab{} variables with shared scope.
+%    \begin{macrocode}
 \newcommand\sharedvarStyle@mlpr
 {%
   \sharedvarFontSpecs@mlpr%
   \color{sharedvarColor@mlpr}%
 }
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\placeholderStyle@mlpr}
+% This macro holds the style of code-snippet placeholders.
+%    \begin{macrocode}
 \newcommand\placeholderStyle@mlpr
 {%
   \placeholderContentFontSpecs@mlpr%
   \color{placeholderColor@mlpr}%
 }
-
-
-% Macro for SelectCharTable key
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{Processing of opening and closing brackets}
+%
+% An opening and or a closing brackets occuring in a \matlab{} listing may
+% change the context;
+% for instance, an |end| keyword is always interpreted as a closing keyword if
+% it is immediately preceded by a closing bracket, no matter what comes
+% before that.
+% To keep track of the context, we must update our state variables every time
+% a bracket is encountered.
+% \begin{macro}{\SelectCharTable@mlpr}
+% This macro, which is passed to the |MoreSelectCharTable| key in the
+% definition of \mllng{}, allows us to dictate what happens when an opening
+% of a closing bracket is encountered.
+%    \begin{macrocode}
 \newcommand\SelectCharTable@mlpr
 {%
-  \processOpenBracket@mlpr{40}{\roundBktOp@mlpr}%
-  \processOpenBracket@mlpr{91}{\squareBktOp@mlpr}%
-  \processOpenBracket@mlpr{123}{\curlyBktOp@mlpr}%
-  \processCloseBracket@mlpr{41}{\roundBktCl@mlpr}%
-  \processCloseBracket@mlpr{93}{\squareBktCl@mlpr}%
-  \processCloseBracket@mlpr{125}{\curlyBktCl@mlpr}%
+  \processOpenBracket@mlpr{`(}{\roundBktOp@mlpr}%
+  \processOpenBracket@mlpr{`[}{\squareBktOp@mlpr}%
+  \processOpenBracket@mlpr{`\{}{\curlyBktOp@mlpr}%
+  \processCloseBracket@mlpr{`)}{\roundBktCl@mlpr}%
+  \processCloseBracket@mlpr{`]}{\squareBktCl@mlpr}%
+  \processCloseBracket@mlpr{`\}}{\curlyBktCl@mlpr}%
 }
+%    \end{macrocode}
+% \end{macro}
+%    \begin{macrocode}
 
 
 % --- macros for processing opening and closing brackets ---
@@ -1704,29 +1866,54 @@ A = [ 1, 2, 3,... (I'm a comment)
 
 %    \end{macrocode}
 %
-% \subsection{Hooking into listings}
+% \subsection{Using \lstpkg{}'s hooks}
 % \label{hooks-mlpretty}
-
+%
+% We use \lstpkg{} hooks to do some housekeeping. 
+%
+% \paragraph{\hookname{InitVarsEOL}}
+% (See the \lstpkg{} documentation for more details on this hook.)
+% \begin{macro}{\addedToInitVarsEOL@mlpr}
+% We add this macro (initially empty) to \lstpkg{}'s
+% \hookname{InitVarsEOL} hook.
 %    \begin{macrocode}
-% ----- Hooking into listings -----
-
-% --- InitVarsEOL hook ---
-\newcommand\addedToInitVarsEOL@mlpr{} % polymorphic macro for InitVarsEOL
+\newcommand\addedToInitVarsEOL@mlpr{}
+\lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpr}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\@ddedToInitVarsEOL@mlpr}
+% The |\addedToInitVarsEOL@mlpr| macro is let to this one under certain
+% conditions (more details follow).
+%    \begin{macrocode}
 \newcommand\@ddedToInitVarsEOL@mlpr
 {%
-  % This avoids continuation of unterminated string literals on next line.
+%    \end{macrocode}
+% \lstpkg{}' built-in mechanism for handling \matlab{} string does not cover
+% the illegal case in which an opening string delimiter is not followed by
+% any matching (closing) string delimiter on the same line;
+% more specifically, \lstpkg{} incorrectly highlights such a broken string
+% literal as a bona-fide \matlab{} string.
+% The following lines constitute an attempt to improve the situation, by only
+% highlighting as a string the line containing the unmatched opening
+% delimiter.
+%    \begin{macrocode}
   \ifInStr@mlpr@%
     \global\InStr@mlpr@false%
     \lst@LeaveMode%
   \fi
-  % we're not in a section title...
+%    \end{macrocode}
+% Clearly, at the very beginning of a line, we're not (not yet, anyway)
+% within a section title, and no visible character has yet occured on that
+% line.
+%    \begin{macrocode}
   \global\WithinSectionTitle@mlpr@false%
-  % ...but a section title is allowed to start here
   \global\NonWhiteOccured@mlpr@false%
 }
-\lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpr}
-
-% --- EndGroup hook ---
+%    \end{macrocode}
+% \end{macro}
+%
+% \paragraph{\hookname{EndGroup}}
+%    \begin{macrocode}
 \newcommand\addedToEndGroup@mlpr{} % polymorphic macro for EndGroup
 \newcommand\@ddedToEndGroup@mlpr
 {%
@@ -1747,6 +1934,8 @@ A = [ 1, 2, 3,... (I'm a comment)
 \lst@AddToHook{PostOutput}{\addedToPostOutput@mlpr}
 
 % --- PreInit Hook ---
+% because lst@addtohook modifies hooks globally (i.e.\ for all listings),
+% we must take some precaution.
 % Now we apply all those patches at the PreInit hook,
 % under the condition that \lst@language and \languageNormedDefd@mlpr
 % expand (once) to the same replacement text.
@@ -1777,27 +1966,6 @@ A = [ 1, 2, 3,... (I'm a comment)
 %
 % \subsection{Placeholders in code snippets}
 %
-% \begin{macro}{\itcorr@mlpr}
-% This macro is used for applying italic correction in case the font shape is
-% italic or slanted.
-%    \begin{macrocode}
-\newcommand\itcorr@mlpr
-{%
-  % After checking that \long@f@shape@mlpr is definable, we
-  % define it as a long macro that expands to the current font shape.
-  \newcommand\long@f@shape@mlpr{}%
-  \long\edef\long@f@shape@mlpr{\f@shape}%
-  \ifx\long@f@shape@mlpr\itdefault%
-    \/%
-  \else
-    \ifx\long@f@shape@mlpr\sldefault%
-      \/%
-    \fi
-  \fi
-}
-%    \end{macrocode}
-% \end{macro}
-%
 % \begin{macro}{\snippetPlaceholder}
 % This user macro can be used to typeset placeholders in code snippets.
 %    \begin{macrocode}
@@ -1819,10 +1987,40 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\itcorr@mlpr}
+% This macro is used for applying italic correction in case the current font
+% shape is either italic or slanted.
+%    \begin{macrocode}
+\newcommand\itcorr@mlpr
+{%
+%    \end{macrocode}
+% After checking that |\long@f@shape@mlpr| is definable, we define it as a
+% long macro that expands to the current font shape, for comparison purposes.
+%    \begin{macrocode}
+  \newcommand\long@f@shape@mlpr{}%
+  \long\edef\long@f@shape@mlpr{\f@shape}%
+%    \end{macrocode}
+% If the current font shape is either italic or slanted, we apply italic
+% correction.
+%    \begin{macrocode}
+  \ifx\long@f@shape@mlpr\itdefault%
+    \/%
+  \else
+    \ifx\long@f@shape@mlpr\sldefault%
+      \/%
+    \fi
+  \fi
+}
+%    \end{macrocode}
+% \end{macro}
+%
 %
 % \subsection{Predefined \texorpdfstring{\mlpkg{}}{matlab-prettifier} styles}
 %
+% For users who do not want to bother themselves with tweaking the apperance
+% of their \matlab{} listings, we define three \lstpkg{} styles.
 % \paragraph{Standard style}
+% This style mimicks the default style of the \matlab{} editor.
 %    \begin{macrocode}
 \lstdefinestyle{Matlab-stdstyle}
 {
@@ -1832,10 +2030,12 @@ A = [ 1, 2, 3,... (I'm a comment)
   numbers     = left,
   numberstyle = \color{black!33},
   breaklines  = true,
+  keepspaces  = true,
 }
 %    \end{macrocode}
 %
 % \paragraph{Black \& white style}
+% This style is mainly for black \& white printing.
 %    \begin{macrocode}
 \lstdefinestyle{Matlab-bwstyle}
 {
@@ -1852,6 +2052,7 @@ A = [ 1, 2, 3,... (I'm a comment)
   numbers             = left,
   numberstyle         = \color{black!33},
   breaklines          = true,
+  keepspaces          = true,
 }
 %    \end{macrocode}
 %
@@ -1876,7 +2077,8 @@ A = [ 1, 2, 3,... (I'm a comment)
   rulecolor           = \color{black!67},
   numbers             = left,
   numberstyle         = \color{black!33},
-  breaklines          = true,
+  breaklines          = true, 
+  keepspaces          = true,
 }
 %    \end{macrocode}
 %
