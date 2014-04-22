@@ -204,6 +204,7 @@
 \newcommand\stringFontSpecs@mlpr{}
 \newcommand\commentFontSpecs@mlpr{}
 \newcommand\sectionTitleFontSpecs@mlpr{\commentFontSpecs@mlpr\bfseries}
+\newcommand\sectionRuleThicknessRatio@mlpr{.05}
 \newcommand\syscomFontSpecs@mlpr{}
 \newcommand\sharedvarFontSpecs@mlpr{}
 \newcommand\placeholderOpDelim@mlpr{\textlangle}
@@ -279,27 +280,25 @@
   \processCloseBracket@mlpr{`]}{\squareBktCl@mlpr}%
   \processCloseBracket@mlpr{`\}}{\curlyBktCl@mlpr}%
 }
-
 \newcommand\processOpenBracket@mlpr[2]
 {%
   \lst@DefSaveDef{#1}#2%
   {%
     #2%
-    \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
+    \ifnum\lst@mode=\lst@Pmode\relax%
       \global\ClosingEndKW@mlpr@false%
       \global\advance\netBracketCount@mlpr by \@ne%
     \fi
   }%
 }
-
 \newcommand\processCloseBracket@mlpr[2]
 {%
   \lst@DefSaveDef{#1}#2%
   {%
     #2%
-    \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
-      \ifClosingEndKW@mlpr@%    % If end is already a blue keyword...
-        \resetBracketCount@mlpr % ... we can safely reset the count.
+    \ifnum\lst@mode=\lst@Pmode\relax%
+      \ifClosingEndKW@mlpr@%
+        \resetBracketCount@mlpr%
       \else
         \global\advance\netBracketCount@mlpr by \m@ne%
         \ifnum\netBracketCount@mlpr>0%
@@ -310,22 +309,18 @@
     \fi
   }%
 }
-
 \newcommand\processOpRegKW@mlpr
 {%
   \resetEndKW@mlpr%
   \global\advance\blkLvl@mlpr\@ne%
   \keywordStyle@mlpr%
 }
-
 \newcommand\processMidKW@mlpr
 {%
   \resetEndKW@mlpr%
   \keywordStyle@mlpr%
 }
-
 \newcommand\processStdaKW@mlpr\processMidKW@mlpr
-
 \newcommand\processClassdefKW@mlpr
 {%
   \resetEndKW@mlpr%
@@ -334,10 +329,8 @@
   \global\advance\blkLvl@mlpr\@ne%
   \keywordStyle@mlpr%
 }
-
 \newcommand\processMidClassdefKW@mlpr
 {%
-  %only for typesetting those as keywords in inline code
   \ifOverridecontext@mlpr@%
     \keywordStyle@mlpr%
   \else
@@ -348,10 +341,8 @@
     \fi
   \fi
 }
-
 \newcommand\processEndKW@mlpr
 {%
-  % only for typesetting those as ``last element'' in inline code
   \ifOverridecontext@mlpr@%
     \lastElemStyle@mlpr%
   \else
@@ -368,9 +359,7 @@
     \fi
   \fi
 }
-
 \newcommand\processString@mlpr{\stringStyle@mlpr}
-
 \newcommand\processDotDotDot@mlpr
 {%
   \lst@CalcLostSpaceAndOutput%
@@ -378,13 +367,10 @@
   \lst@Lmodetrue%
   \commentStyle@mlpr%
 }
-
 \newlength\emHeight@mlpr
 \newlength\jayDepth@mlpr
 \newlength\sectionRuleOffset@mlpr
 \newlength\sectionRuleThickness@mlpr
-\newcommand\sectionRuleThicknessRatio@mlpr{.05}
-
 \newcommand\processSectionTitle@mlpr
 {%
   \ifWithinSectionTitle@mlpr@%
@@ -415,9 +401,7 @@
              -.5\jayDepth@mlpr\relax%
     }%
     \setlength\sectionRuleThickness@mlpr%
-    {%
-      \sectionRuleThicknessRatio@mlpr\baselineskip%
-    }%
+      {\sectionRuleThicknessRatio@mlpr\baselineskip}%
     \color{sectionRuleColor@mlpr}%
     \ifShowCellrules@mlpr@%
       \makebox[0em][l]%

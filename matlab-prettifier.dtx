@@ -226,7 +226,10 @@
 % "while", "for", "break", etc.
 %
 % \paragraph{Context-sensitive keywords}
-% "end", "events", "properties", etc.
+% "end",
+% \lstinline[mloverride]|events|,
+% \lstinline[mloverride]|properties|,
+% etc.
 % 
 % \paragraph{Quoted strings}
 % \mbox{}
@@ -1262,8 +1265,8 @@ A = [ 1, 2, 3,... (I'm a comment)
   },
   keywordstyle = [257]\processOpRegKW@mlpr,
 %    \end{macrocode}
-% Most of the following keywords can only occur within a block opened by the
-% keywords listed above^^A
+% Most of the following keywords (nicknamed ``middle keywords'' herein) can
+% only occur within a block opened by the keywords listed above^^A
 % ---"function" and "return" are exceptions, but, as far as I can tell,
 % seem to have the same effects on syntax highlighting as the others---^^A
 % and are unrelated to class definition.
@@ -1291,15 +1294,15 @@ A = [ 1, 2, 3,... (I'm a comment)
   }, 
   keywordstyle=[259]\processStdaKW@mlpr,
 %    \end{macrocode}
-% The "classdef" keyword interacts with other keywords in a unique fashion;
+% The |classdef| keyword interacts with other keywords in a unique fashion;
 % therefore, we dedicate a whole class of \lstpkg{} keywords to it. 
 %    \begin{macrocode}
   morekeywords=[260]{classdef},  
   keywordstyle=[260]\processClassdefKW@mlpr,
 %    \end{macrocode}
 % The \matlab{} "iskeyword" prints a list of some of the \matlab{} keywords,
-% but it omits the four keywords that can only be used within a "classdef"
-% block, namely \lstinline[mloverride]|events|,
+% but it omits the four keywords that occur within a class-definition block,
+% namely \lstinline[mloverride]|events|,
 % \lstinline[mloverride]|enumeration|, \lstinline[mloverride]|methods|, and
 % \lstinline[mloverride]|properties|.
 % We dedicate a class of pkg{listings} keywords to those four \matlab{}
@@ -1355,7 +1358,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 %
 % \paragraph{Variables with shared scope}
-% Not much to say about those.
+% Not much to write about those.
 %    \begin{macrocode}
   mlsharedvarstyle = \processSharedVar@mlpr,
 %    \end{macrocode}
@@ -1476,8 +1479,8 @@ A = [ 1, 2, 3,... (I'm a comment)
 % Default font settings for the different elements of \matlab{} syntax are 
 % stored in the following macros.
 % \begin{macro}{\basicFontSpecs@mlpr}
-% The following macro holds the default font specs for the ``basic style''
-% of our listings.
+% This macro holds the default font specs for the ``basic style'' of our
+% listings.
 % We use a scaled-down version of the Bera Mono font, because, contrary to
 % typewriter \TeX{} fonts, it comes with a bold series.
 %    \begin{macrocode}
@@ -1495,58 +1498,82 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\keywordFontSpecs@mlpr}
-% The following macro holds the default font specs for keywords.
+% This macro holds the default font specs for keywords.
 %    \begin{macrocode}
 \newcommand\keywordFontSpecs@mlpr{}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\lastElemFontSpecs@mlpr}
-% The following macro holds the default font specs for keywords.
+% This macro holds the default font specs for the |end| keyword acting as
+% ``last element''.
 %    \begin{macrocode}
 \newcommand\lastElemFontSpecs@mlpr{}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\stringFontSpecs@mlpr}
+% This macro holds the default font specs for strings.
 %    \begin{macrocode}
 \newcommand\stringFontSpecs@mlpr{}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\commentFontSpecs@mlpr}
+% The following macro holds the default font specs for comments.
 %    \begin{macrocode}
 \newcommand\commentFontSpecs@mlpr{}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\sectionTitleFontSpecs@mlpr}
+% This macro holds the default font specs for section titles.
 %    \begin{macrocode}
 \newcommand\sectionTitleFontSpecs@mlpr{\commentFontSpecs@mlpr\bfseries}
 %    \end{macrocode}
 % \end{macro}
+% \begin{macro}{\sectionRuleThicknessRatio@mlpr}
+% This macro holds the default value for the relative thickness of the
+% horizontal rule drawn above each section title in the \matlab{} editor.
+%    \begin{macrocode}
+\newcommand\sectionRuleThicknessRatio@mlpr{.05}
+%    \end{macrocode}
+% \end{macro}
 % \begin{macro}{\syscomFontSpecs@mlpr}
+% This macro holds the default font specs for system commands.
 %    \begin{macrocode}
 \newcommand\syscomFontSpecs@mlpr{}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\sharedvarFontSpecs@mlpr}
+% This macro holds the default font specs for variables with shared scope.
 %    \begin{macrocode}
 \newcommand\sharedvarFontSpecs@mlpr{}
 %    \end{macrocode}
 % \end{macro}
+% Although \mlpkg{} currently does not offer a nice interface for customizing 
+% code-snippet placeholder delimiters, this feature might be implemented in a
+% future release if there is demand for it.
+% For this reason, we use macros to store the default opening and closing
+% delimiters and their default font specs.
 % \begin{macro}{\placeholderOpDelim@mlpr}
+% This macro holds the default opening delimiter for code-snippet
+% placeholders.
 %    \begin{macrocode}
 \newcommand\placeholderOpDelim@mlpr{\textlangle}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\placeholderClDelim@mlpr}
+% This macro holds the default closing delimiter for code-snippet
+% placeholders.
 %    \begin{macrocode}
 \newcommand\placeholderClDelim@mlpr{\textrangle}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\placeholderDelimFontSpecs@mlpr}
+% The following macro holds the default font specs for placeholder delimiters.
 %    \begin{macrocode}
 \newcommand\placeholderDelimFontSpecs@mlpr{\rmfamily\upshape}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\placeholderContentFontSpecs@mlpr}
+% The following macro holds the default font specs for placeholder content.
 %    \begin{macrocode}
 \newcommand\placeholderContentFontSpecs@mlpr{\rmfamily\itshape}
 %    \end{macrocode}
@@ -1555,6 +1582,8 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \paragraph{Matlab syntax highlighting colors}
 % Default colors for the different elements of \matlab{} syntax are defined 
 % below.
+% The naming scheme used for the following colors is consistent with that
+% used for macros holding the values of font specs.
 %    \begin{macrocode}
 \colorlet{textColor@mlpr}{black}
 \colorlet{lastElemColor@mlpr}{textColor@mlpr}
@@ -1573,7 +1602,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 \colorlet{numbersColor@matlabpretty}{gray}
 %    \end{macrocode}
 % The following color definitions are not currently used by \mlpkg{}, but may
-% be in the future.
+% be used in a future release.
 %    \begin{macrocode}
 \colorlet{bgColor@mlpr}{white}
 \definecolor{untermStringColor@mlpr}{RGB}{178,000,000}
@@ -1702,30 +1731,38 @@ A = [ 1, 2, 3,... (I'm a comment)
 }
 %    \end{macrocode}
 % \end{macro}
+%
+% \begin{macro}{\processOpenBracket@mlpr}
+% This macro is used to ``hook into'' opening bracket characters and update
+% state variables every time such a character is encountered in \lstpkg{}'s
+% ``processing mode''.
 %    \begin{macrocode}
-
-
-% --- macros for processing opening and closing brackets ---
 \newcommand\processOpenBracket@mlpr[2]
 {%
   \lst@DefSaveDef{#1}#2%
   {%
     #2%
-    \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
+    \ifnum\lst@mode=\lst@Pmode\relax%
       \global\ClosingEndKW@mlpr@false%
       \global\advance\netBracketCount@mlpr by \@ne%
     \fi
   }%  
 }
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\processCloseBracket@mlpr}
+% This macro is used to ``hook into'' closing bracket characters and update
+% state variables every time such a character is encountered in \lstpkg{}'s
+% ``processing mode''.
+%    \begin{macrocode}
 \newcommand\processCloseBracket@mlpr[2]
 {%
   \lst@DefSaveDef{#1}#2%
   {%
     #2%
-    \ifnum\lst@mode=\lst@Pmode\relax% if we're not inside a string or comment
-      \ifClosingEndKW@mlpr@%    % If end is already a blue keyword... 
-        \resetBracketCount@mlpr % ... we can safely reset the count.
+    \ifnum\lst@mode=\lst@Pmode\relax%
+      \ifClosingEndKW@mlpr@%
+        \resetBracketCount@mlpr%
       \else
         \global\advance\netBracketCount@mlpr by \m@ne%
         \ifnum\netBracketCount@mlpr>0%
@@ -1736,24 +1773,51 @@ A = [ 1, 2, 3,... (I'm a comment)
     \fi
   }%  
 }
-
-% --- macros for processing keywords ---
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{Processing of keywords, strings, comments, etc.}
+% 
+% \paragraph{Processing of keywords}
+% The following macros are used for updating state variables every time a
+% keyword is encountered in processed.
+% The overall algorithm is not documented here; in a future release, perhaps.
+% \begin{macro}{\processOpRegKW@mlpr}
+% This macro updates state variables every time an opening keyword is
+% processed.
+%    \begin{macrocode}
 \newcommand\processOpRegKW@mlpr
 {%
   \resetEndKW@mlpr%
   \global\advance\blkLvl@mlpr\@ne%
   \keywordStyle@mlpr%
 }
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\processMidKW@mlpr}
+% This macro updates state variables every time a ``middle keyword'' is
+% processed.
+%    \begin{macrocode}
 \newcommand\processMidKW@mlpr
 {%
   \resetEndKW@mlpr%
   \keywordStyle@mlpr%
 }
-
-% No difference between standalone keywords and middle keywords
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\processStdaKW@mlpr}
+% As far as I can tell, standalone keywords and ``middle keywords'' affect the
+% context in the same way;
+% therefore, we simply reuse |\processMidKW@mlpr| here.
+%    \begin{macrocode}
 \newcommand\processStdaKW@mlpr\processMidKW@mlpr
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\processClassdefKW@mlpr}
+% This macro updates state variables every time the |classdef| keyword is
+% processed.
+%    \begin{macrocode}
 \newcommand\processClassdefKW@mlpr
 {%
   \resetEndKW@mlpr%
@@ -1762,10 +1826,14 @@ A = [ 1, 2, 3,... (I'm a comment)
   \global\advance\blkLvl@mlpr\@ne%
   \keywordStyle@mlpr%
 }
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\processMidClassdefKW@mlpr}
+% This macro updates state variables every time one of the four keywords
+% that occur within a class-definition block is processed.
+%    \begin{macrocode}
 \newcommand\processMidClassdefKW@mlpr
 {%
-  %only for typesetting those as keywords in inline code
   \ifOverridecontext@mlpr@%
     \keywordStyle@mlpr%
   \else
@@ -1776,11 +1844,15 @@ A = [ 1, 2, 3,... (I'm a comment)
     \fi
   \fi
 }
-
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\processEndKW@mlpr}
+% This macro updates state variables every time the |end| keyword is
+% processed.
+%    \begin{macrocode}
 \newcommand\processEndKW@mlpr
 {%
-  % only for typesetting those as ``last element'' in inline code
-  \ifOverridecontext@mlpr@% 
+  \ifOverridecontext@mlpr@%
     \lastElemStyle@mlpr%
   \else
     \ifClosingEndKW@mlpr@%
@@ -1796,12 +1868,25 @@ A = [ 1, 2, 3,... (I'm a comment)
     \fi
   \fi
 }
-
-
-% --- strings ---
+%    \end{macrocode}
+% \end{macro}
+%
+% \paragraph{Processing of strings}
+% \begin{macro}{\processString@mlpr}
+% Not much to write about that.
+%    \begin{macrocode}
 \newcommand\processString@mlpr{\stringStyle@mlpr}
-
-% --- macro for handling line continuation ---
+%    \end{macrocode}
+% \end{macro}
+%
+% \paragraph{Processing of line-continuation tokens}
+% \begin{macro}{\processDotDotDot@mlpr}
+% This macro typesets the line-continuation token in the style of our
+% \matlab{} keywords,
+% tells \lstpkg{} that the current mode ends at the end of the current line,
+% and applies our style for \matlab{} comments to the rest of the current
+% line.
+%    \begin{macrocode}
 \newcommand\processDotDotDot@mlpr
 {%
   \lst@CalcLostSpaceAndOutput%
@@ -1809,22 +1894,60 @@ A = [ 1, 2, 3,... (I'm a comment)
   \lst@Lmodetrue%
   \commentStyle@mlpr%
 }
-
-% --- macro for processing section title ---
+%    \end{macrocode}
+% \end{macro}
+%
+% \paragraph{Processing of section titles}
+% First, we need to define a few length macros in order to draw the horizontal
+% rule that \matlab{} shows (by default) above each section title.
+% \begin{macro}{\emHeight@mlpr}
+% We will use this length to store the height of the ``M'' character in the
+% font being used.
+%    \begin{macrocode}
 \newlength\emHeight@mlpr
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\jayDepth@mlpr}
+% We will use this length to store the depth of letter ``j'' in the font
+% being used.
+%    \begin{macrocode}
 \newlength\jayDepth@mlpr
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\sectionRuleOffset@mlpr}
+% We will use this length to store the result of our calculations for the
+% vertical offset required.
+%    \begin{macrocode}
 \newlength\sectionRuleOffset@mlpr
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\sectionRuleThickness@mlpr}
+% We will use this length to store the value of the rule thickness.
+%    \begin{macrocode}
 \newlength\sectionRuleThickness@mlpr
-\newcommand\sectionRuleThicknessRatio@mlpr{.05}
-
+%    \end{macrocode}
+% \end{macro}
+% Let's proceed\ldots
+% \begin{macro}{\processSectionTitle@mlpr}
+% This macro is invoked when a |%%| delimiter is encountered.
+%    \begin{macrocode}
 \newcommand\processSectionTitle@mlpr
 {%
   \ifWithinSectionTitle@mlpr@%
     \sectionTitleStyle@mlpr%
   \else
+%    \end{macrocode}
+% If visible characters have already been encountered before the |%%| on the
+% current line, this line is simply typeset as a to-end-of-line comment.
+%    \begin{macrocode}
     \ifNonWhiteOccured@mlpr@%
       \lst@Lmodetrue%
       \commentStyle@mlpr%
+%    \end{macrocode}
+% Otherwise, a section title starts here;
+% we update the relevant state variables and, if the
+% \rkeyname{mlshowsectionrules} key has been set, we draw a horizontal rule.
+%    \begin{macrocode}
     \else % a section title is starting here
       \global\WithinSectionTitle@mlpr@true%
       \resetEndKW@mlpr%
@@ -1833,6 +1956,9 @@ A = [ 1, 2, 3,... (I'm a comment)
     \fi
   \fi
 }
+%    \end{macrocode}
+% \end{macro}
+%    \begin{macrocode}
 
 % helper macro for drawing horizontal rule in \processSectionTitle@mlpr 
 \newcommand\drawSectionRule@mlpr
@@ -1848,9 +1974,7 @@ A = [ 1, 2, 3,... (I'm a comment)
              -.5\jayDepth@mlpr\relax%
     }%
     \setlength\sectionRuleThickness@mlpr%
-    {%
-      \sectionRuleThicknessRatio@mlpr\baselineskip%
-    }%
+      {\sectionRuleThicknessRatio@mlpr\baselineskip}%
     \color{sectionRuleColor@mlpr}%
     \ifShowCellrules@mlpr@%
       \makebox[0em][l]%
@@ -2017,8 +2141,9 @@ A = [ 1, 2, 3,... (I'm a comment)
 %
 % \subsection{Predefined \texorpdfstring{\mlpkg{}}{matlab-prettifier} styles}
 %
-% For users who do not want to bother themselves with tweaking the apperance
-% of their \matlab{} listings, we define three \lstpkg{} styles.
+% Finally, for users who do not want to bother themselves with tweaking the
+% appearance of their \matlab{} listings, we define three \lstpkg{} styles
+% for \matlab{} listings.
 % \paragraph{Standard style}
 % This style mimicks the default style of the \matlab{} editor.
 %    \begin{macrocode}
