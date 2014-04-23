@@ -5,7 +5,7 @@
 %% The original source files were:
 %%
 %% matlab-prettifier.dtx  (with options: `package')
-%%  
+%% 
 %% This is a generated file.
 %% 
 %% Copyright (C) 2014 by Julien Cretel <jubobs.matlab.prettifier at gmail.com>
@@ -29,7 +29,8 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
 \ProvidesPackage{matlab-prettifier}
-  [2014/04/15 v0.1 A package for prettyprinting Matlab source code]
+  [2014/04/24 v0.1 A package for prettyprinting Matlab source code]
+
 
 \newcommand\lstoptcheck@mlpr[1]
 {%
@@ -105,15 +106,15 @@
 \expandafter\expandafter\expandafter\lstdefinelanguage\expandafter%
 {\language@mlpr}
 {%
-  sensitive = true,
-  upquote = true,
-  showspaces       = false,
-  showstringspaces = false,
-  rulecolor = \color{black},
+  sensitive=true,
+  upquote=true,
+  showspaces=false,
+  showstringspaces=false,
+  rulecolor=\color{black},
   alsoother={\$@},
-  MoreSelectCharTable = \MoreSelectCharTable@mlpr,
-  basicstyle = \basicStyle@mlpr,
-  morekeywords = [257]%
+  MoreSelectCharTable=\MoreSelectCharTable@mlpr,
+  basicstyle=\basicStyle@mlpr,
+  morekeywords=[257]%
   {%
     for,
     if,
@@ -124,8 +125,8 @@
     try,
     while,
   },
-  keywordstyle = [257]\processOpRegKW@mlpr,
-  morekeywords = [258]%
+  keywordstyle=[257]\processOpRegKW@mlpr,
+  morekeywords=[258]%
   {%
     break,
     case,
@@ -163,7 +164,7 @@
   moredelim=**[il][\processDotDotDot@mlpr]{...},
   moredelim=[l][\processSectionTitle@mlpr]{\%\%},
   moredelim=[l][\syscomStyle@mlpr]{!},
-  mlsharedvarstyle = \processSharedVar@mlpr,
+  mlsharedvarstyle=\processSharedVar@mlpr,
 }[
   keywords,
   strings,
@@ -175,7 +176,7 @@
 \newif\ifClosingEndKW@mlpr@             \ClosingEndKW@mlpr@true
 \newif\ifInClassdef@mlpr@                 \InClassdef@mlpr@false
 \newif\ifInStr@mlpr@                           \InStr@mlpr@false
-\newif\ifNonWhiteOccured@mlpr@       \NonWhiteOccured@mlpr@false
+\newif\ifVisCharOccured@mlpr@       \VisCharOccured@mlpr@false
 \newif\ifWithinSectionTitle@mlpr@ \WithinSectionTitle@mlpr@false
 \newcommand\resetEndKW@mlpr
 {%
@@ -373,7 +374,7 @@
   \ifWithinSectionTitle@mlpr@%
     \sectionTitleStyle@mlpr%
   \else
-    \ifNonWhiteOccured@mlpr@%
+    \ifVisCharOccured@mlpr@%
       \lst@Lmodetrue%
       \commentStyle@mlpr%
     \else % a section title is starting here
@@ -415,7 +416,7 @@
     \lst@LeaveMode%
   \fi
   \global\WithinSectionTitle@mlpr@false%
-  \global\NonWhiteOccured@mlpr@false%
+  \global\VisCharOccured@mlpr@false%
 }
 \newcommand\addedToEndGroup@mlpr{}
 \lst@AddToHook{EndGroup}{\addedToEndGroup@mlpr}
@@ -426,7 +427,7 @@
 {%
   \lst@ifwhitespace%
   \else
-    \global\NonWhiteOccured@mlpr@true%
+    \global\VisCharOccured@mlpr@true%
   \fi
 }
 \newcommand\addedToPreInitHook@mlpr
@@ -444,7 +445,7 @@
     \resetEndKW@mlpr%
     \resetClassdefKW@mlpr%
     \InStr@mlpr@false%
-    \NonWhiteOccured@mlpr@false%
+    \VisCharOccured@mlpr@false%
     \WithinSectionTitle@mlpr@false%
   \fi
 }

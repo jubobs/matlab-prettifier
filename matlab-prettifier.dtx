@@ -18,31 +18,34 @@
 % \iffalse
 %<package>\NeedsTeXFormat{LaTeX2e}[2011/06/27]
 %<package>\ProvidesPackage{matlab-prettifier}
-%<package>  [2014/04/15 v0.1 A package for prettyprinting Matlab source code]
+%<package>  [2014/04/24 v0.1 A package for prettyprinting Matlab source code]
 %
 %<*driver>
-\documentclass{ltxdoc}
+\documentclass[a4paper]{ltxdoc}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
 
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{xcolor}
 \usepackage{lstdoc}
 \usepackage{matlab-prettifier}
-\usepackage{lstautogobble}
 \usepackage{hyperref}
 \usepackage{cleveref}
 
 \lstset
 {
-  language = Matlab-pretty,
-  upquote = true,
-  mlunquotedstringdelim = {/*}{*/},
+  language=Matlab-pretty,
+  upquote=true,
+  mlunquotedstringdelim={/*}{*/},
 }
 \lstMakeShortInline"
 \let\ph\snippetPlaceholder
 \newcommand*{\pkg}[1]{\textsf{#1}}
 \newcommand*{\opt}[1]{\texttt{#1}}
 \newcommand*{\lststy}[1]{\texttt{#1}}
+\newcommand*{\lstlng}[1]{\texttt{#1}}
 \newcommand\matlab{\textsc{Matlab}}
 \newcommand\matlabver{\matlab~(R2013a)}
 \newcommand\mathworks{MathWorks}
@@ -51,10 +54,10 @@
 \newcommand\lstpkg{\pkg{listings}}
 \newcommand\beamercls{\pkg{beamer}}
 \newcommand\mllng{\texttt{Matlab-pretty}}
+\newcommand\itemp{\item[\(+\)]}
+\newcommand\itemm{\item[\(-\)]}
 
-\EnableCrossrefs
-\CodelineIndex
-\RecordChanges
+\makeindex
 
 \begin{document}
   \DocInput{matlab-prettifier.dtx}
@@ -80,7 +83,7 @@
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
 %
-% \changes{v0.1}{2014/04/16}{Initial release.}
+% \changes{v0.1}{2014/04/24}{Initial release.}
 %
 % \GetFileInfo{matlab-prettifier.sty}
 %
@@ -122,7 +125,7 @@
 %   \lstdefinestyle,\lstKV@SetIf}
 % \DoNotIndex{\m@ne,\makebox}
 % \DoNotIndex{\newcommand,\newcount,\newif,\newlength,^^A,
-%   \NonWhiteOccured@mlpr@true,\NonWhiteOccured@mlpr@false,^^A
+%   \VisCharOccured@mlpr@true,\VisCharOccured@mlpr@false,^^A
 %   \normalsize}
 % \DoNotIndex{\OptionNotUsed}
 % \DoNotIndex{\PackageError,\PackageWarning,\ProcessOptions}
@@ -148,7 +151,7 @@
 %
 % \begin{abstract}
 %   The \mlpkg{} package allows you to effortlessly prettyprint
-%   Matlab source code in documents typeset with \LaTeX{} \& friends. Built
+%   \matlab{} source code in documents typeset with \LaTeX{} \& friends. Built
 %   on top of the \lstpkg{} package, \mlpkg{} defines a language called
 %   \mllng{}, which can be invoked by \lstpkg{} macros and
 %   environments and can be used in conjunction with (most) parameters
@@ -161,10 +164,10 @@
 % \tableofcontents\newpage
 %
 %
-% \section{Introduction}
+% \part{Introduction}
 %
 %
-% \subsection{Why this package?}
+% \section{Why this package?}
 %
 % \trademark{\matlab} is a high-level language and interactive environment for
 % numerical computation, visualization, and programming.^^A
@@ -216,7 +219,7 @@
 % your life easier. Read on!
 %
 %
-% \subsection{Syntax highlighting performed by \mlpkg{}}
+% \section{Syntax highlighting performed by \mlpkg{}}
 % 
 % The \mlpkg{} package defines a \pkg{listings} \emph{language} called
 % \mllng{}, which can be invoked in the user-level macros and environments
@@ -286,7 +289,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \fi
 %
 %
-% \subsection{Other features}
+% \section{Other features}
 %
 % Additional features include
 %
@@ -294,19 +297,94 @@ A = [ 1, 2, 3,... (I'm a comment)
 %   \item a key-value interface extending that of the \lstpkg{} package,
 %   \item automatic scaling of inline code according to its surroundings,
 %   \item manual highlighting of variables with shared scope,
-%   \item manual highlighting of unquoted strings,
+%   \item manual highlighting of unquoted strings
+%     (e.g.\ |on| in ``"hold /*on*/"''),
 %   \item a macro for easily typesetting placeholders in code snippets,
 %   \item three predefined styles.
 % \end{itemize}
 %
 %
-% \subsection{Comparison with other packages}
+% \section{Review of other approaches}
 %
-% TODO; use a matrix with features of each; speed benchmark
+% Here is a review of the different options^^A
+% ---other than the \mlpkg{} package and \matlab{}'s "publish" function---^^A
+% available for typesetting \matlab{} listings in \LaTeX{} documents.
+%
+% \paragraph{\lstpkg{}' \lstlng{Matlab} language} 
+%^^A
+% \begin{itemize}
+%   \itemp Better than nothing!
+%   \itemp \lstpkg{}' rich features are available.
+%   \itemp Settings for \matlab{} listings are bundled into a \lstpkg{}
+%     language, which can be invoked \emph{locally}.
+%   \itemm Some \matlab{} keywords (e.g.\ "parfor") are not listed.
+%   \itemm Built-in \matlab{} function names (e.g.\ "sum") get highlighted
+%     like \matlab{} keywords do, which is very distracting.
+%   \itemm Highlighting of keywords is not context-aware;
+%     in particular, the |end| keyword gets typeset in the same style,
+%     regardless of the context (closing keyword or last-element keyword)
+%     in which it occurs.
+%   \itemm No highlighting of block comments.
+%   \itemm No highlighting of line-continuation token and associated comment.
+%   \itemm Section titles are not highlighted in a style distinct from that of
+%     comments.
+%   \itemm No highlighting of unquoted strings.
+% \end{itemize}
+%
+% \paragraph{\pkg{mcode}}
+%^^A
+% \begin{itemize}
+%   \itemp An honest attempt at improving \lstpkg{}' \lstlng{Matlab} language.
+%   \itemp Package options for quickly effecting global changes to the look
+%     of \matlab{} listings.
+%   \itemp Block comments are highlighted as such.
+%   \itemp A line-continuation token activates comment style\ldots
+%   \itemm \ldots but also gets highlighted in comment style.
+%   \itemm Settings for \matlab{} listings are defined \emph{globally}
+%     (using |\lstset|) rather than locally,
+%     which means those settings can easily be overwritten/lost.
+%   \itemm The \lstinline[mloverride]|enumeration| keyword is not listed.
+%   \itemm Highlighting of the last-element keyword is handled by a series of
+%     literate replacements,
+%     which will only work well in a limited number of cases.
+%   \itemm Highlighting of class-definition keywords is not context-aware;
+%     in particular, |properties| gets typeset in the same style,
+%     regardless of the context (function of class-definition keyword)
+%     in which it occurs.
+%   \itemm Undesirable literate replacements
+%     ("<=" by~\(\leq\), "delta" by~\(\Delta\)) are forced upon the user.
+%   \itemm No highlighting of line-continuation token and associated comment.
+%   \itemm Section titles are not highlighted in a style distinct from that of
+%     comments.
+%   \itemm No highlighting of unquoted strings.
+%   \itemm The package's implementation lacks ``namespacing'', which increases
+%     the risk of conflict with other packages.
+%   \itemm \pkg{mcode} is not available on CTAN.
+% \end{itemize}
+%
+% \paragraph{Pygments-based packages
+%   (\pkg{minted}, \pkg{verbments}, \pkg{pythontex})}
+%^^A
+% \begin{itemize}
+%   \itemp Python!
+%   \itemp Pygments!
+%   \itemp Slick look.
+%   \itemm \lstpkg{}' features are not available.
+%   \itemm Highlighting of keywords is not context-aware;
+%     in particular, the last-element keyword gets highlighted like the
+%     closing keyword does, which is very distracting.
+%   \itemm \matlab{}'s transpose operator (".'") is misconstrued as a string
+%     delimiter; same problem with "}'".
+%   \itemm Escape to \LaTeX{} is only allowed in comments.
+%   \itemm Relatively slow; \pkg{minted}'s maintainer has plans to improve
+%     for improving its speed, though.
+%   \itemm Requires |-shell-escape|.
+% \end{itemize}
 % 
 %
-% \section{Installation}
+% \part{User's guide}
 %
+% \section{Installation}
 %
 % \subsection{Package dependencies}
 %
@@ -317,7 +395,6 @@ A = [ 1, 2, 3,... (I'm a comment)
 %
 % \subsection{Installing \texorpdfstring{\mlpkg{}}{matlab-prettifier}}
 %
-% TODO
 % To install \mlpkg{} manually, run
 %^^A
 % \begin{verbatim}
@@ -335,7 +412,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %^^A
 %
 %
-% \section{User's guide}
+% \section{Getting started}
 %
 % As stated above, the \mlpkg{} package is built on top of the \lstpkg{}
 % package.
@@ -498,7 +575,6 @@ A = [ 1, 2, 3,... (I'm a comment)
 % 
 % Here is a comparison of the three styles defined by \mlpkg{}.
 %
-% \clearpage
 % \paragraph{Matlab-stdstyle}
 % Standard style of the \matlab{} editor.
 %^^A
@@ -547,7 +623,6 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{lstlisting}
 % \end{lstsample}
 %
-% \clearpage
 % \paragraph{Matlab-pygstyle}
 % Style that closely mimicks that of Pygments's `MatlabLexer'.
 %
@@ -574,19 +649,19 @@ A = [ 1, 2, 3,... (I'm a comment)
 %^^A
 % 
 %
-% \section{Key-value interface}
+% \section{Advanced techniques}
 %
 % The \lstpkg{} package provides a large number of options accessible via a
 % nifty key-value interface, which is described in the excellent \lstpkg{}
 % documentation.
 % The \mlpkg{} package extends the \lstpkg{} key-value interface interface by
-% defining several additional keys that allow you to customise the style of
+% defining several additional keys that allow you to customize the style of
 % your \matlab{} listings, should you wish to do so.
 % All the keys provided by \mlpkg{} are prefixed by |ml|, to distinguish them
 % from ``native'' \lstpkg{} keys. 
 % 
 %
-% \subsection{\lstpkg{} keys you should not use with \mllng{}}
+% \subsection{\lstpkg{} keys you should not use}
 %
 % The great majority of keys provided by \lstpkg{} can be used in conjunction
 % with keys provided by \mlpkg{} without any detrimental side effects,
@@ -604,11 +679,11 @@ A = [ 1, 2, 3,... (I'm a comment)
 % and eschew the \lstpkg{} key called \rkeyname{keywordstyle}.
 % More generally, if \lstpkg{} provides a key called \meta{something} and
 % \mlpkg{} provides a key called |ml|\meta{something},
-% customisation of your \matlab{} listings should be done with the latter, not
+% customization of your \matlab{} listings should be done with the latter, not
 % the former.
 %
 %
-% \subsection{Options provided by \mlpkg{}}
+% \subsection{Key-value interface}
 %
 % For each of the \mlpkg{} key described below, the default value is indicated
 % on the right-hand side.
@@ -629,9 +704,9 @@ A = [ 1, 2, 3,... (I'm a comment)
 %     which it occurs:
 %     it may be used to close a code block (e.g.\ a while loop),
 %     or it may stand for the last element of an array.
-%     In the first case, it's highlighted in the same style as the other
+%     In the first case, it gets highlighted in the same style as the other
 %     \matlab{} keywords, like so: "end".
-%     In the other case, it's highlighted like ``normal text'', like so:
+%     In the other case, it gets highlighted like ``normal text'', like so:
 %     \lstinline[language=Matlab-pretty,mloverride]|end|.
 %     This key determines the style of this keyword in cases where it means
 %     ``last element''.
@@ -741,8 +816,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %     This key determines the style for placeholders in code snippets.
 %     The last token can be a one-parameter command,
 %     such as |\textbf| or |\underbar|.
-%       
-%
+% 
 % \end{syntax}
 %
 %
@@ -757,7 +831,14 @@ A = [ 1, 2, 3,... (I'm a comment)
 % the predefined styles, you should define your own \lstpkg{} style.
 % You can even base your custom style on one of the predefined styles and
 % tweak it (see subsection~4.5 in the \lstpkg{} documentation).
-% 
+%
+% \paragraph{Load the \mllng{} language or a style first; customize later.}
+% If you want to customize the appearance of your \matlab{} listings, 
+% you should use the \rkeyname{language} key or the \rkeyname{style} key
+% before using any other (\lstpkg{} or \mlpkg{}) key,
+% because loading a language or a style ``too late'' has the potential to
+% wipe out most of the current settings.
+%
 % \paragraph{Define macros for recurring placeholders.}
 % For maintainability reasons, you should define macros for oft-used
 % placeholders, e.g.
@@ -841,6 +922,8 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \lstpkg{} package).
 %
 %
+% \part{Miscellaneous}
+% 
 % \section{To-do list}
 %
 % \paragraph{Automatic highlighting of unquoted strings}
@@ -859,7 +942,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % but is currently not compatible with \mlpkg{};
 % I have plans to implement this feature in a future release of \mlpkg{}.
 %
-% \section{Known issues and missing features}
+% \section{Missing features and known issues}
 %
 % Although \mlpkg{} does a reasonably good job at replicating the syntax
 % highlighting performed by the \matlab{} editor, some problems remain.
@@ -879,7 +962,11 @@ A = [ 1, 2, 3,... (I'm a comment)
 % checking whether an opening string delimiter is missing a matching (closing)
 % string delimiter on the same line.
 %
-% \paragraph{Incorrect highlighting of certain instances of illegal syntax}
+% \paragraph{No highlighting of invalid characters}
+% Characters occuring in places where they are invalid do not get highlighted
+% in red, as they would in the \matlab{} editor.
+%
+% \paragraph{Illegal syntax tends to yield incorrect syntax highlighting}
 % For example, the \matlab{} editor would highlight the |end| keyword in the
 % listing below, not as closing keyword ("end"), but as last-element keyword
 % (\lstinline[language=Matlab-pretty,mloverride]|end|).
@@ -890,10 +977,41 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    if=end
 %    \end{lstlisting}
 % \end{lstsample}
+%
+% \paragraph{\texttt{\%\%}\meta{visible-char} gets highlighted like a
+% section title}
+% In \matlab{}, a line starting by \texttt{\%\%} and immediately followed by
+% one or more visible characters is not a section title, but a mere comment^^A
+% ---although the \matlab{} help does not document this behavior.
+% \mllng{} incorrectly highlights such a comment like a section title.
+%^^A
+% \begin{lstsample}{}{}
+%    \begin{lstlisting}[
+%      language=Matlab-pretty]
+%    %% This is a section title
+%    %%This should be a comment.
+%    \end{lstlisting}
+% \end{lstsample}
+%
+% \paragraph{\lstpkg{}' \keyname{keespaces} key messes up section-title rules}
+% If both \lstpkg{}' \keyname{keepspaces} and \mlpkg{}'s
+% \keyname{mlshowsectionrules} are set, section titles that start by some
+% white space get pushed to the right.
+%^^A
+% \begin{lstsample}{}{}
+%    \begin{lstlisting}[
+%      style=Matlab-stdstyle,
+%      numbers=none,
+%      keepspaces,
+%      mlshowsectionrules]
+%        %% the rule gets pushed to the right...
+%    \end{lstlisting}
+% \end{lstsample}
+
 % 
-% \paragraph{Incorrect highlighting of ``runaway'' block comments} 
+% \paragraph{``Runaway'' block comments end prematurely (in some cases)} 
 % \matlab{} requires opening and closing delimiters of block comments to each
-% be on a line of their own, without any non-white character, but \mlpkg{}
+% be on a line on its own, without any visible character, but \mlpkg{}
 % incorrectly considers block comments closed even in some cases where this
 % rule is infringed.
 % For example, in the listing below, the \matlab{} editor would typeset
@@ -910,23 +1028,23 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{lstlisting}
 % \end{lstsample}
 %
-% \paragraph{No highlighting of invalid characters}
-% Characters occuring in places where they are invalid do not get highlighted
-% in red, as they would in the \matlab{} editor.
-%
 %
 % \section{Bug reports and feature suggestions}
 %
 % The development version of \mlpkg{} is currently hosted on Bitbucket at
 % \href{http://bitbucket.org/Jubobs/matlab-prettifier/}
 %   {Jubobs/matlab-prettifier}.
-% If you find a bug in \mlpkg{}, if you would like to see a feature
-% implemented in the package, or if you can think of ways the \mlpkg{}
-% documentation could be improved, please add an entry to the Bitbucket
-% repository's issue tracker; alternatively, you can send me an email at
+% If you find a bug in \mlpkg{} that this manual does not mention,
+% if you would like to see a feature implemented in the package,
+% or if you can think of ways in which the \mlpkg{} documentation could be
+% improved, please add an entry to the Bitbucket repository's issue tracker;
+% alternatively, you can send me an email at
 % \href{mailto:jubobs.matlab.prettifier@gmail.com}
 %   {jubobs.matlab.prettifier@gmail.com}
 %
+% \makeatletter
+% \def\index@prologue{\part{Index}\markboth{Index}{Index}}
+% \makeatother
 % \StopEventually{^^A
 %   \clearpage^^A
 %   \PrintChanges^^A
@@ -935,13 +1053,13 @@ A = [ 1, 2, 3,... (I'm a comment)
 % }
 %
 %
-% \section{Implementation}
+% \part{Implementation}
 %
 % Be aware that, for ``namespacing'', the \mlpkg{} package uses, not a prefix,
 % but the |mlpretty|~suffix (preceded by an |@| character) throughout.
 %
 %
-% \subsection{Preliminary checks}
+% \section{Preliminary checks}
 %
 % \begin{macro}{\lstoptcheck@mlpr}
 %   Because the \lstpkg{} options \opt{noaspects}, \opt{0.21}, and
@@ -976,7 +1094,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 %
 %
-% \subsection{Package options}
+% \section{Package options}
 %
 % \mlpkg{} currently offers no package option; therefore, if the user
 % mistakenly specifies any option for the package, we discard that option
@@ -991,7 +1109,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 %
 %
-% \subsection{Required packages}
+% \section{Required packages}
 % 
 % The \mlpkg{} package require three packages without any package option:
 % the \pkg{textcomp} package, in order to use \lstpkg{}' \rkeyname{upquote}
@@ -1005,7 +1123,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 %
 %
-% \subsection{Key-value interface}
+% \section{Key-value interface}
 %
 % We extend \lstpkg{}' key-value interface by defining several additional
 % keys, which we will use for defining a new \lstpkg{} language and three
@@ -1172,7 +1290,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \end{lstkey}
 %
 %
-% \subsection{Definition of the \mllng{} language}
+% \section{Definition of the \mllng{} language}
 %
 % \paragraph{Language name}
 % \begin{macro}{\language@mlpr}
@@ -1203,21 +1321,21 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \paragraph{Case sensitivity}
 % \matlab{} is a case-sensitive language.
 %    \begin{macrocode}
-  sensitive = true,
+  sensitive=true,
 %    \end{macrocode}
 %
 % \paragraph{Straight single quotes and backticks}
 % \lstpkg{}' \rkeyname{upquote} key is set so that single quotes and backticks
 % be, not curly, but straight, as in \matlab{}.
 %    \begin{macrocode}
-  upquote = true,
+  upquote=true,
 %    \end{macrocode}
 %
 % \paragraph{No visible space characters}
 % By default, no visible-space characters should be printed.
 %    \begin{macrocode}
-  showspaces       = false,
-  showstringspaces = false,
+  showspaces=false,
+  showstringspaces=false,
 %    \end{macrocode}
 %
 % \paragraph{Uniform frame color}
@@ -1226,7 +1344,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % In most cases, this behaviour is undesirable, but can be avoided by passing
 % some color specification to \lstpkg{}' \rkeyname{rulecolor} key.
 %    \begin{macrocode}
-  rulecolor = \color{black},
+  rulecolor=\color{black},
 %    \end{macrocode}
 %
 % \paragraph{Adjust the list of characters valid in identifiers}
@@ -1240,13 +1358,13 @@ A = [ 1, 2, 3,... (I'm a comment)
 % In order to keep track of the context, we need to modify the character
 % table a bit.
 %    \begin{macrocode}
-  MoreSelectCharTable = \MoreSelectCharTable@mlpr,
+  MoreSelectCharTable=\MoreSelectCharTable@mlpr,
 %    \end{macrocode}
 %
 % \paragraph{Basic style}
 % The ``basic style'' of our \matlab{} listings is defined below.
 %    \begin{macrocode}
-  basicstyle = \basicStyle@mlpr,
+  basicstyle=\basicStyle@mlpr,
 %    \end{macrocode}
 %
 %
@@ -1264,7 +1382,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % The following keywords open a block that has nothing to do with class
 % definition. 
 %    \begin{macrocode}
-  morekeywords = [257]%
+  morekeywords=[257]%
   {% 
     for,
     if,
@@ -1275,7 +1393,7 @@ A = [ 1, 2, 3,... (I'm a comment)
     try,
     while,
   },
-  keywordstyle = [257]\processOpRegKW@mlpr,
+  keywordstyle=[257]\processOpRegKW@mlpr,
 %    \end{macrocode}
 % Most of the following keywords (nicknamed ``middle'' keywords herein) can
 % only occur within a block opened by the keywords listed above^^A
@@ -1283,7 +1401,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % seem to have the same effects on syntax highlighting as the others---^^A
 % and are unrelated to class definition.
 %    \begin{macrocode}
-  morekeywords = [258]%
+  morekeywords=[258]%
   {%
     break,
     case,
@@ -1372,7 +1490,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \paragraph{Variables with shared scope}
 % Not much to write about those.
 %    \begin{macrocode}
-  mlsharedvarstyle = \processSharedVar@mlpr,
+  mlsharedvarstyle=\processSharedVar@mlpr,
 %    \end{macrocode}
 %
 % \paragraph{\lstpkg{} aspects}
@@ -1388,7 +1506,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 %
 %
-% \subsection{State variables}
+% \section{State variables}
 % We define a number of \TeX{} counters and switches that will be used as
 % ``state variables'', to keep track of the context.
 %
@@ -1440,11 +1558,11 @@ A = [ 1, 2, 3,... (I'm a comment)
 \newif\ifInStr@mlpr@                           \InStr@mlpr@false
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\ifNonWhiteOccured@mlpr@}
+% \begin{macro}{\ifVisCharOccured@mlpr@}
 % This switch is used to keep track of whether visible characters have
 % occured on the current line.
 %    \begin{macrocode}
-\newif\ifNonWhiteOccured@mlpr@       \NonWhiteOccured@mlpr@false
+\newif\ifVisCharOccured@mlpr@       \VisCharOccured@mlpr@false
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\ifWithinSectionTitle@mlpr@}
@@ -1479,7 +1597,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \end{macro}
 %
 %
-% \subsection{Default font and color settings}
+% \section{Default font and color settings}
 %%
 % \paragraph{Default fonts (family, series, shape, size)}
 % Default font settings for the different elements of \matlab{} syntax are 
@@ -1615,7 +1733,8 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 %
 %
-% \subsection{Helper macro for style settings}
+% \section{Helper macros for style settings}
+%
 % Those helper macros are used to hold the current style settings for
 % keywords, comments, strings, etc.
 % \begin{macro}{\basicStyle@mlpr}
@@ -1711,7 +1830,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \end{macro}
 %
 %
-% \subsection{Processing of opening and closing brackets}
+% \section{Processing of opening and closing brackets}
 %
 % An opening and or a closing brackets occuring in a \matlab{} listing may
 % change the context;
@@ -1729,42 +1848,42 @@ A = [ 1, 2, 3,... (I'm a comment)
 {%
 %    \end{macrocode}
 % \begin{macro}{\roundBktOp@mlpr}
-% In this macro is stored the definition of ``('' from the default character
+% In this macro is stored the definition of ``|(|'' from the default character
 % table.
 %    \begin{macrocode}
   \processOpenBracket@mlpr{`(}{\roundBktOp@mlpr}%
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\squareBktOp@mlpr}
-% In this macro is stored the definition of ``['' from the default character
+% In this macro is stored the definition of ``|[|'' from the default character
 % table.
 %    \begin{macrocode}
   \processOpenBracket@mlpr{`[}{\squareBktOp@mlpr}%
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\curlyBktOp@mlpr}
-% In this macro is stored the definition of ``\{'' from the default character
+% In this macro is stored the definition of ``|{|'' from the default character
 % table.
 %    \begin{macrocode}
   \processOpenBracket@mlpr{`\{}{\curlyBktOp@mlpr}%
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\roundBktCl@mlpr}
-% In this macro is stored the definition of ``)'' from the default character
+% In this macro is stored the definition of ``|)|'' from the default character
 % table.
 %    \begin{macrocode}
   \processCloseBracket@mlpr{`)}{\roundBktCl@mlpr}%
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\squareBktCl@mlpr}
-% In this macro is stored the definition of ``]'' from the default character
+% In this macro is stored the definition of ``|]|'' from the default character
 % table.
 %    \begin{macrocode}
   \processCloseBracket@mlpr{`]}{\squareBktCl@mlpr}%
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\curlyBktCl@mlpr}
-% In this macro is stored the definition of ``\}'' from the default character
+% In this macro is stored the definition of ``|}|'' from the default character
 % table.
 %    \begin{macrocode}
   \processCloseBracket@mlpr{`\}}{\curlyBktCl@mlpr}%
@@ -1820,7 +1939,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \end{macro}
 %
 %
-% \subsection{Processing of keywords, strings, comments, etc.}
+% \section{Processing of keywords, strings, comments, etc.}
 % 
 % \paragraph{Processing of keywords}
 % The following macros are used for updating state variables every time a
@@ -1977,7 +2096,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % If visible characters have already been encountered before the |%%| on the
 % current line, this line is simply typeset as a to-end-of-line comment.
 %    \begin{macrocode}
-    \ifNonWhiteOccured@mlpr@%
+    \ifVisCharOccured@mlpr@%
       \lst@Lmodetrue%
       \commentStyle@mlpr%
 %    \end{macrocode}
@@ -2036,7 +2155,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 % \end{macro}
 %
-% \subsection{Hooking into \lstpkg{}' hooks}
+% \section{Hooking into \lstpkg{}' hooks}
 % \label{hooks-mlpretty}
 %
 % We hook into some of \lstpkg{}'s hooks to apply some necessary patches.
@@ -2076,7 +2195,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % line.
 %    \begin{macrocode}
   \global\WithinSectionTitle@mlpr@false%
-  \global\NonWhiteOccured@mlpr@false%
+  \global\VisCharOccured@mlpr@false%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -2123,7 +2242,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 {%
   \lst@ifwhitespace%
   \else
-    \global\NonWhiteOccured@mlpr@true%
+    \global\VisCharOccured@mlpr@true%
   \fi
 }
 %    \end{macrocode}
@@ -2169,7 +2288,7 @@ A = [ 1, 2, 3,... (I'm a comment)
     \resetEndKW@mlpr%
     \resetClassdefKW@mlpr%
     \InStr@mlpr@false%
-    \NonWhiteOccured@mlpr@false%
+    \VisCharOccured@mlpr@false%
     \WithinSectionTitle@mlpr@false%
   \fi
 }
@@ -2178,7 +2297,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \end{macro}
 %
 %
-% \subsection{Placeholders in code snippets}
+% \section{Code-snippet placeholders}
 %
 % \begin{macro}{\snippetPlaceholder}
 % This user macro can be used to typeset placeholders in code snippets.
@@ -2229,7 +2348,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \end{macro}
 %
 %
-% \subsection{Predefined \texorpdfstring{\mlpkg{}}{matlab-prettifier} styles}
+% \section{\texorpdfstring{\mlpkg{}}{matlab-prettifier} styles}
 %
 % Finally, for users who do not want to bother themselves with tweaking the
 % appearance of their \matlab{} listings, we define three \lstpkg{} styles
