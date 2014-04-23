@@ -8,7 +8,7 @@ PACKAGE  = $(PKGNAME).dtx \
            README         \
            makefile
 
-all: doc clean
+all: doc
 
 doc: $(PKGNAME).pdf
 

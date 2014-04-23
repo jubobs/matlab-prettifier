@@ -1,3 +1,4 @@
 PKGNAME="matlab-prettifier"
-make all
-ctanify ${PKGNAME}.*  README makefile
+make
+make clean
+ctanify ${PKGNAME}.ins ${PKGNAME}.pdf  README makefile

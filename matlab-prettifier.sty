@@ -32,6 +32,7 @@
   [2014/04/24 v0.1 A package for prettyprinting Matlab source code]
 
 
+
 \newcommand\lstoptcheck@mlpr[1]
 {%
   \@ifpackagewith{listings}{#1}%
@@ -92,10 +93,8 @@
      \csname\@lst @#2@data\expandafter\endcsname
      \csname\@lst @#5\endcsname {#1}{#2}{#3}
 }
-\InstallKeywords@mlpr k{sharedvars}{mlsharedvarStyle@mlpr}\relax%
-  {mlsharedvarStyle@mlpr}{}ld
-\lst@Key{mlsharedvarstyle}\relax%
-  {\renewcommand\sharedvarStyle@mlpr{#1}}
+\InstallKeywords@mlpr k{sharedvars}{mlsharedvarstyle}\relax%
+  {mlsharedvarstyle}{}ld
 \lst@Key{mlunquotedstringdelim}\relax%
   {\lst@DelimKey\relax{[is][\stringStyle@mlpr]{#1}}}
 \lst@Key{mlplaceholderstyle}\relax%
@@ -162,7 +161,7 @@
   morecomment=[n]{\%\{\^^M}{\%\}\^^M},
   commentstyle=\commentStyle@mlpr,
   moredelim=**[il][\processDotDotDot@mlpr]{...},
-  moredelim=[l][\processSectionTitle@mlpr]{\%\%},
+  moredelim=[l][\processSectionTitle@mlpr]{\%\%\ },
   moredelim=[l][\syscomStyle@mlpr]{!},
   mlsharedvarstyle=\processSharedVar@mlpr,
 }[
@@ -375,7 +374,6 @@
     \sectionTitleStyle@mlpr%
   \else
     \ifVisCharOccured@mlpr@%
-      \lst@Lmodetrue%
       \commentStyle@mlpr%
     \else % a section title is starting here
       \global\WithinSectionTitle@mlpr@true%
@@ -467,8 +465,7 @@
 }
 \newcommand\itcorr@mlpr
 {%
-  \newcommand\long@f@shape@mlpr{}%
-  \long\edef\long@f@shape@mlpr{\f@shape}%
+  \expandafter\newcommand\expandafter\long@f@shape@mlpr\expandafter{\f@shape}%
   \ifx\long@f@shape@mlpr\itdefault%
     \/%
   \else
