@@ -8,7 +8,7 @@ PACKAGE  = $(PKGNAME).dtx \
            README         \
            makefile
 
-all: doc
+all: doc clean
 
 doc: $(PKGNAME).pdf
 
@@ -17,7 +17,7 @@ $(PKGNAME).pdf: $(PKGNAME).sty \
                 $(PKGNAME).ind \
                 $(PKGNAME).dtx
 	$(LATEXMK) $(TEXFLAGS) $(PKGNAME).dtx
-	open -a Preview $(PKGNAME).pdf
+#	open -a Preview $(PKGNAME).pdf
 
 $(PKGNAME).sty: $(PKGNAME).ins \
                 $(PKGNAME).dtx
