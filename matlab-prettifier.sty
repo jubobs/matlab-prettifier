@@ -31,7 +31,6 @@
 \ProvidesPackage{matlab-prettifier}
   [2014/04/15 v0.1 A package for prettyprinting Matlab source code]
 
-
 \newcommand\lstoptcheck@mlpr[1]
 {%
   \@ifpackagewith{listings}{#1}%
@@ -72,7 +71,7 @@
 \lst@Key{mlshowsectionrules}{false}[t]%
   {\lstKV@SetIf{#1}\ifShowCellrules@mlpr@}
 \lst@Key{mlsectionrulethickness}\relax%
-  {\renewcommand\sectionRuleThicknessRatio@mlpr{#1}}
+  {\renewcommand\sectionRuleRT@mlpr{#1}}
 \lst@Key{mlsectionrulecolor}\relax%
   {\colorlet{sectionRuleColor@mlpr}{#1}}
 \lst@Key{mlsyscomstyle}\relax%
@@ -99,7 +98,7 @@
 \lst@Key{mlunquotedstringdelim}\relax%
   {\lst@DelimKey\relax{[is][\stringStyle@mlpr]{#1}}}
 \lst@Key{mlplaceholderstyle}\relax%
-  {\renewcommand\placeholderStyle@mlpr{#1}}
+  {\renewcommand\phStyle@mlpr{#1}}
 \newcommand\language@mlpr{Matlab-pretty}
 \expandafter\lst@NormedDef\expandafter\languageNormedDefd@mlpr%
   \expandafter{\language@mlpr}
@@ -112,7 +111,7 @@
   showstringspaces = false,
   rulecolor = \color{black},
   alsoother={\$@},
-  MoreSelectCharTable = \SelectCharTable@mlpr,
+  MoreSelectCharTable = \MoreSelectCharTable@mlpr,
   basicstyle = \basicStyle@mlpr,
   morekeywords = [257]%
   {%
@@ -178,11 +177,10 @@
 \newif\ifInStr@mlpr@                           \InStr@mlpr@false
 \newif\ifNonWhiteOccured@mlpr@       \NonWhiteOccured@mlpr@false
 \newif\ifWithinSectionTitle@mlpr@ \WithinSectionTitle@mlpr@false
-\newcommand\resetBracketCount@mlpr{\global\netBracketCount@mlpr=0}
 \newcommand\resetEndKW@mlpr
 {%
   \global\ClosingEndKW@mlpr@true%
-  \resetBracketCount@mlpr%
+  \global\netBracketCount@mlpr=0%
 }
 \newcommand\resetClassdefKW@mlpr
 {%
@@ -204,23 +202,23 @@
 \newcommand\stringFontSpecs@mlpr{}
 \newcommand\commentFontSpecs@mlpr{}
 \newcommand\sectionTitleFontSpecs@mlpr{\commentFontSpecs@mlpr\bfseries}
-\newcommand\sectionRuleThicknessRatio@mlpr{.05}
+\newcommand\sectionRuleRT@mlpr{.05}
 \newcommand\syscomFontSpecs@mlpr{}
 \newcommand\sharedvarFontSpecs@mlpr{}
-\newcommand\placeholderOpDelim@mlpr{\textlangle}
-\newcommand\placeholderClDelim@mlpr{\textrangle}
-\newcommand\placeholderDelimFontSpecs@mlpr{\rmfamily\upshape}
-\newcommand\placeholderContentFontSpecs@mlpr{\rmfamily\itshape}
+\newcommand\phOpDelim@mlpr{\textlangle}
+\newcommand\phClDelim@mlpr{\textrangle}
+\newcommand\phDelimFontSpecs@mlpr{\rmfamily\upshape}
+\newcommand\phContentFontSpecs@mlpr{\rmfamily\itshape}
 \colorlet{textColor@mlpr}{black}
 \colorlet{lastElemColor@mlpr}{textColor@mlpr}
 \definecolor{keywordColor@mlpr}     {RGB}{000,000,255}
 \definecolor{stringColor@mlpr}      {RGB}{160,032,240}
 \definecolor{commentColor@mlpr}     {RGB}{034,139,034}
-\definecolor{sectionTitleColor@mlpr}{RGB}{034,139,034}
+\colorlet{sectionTitleColor@mlpr}{commentColor@mlpr}
 \colorlet{sectionRuleColor@mlpr}{black!15}
 \definecolor{syscomColor@mlpr}      {RGB}{178,140,000}
 \definecolor{sharedvarColor@mlpr}   {RGB}{000,163,163}
-\definecolor{placeholderColor@mlpr} {RGB}{209,000,086}
+\definecolor{phColor@mlpr}          {RGB}{209,000,086}
 \colorlet{numbersColor@matlabpretty}{gray}
 \colorlet{bgColor@mlpr}{white}
 \definecolor{untermStringColor@mlpr}{RGB}{178,000,000}
@@ -266,12 +264,12 @@
   \sharedvarFontSpecs@mlpr%
   \color{sharedvarColor@mlpr}%
 }
-\newcommand\placeholderStyle@mlpr
+\newcommand\phStyle@mlpr
 {%
-  \placeholderContentFontSpecs@mlpr%
-  \color{placeholderColor@mlpr}%
+  \phContentFontSpecs@mlpr%
+  \color{phColor@mlpr}%
 }
-\newcommand\SelectCharTable@mlpr
+\newcommand\MoreSelectCharTable@mlpr
 {%
   \processOpenBracket@mlpr{`(}{\roundBktOp@mlpr}%
   \processOpenBracket@mlpr{`[}{\squareBktOp@mlpr}%
@@ -298,7 +296,7 @@
     #2%
     \ifnum\lst@mode=\lst@Pmode\relax%
       \ifClosingEndKW@mlpr@%
-        \resetBracketCount@mlpr%
+        \netBracketCount@mlpr=0%
       \else
         \global\advance\netBracketCount@mlpr by \m@ne%
         \ifnum\netBracketCount@mlpr>0%
@@ -370,7 +368,6 @@
 \newlength\emHeight@mlpr
 \newlength\jayDepth@mlpr
 \newlength\sectionRuleOffset@mlpr
-\newlength\sectionRuleThickness@mlpr
 \newcommand\processSectionTitle@mlpr
 {%
   \ifWithinSectionTitle@mlpr@%
@@ -382,39 +379,33 @@
     \else % a section title is starting here
       \global\WithinSectionTitle@mlpr@true%
       \resetEndKW@mlpr%
-      \drawSectionRule@mlpr%
+      \ifShowCellrules@mlpr@%
+        \drawSectionRule@mlpr%
+      \fi
       \sectionTitleStyle@mlpr%
     \fi
   \fi
 }
-
 \newcommand\drawSectionRule@mlpr
 {%
+  \setlength\emHeight@mlpr{\fontcharht\font`M}%
+  \setlength\jayDepth@mlpr{\fontchardp\font`j}%
+  \setlength\sectionRuleOffset@mlpr%
+  {%
+    \dimexpr.5\emHeight@mlpr%
+           +.5\baselineskip%
+           -.5\jayDepth@mlpr\relax%
+  }%
   \bgroup%
-    % calculate the vertical offset for the rule
-    \setlength\emHeight@mlpr{\fontcharht\font`M}%
-    \setlength\jayDepth@mlpr{\fontchardp\font`j}%
-    \setlength\sectionRuleOffset@mlpr%
+  \color{sectionRuleColor@mlpr}%
+    \makebox[0em][l]%
     {%
-      \dimexpr.5\emHeight@mlpr%
-             +.5\baselineskip%
-             -.5\jayDepth@mlpr\relax%
+      \raisebox{\sectionRuleOffset@mlpr}[0pt][0pt]%
+        {\rule{\lst@linewidth}{\sectionRuleRT@mlpr\baselineskip}}%
     }%
-    \setlength\sectionRuleThickness@mlpr%
-      {\sectionRuleThicknessRatio@mlpr\baselineskip}%
-    \color{sectionRuleColor@mlpr}%
-    \ifShowCellrules@mlpr@%
-      \makebox[0em][l]%
-      {%
-        \raisebox{\sectionRuleOffset@mlpr}[0pt][0pt]%
-          {\rule{\lst@linewidth}{\sectionRuleThickness@mlpr}}%
-      }%
-    \fi
   \egroup%
 }
-
 \newcommand\processSharedVar@mlpr{\sharedvarStyle@mlpr}
-
 \newcommand\addedToInitVarsEOL@mlpr{}
 \lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpr}
 \newcommand\@ddedToInitVarsEOL@mlpr
@@ -426,24 +417,18 @@
   \global\WithinSectionTitle@mlpr@false%
   \global\NonWhiteOccured@mlpr@false%
 }
-\newcommand\addedToEndGroup@mlpr{} % polymorphic macro for EndGroup
-\newcommand\@ddedToEndGroup@mlpr
-{%
-  % if we were inside a string, we're now getting out of it
-  \ifInStr@mlpr@%
-    \global\InStr@mlpr@false%
-  \fi
-}
+\newcommand\addedToEndGroup@mlpr{}
 \lst@AddToHook{EndGroup}{\addedToEndGroup@mlpr}
-
-\newcommand\addedToPostOutput@mlpr{} % polymorphic macro for PostOuput
+\newcommand\@ddedToEndGroup@mlpr{\global\InStr@mlpr@false}
+\newcommand\addedToPostOutput@mlpr{}
+\lst@AddToHook{PostOutput}{\addedToPostOutput@mlpr}
 \newcommand\@ddedToPostOutput@mlpr
 {%
-  % At the first PostOutput, it's too late for a section title to start.
-  \global\NonWhiteOccured@mlpr@true%
+  \lst@ifwhitespace%
+  \else
+    \global\NonWhiteOccured@mlpr@true%
+  \fi
 }
-\lst@AddToHook{PostOutput}{\addedToPostOutput@mlpr}
-
 \newcommand\addedToPreInitHook@mlpr
 {%
   \ifx\lst@language\languageNormedDefd@mlpr%
@@ -453,27 +438,29 @@
   \fi
 }
 \lst@AddToHook{PreInit}{\addedToPreInitHook@mlpr}
-
 \newcommand\addedToDeInitHook@mlpr
 {%
   \ifx\lst@language\languageNormedDefd@mlpr%
     \resetEndKW@mlpr%
     \resetClassdefKW@mlpr%
+    \InStr@mlpr@false%
+    \NonWhiteOccured@mlpr@false%
+    \WithinSectionTitle@mlpr@false%
   \fi
 }
 \lst@AddToHook{DeInit}{\addedToDeInitHook@mlpr}
 \newcommand\snippetPlaceholder[1]
 {%
   \bgroup%
-    \placeholderStyle@mlpr%
+    \phStyle@mlpr%
     \bgroup%
-      \placeholderDelimFontSpecs@mlpr%
-      \placeholderOpDelim@mlpr%
+      \phDelimFontSpecs@mlpr%
+      \phOpDelim@mlpr%
     \egroup%
     #1\itcorr@mlpr%
     \bgroup%
-      \placeholderDelimFontSpecs@mlpr%
-      \placeholderClDelim@mlpr%
+      \phDelimFontSpecs@mlpr%
+      \phClDelim@mlpr%
     \egroup%
   \egroup%
 }
@@ -497,7 +484,6 @@
   numbers     = left,
   numberstyle = \color{black!33},
   breaklines  = true,
-  keepspaces  = true,
 }
 \lstdefinestyle{Matlab-bwstyle}
 {
@@ -514,7 +500,6 @@
   numbers             = left,
   numberstyle         = \color{black!33},
   breaklines          = true,
-  keepspaces          = true,
 }
 \lstdefinestyle{Matlab-pygstyle}
 {
@@ -532,7 +517,6 @@
   numbers             = left,
   numberstyle         = \color{black!33},
   breaklines          = true,
-  keepspaces          = true,
 }
 \endinput
 %%
