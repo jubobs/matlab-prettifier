@@ -18,7 +18,7 @@
 % \iffalse
 %<package>\NeedsTeXFormat{LaTeX2e}[2011/06/27]
 %<package>\ProvidesPackage{matlab-prettifier}
-%<package>  [2014/04/24 v0.1 A package for prettyprinting Matlab source code]
+%<package>  [2014/04/24 v0.1a A package for prettyprinting Matlab source code]
 %
 %<*driver>
 \documentclass[a4paper]{ltxdoc}
@@ -66,7 +66,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{583}
+% \CheckSum{615}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -110,20 +110,20 @@
 %   \color,\colorlet,\csname,\CurrentOption}
 % \DoNotIndex{\DeclareOption,\def,\definecolor,\dimexpr}
 % \DoNotIndex{\edef,\egroup,\else,\endcsname,\expandafter}
-% \DoNotIndex{\f@shape,\fi,\font,\fontchardp,\fontcharht,\fontfamily,^^A
-%   \fvm@Scale}
+% \DoNotIndex{\f@baselineskip,\f@shape,\f@size,\fi,\font,\fontsize,^^A
+%   \fontchardp,\fontcharht,\fontfamily,\fvm@Scale}
 % \DoNotIndex{\gdef,\global}
 % \DoNotIndex{\ifnum,\ifx,^^A
 %   \InClassdef@mlpr@false,\InClassdef@mlpr@true,^^A
 %   \InStr@mlpr@false,\InStr@mlpr@true,^^A
 %   \itdefault,\itshape}
-% \DoNotIndex{\lst@AddToHook,\lst@CalcLostSpaceAndOutput,\lst@DefSaveDef,^^A
-%   \lst@DelimKey,\lst@ifdisplaystyle,\lst@ifwhitespace,^^A
-%   \lst@InstallKeywords,\lst@Key,\lst@language,\lst@LeaveMode,^^A
-%   \lst@linewidth,\lst@Lmodetrue,\lst@mode,\lst@NormedDef,\lst@Pmode,^^A
-%   \lst@DeleteKeywords,\lst@InstallFamily@,\lst@MakeKeywords,^^A
-%   \lst@MakeMoreKeywords,\lst@UseFamily,\lstdefinelanguage,^^A
-%   \lstdefinestyle,\lstKV@SetIf}
+% \DoNotIndex{\let,\lst@basicstyle,\lst@AddToHook,^^A
+%   \lst@CalcLostSpaceAndOutput,\lst@DefSaveDef,\lst@DelimKey,^^A
+%   \lst@ifdisplaystyle,\lst@ifwhitespace,\lst@InstallKeywords,\lst@Key,^^A
+%   \lst@language,\lst@LeaveMode,\lst@linewidth,\lst@Lmodetrue,\lst@mode,^^A
+%   \lst@NormedDef,\lst@Pmode,\lst@DeleteKeywords,\lst@InstallFamily@,^^A
+%   \lst@MakeKeywords,\lst@MakeMoreKeywords,\lst@UseFamily,^^A
+%   \lstdefinelanguage,\lstdefinestyle,\lstKV@SetIf}
 % \DoNotIndex{\m@ne,\makebox}
 % \DoNotIndex{\newcommand,\newcount,\newif,\newlength,^^A,
 %   \VisCharOccured@mlpr@true,\VisCharOccured@mlpr@false,^^A
@@ -821,12 +821,21 @@ A = [ 1, 2, 3,... (I'm a comment)
 %     automatic highlighting of unquoted strings is a planned feature for the
 %     next release of \mlpkg{}, which should make this key obsolete.
 %
-% \item[0.1,{\rmfamily\itshape\color[RGB]{209,0,86}}]
+%   \item[0.1,{\rmfamily\itshape\color[RGB]{209,0,86}}]
 %     \rkeyname{mlplaceholderstyle}|=|\meta{style}
 %
 %     This key determines the style applied to placeholders in code snippets.
 %     The last token can be a one-parameter command,
 %     such as |\textbf| or |\underbar|.
+%
+%   \item[0.1,true]
+%     \rkeyname{mlscaleinline}|=|\meta{\alternative{true,false}}
+%     \syntaxor\rkeyname{mlscaleinline}
+%
+%     If this key is set, any font-size specification in the basic style is
+%     overriden, and inline \matlab{} code is scaled to it surroundings;
+%     in other words, the font size of inline \matlab{} code is made to match
+%     the local font size.
 % 
 % \end{syntax}
 %
@@ -989,8 +998,8 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{lstlisting}
 % \end{lstsample}
 %
-% \paragraph{A line composed only of \texttt{\%\%} fails to be highlighted like a
-% section title}
+% \paragraph{A line composed only of \texttt{\%\%} fails to be highlighted
+% like a section title}
 % In \matlab{}, a line starting by blanks (spaces, tabs)
 % followed by ``\texttt{\%\%}'',
 % followed by more blanks,
@@ -1239,10 +1248,6 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 % \end{lstkey}
 %
-% \begin{lstkey}{mlsharedvars}
-% \begin{lstkey}{mlmoresharedvars}
-% \begin{lstkey}{mldeletesharedvars}
-% \begin{lstkey}{mlsharedvarstyle}
 %   For convenience, we create a brand new class of \lstpkg{} keywords for
 %   allowing the user to define \matlab{} variables with shared scope.
 % \begin{macro}{\InstallKeywords@mlpr}
@@ -1266,7 +1271,11 @@ A = [ 1, 2, 3,... (I'm a comment)
 }
 %    \end{macrocode}
 % \end{macro}
-%   We now use that macro to define the four keys in question:
+% \begin{lstkey}{mlsharedvars}
+% \begin{lstkey}{mlmoresharedvars}
+% \begin{lstkey}{mldeletesharedvars}
+% \begin{lstkey}{mlsharedvarstyle}
+%   We now use |\InstallKeywords@mlpr| to define the four keys in question:
 %   \rkeyname{mlsharedvars}, which can be used to define a list of \matlab{}
 %   variables with shared scope;
 %   \rkeyname{mlmoresharedvars}, which can be used to add elements to the
@@ -1301,6 +1310,17 @@ A = [ 1, 2, 3,... (I'm a comment)
 \lst@Key{mlplaceholderstyle}\relax%
   {\renewcommand\phStyle@mlpr{#1}}
 %    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{lstkey}{mlscaleinline}
+% \begin{macro}{\ifScaleInline@mlpr@}
+%   This key determines whether the font size of inline \matlab{} code should
+%   match the local font size of ``normal'' text.
+%    \begin{macrocode}
+\lst@Key{mlscaleinline}{true}[t]%
+  {\lstKV@SetIf{#1}\ifScaleInline@mlpr@}
+%    \end{macrocode}
+% \end{macro}
 % \end{lstkey}
 %
 %
@@ -1613,25 +1633,26 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \section{Default font and color settings}
 %%
 % \paragraph{Default fonts (family, series, shape, size)}
+% We start by defining a user macro for easily setting a scaled version of
+% the Bera Mono font, a typewriter font family which, contrary to typewriter
+% \TeX{} fonts, conveniently comes with a boldface version.
+% \begin{macro}{\ttfamilymlpr}
+%    \begin{macrocode}
+\newcommand\ttfamilymlpr
+{%
+  \def\fvm@Scale{.85}%
+  \fontfamily{fvm}\selectfont%
+  \normalsize%
+}
+%    \end{macrocode}
+% \end{macro}
 % Default font settings for the different elements of \matlab{} syntax are 
 % stored in the following macros.
 % \begin{macro}{\basicFontSpecs@mlpr}
 % This macro holds the default font specs for the ``basic style'' of our
 % listings.
-% We use a scaled-down version of the Bera Mono font, because, contrary to
-% typewriter \TeX{} fonts, it comes with a bold series.
 %    \begin{macrocode}
-\newcommand\basicFontSpecs@mlpr
-{%
-  \def\fvm@Scale{.85}%
-  \fontfamily{fvm}\selectfont%
-%    \end{macrocode}
-% Also, we set the font size of inline code to the size of its surroundings.
-%    \begin{macrocode}
-  \lst@ifdisplaystyle%
-    \normalsize%
-  \fi
-}
+\newcommand\basicFontSpecs@mlpr\ttfamilymlpr
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\keywordFontSpecs@mlpr}
@@ -2170,6 +2191,47 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \section{Hooking into \lstpkg{}' hooks}
 %
 % We hook into a few of \lstpkg{}'s hooks to apply some necessary patches.
+% But first, we define a few helper macros.
+% \begin{macro}{\localFontSize@mlpr}
+% This macro will be used to save the current font size.
+%    \begin{macrocode}
+\newcommand\localFontSize@mlpr{}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\localBaselineskip@mlpr}
+% This macro will be used to save the current value of |\baselineskip|.
+%    \begin{macrocode}
+\newcommand\localBaselineskip@mlpr{}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\scaleInlineCode@mlpr}
+% This helper macro is for setting the font size of inline code to the local
+% font size (only if the \keyname{mlscaleinline} key is set).
+%    \begin{macrocode}
+\newcommand\scaleInlineCode@mlpr
+{%
+  \lst@ifdisplaystyle%
+  \else
+    \ifScaleInline@mlpr@%
+%    \end{macrocode}
+% We save the values of the current font size and of |\baselineskip| into our
+% dedicated macros\ldots
+%    \begin{macrocode}
+      \let\localFontSize@mlpr\f@size%
+      \let\localBaselineskip@mlpr\f@baselineskip%
+%    \end{macrocode}
+% \ldots and we use the basic style but we update the font size. 
+%    \begin{macrocode}
+      \expandafter\def\expandafter\lst@basicstyle\expandafter%
+      {%
+        \lst@basicstyle%
+        \fontsize{\localFontSize@mlpr}{\localBaselineskip@mlpr}\selectfont%
+      }%
+    \fi
+  \fi
+}
+%    \end{macrocode}
+% \end{macro}
 %
 % \paragraph{\hookname{InitVarsEOL}}
 % (See the
@@ -2283,10 +2345,11 @@ A = [ 1, 2, 3,... (I'm a comment)
 \newcommand\addedToPreInitHook@mlpr
 {%
   \ifx\lst@language\languageNormedDefd@mlpr%
+    \scaleInlineCode@mlpr%
     \renewcommand\addedToInitVarsEOL@mlpr\@ddedToInitVarsEOL@mlpr%
     \renewcommand\addedToEndGroup@mlpr\@ddedToEndGroup@mlpr%
     \renewcommand\addedToPostOutput@mlpr\@ddedToPostOutput@mlpr%
-  \fi
+\fi
 }
 \lst@AddToHook{PreInit}{\addedToPreInitHook@mlpr}
 %    \end{macrocode}

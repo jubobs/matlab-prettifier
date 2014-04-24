@@ -29,7 +29,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
 \ProvidesPackage{matlab-prettifier}
-  [2014/04/24 v0.1 A package for prettyprinting Matlab source code]
+  [2014/04/24 v0.1a A package for prettyprinting Matlab source code]
 
 
 
@@ -99,6 +99,8 @@
   {\lst@DelimKey\relax{[is][\stringStyle@mlpr]{#1}}}
 \lst@Key{mlplaceholderstyle}\relax%
   {\renewcommand\phStyle@mlpr{#1}}
+\lst@Key{mlscaleinline}{true}[t]%
+  {\lstKV@SetIf{#1}\ifScaleInline@mlpr@}
 \newcommand\language@mlpr{Matlab-pretty}
 \expandafter\lst@NormedDef\expandafter\languageNormedDefd@mlpr%
   \expandafter{\language@mlpr}
@@ -189,14 +191,13 @@
   \global\blkLvlAtClassdef@mlpr=0%
 }
 %%
-\newcommand\basicFontSpecs@mlpr
+\newcommand\ttfamilymlpr
 {%
   \def\fvm@Scale{.85}%
   \fontfamily{fvm}\selectfont%
-  \lst@ifdisplaystyle%
-    \normalsize%
-  \fi
+  \normalsize%
 }
+\newcommand\basicFontSpecs@mlpr\ttfamilymlpr
 \newcommand\keywordFontSpecs@mlpr{}
 \newcommand\lastElemFontSpecs@mlpr{}
 \newcommand\stringFontSpecs@mlpr{}
@@ -405,6 +406,23 @@
   \egroup%
 }
 \newcommand\processSharedVar@mlpr{\sharedvarStyle@mlpr}
+\newcommand\localFontSize@mlpr{}
+\newcommand\localBaselineskip@mlpr{}
+\newcommand\scaleInlineCode@mlpr
+{%
+  \lst@ifdisplaystyle%
+  \else
+    \ifScaleInline@mlpr@%
+      \let\localFontSize@mlpr\f@size%
+      \let\localBaselineskip@mlpr\f@baselineskip%
+      \expandafter\def\expandafter\lst@basicstyle\expandafter%
+      {%
+        \lst@basicstyle%
+        \fontsize{\localFontSize@mlpr}{\localBaselineskip@mlpr}\selectfont%
+      }%
+    \fi
+  \fi
+}
 \newcommand\addedToInitVarsEOL@mlpr{}
 \lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpr}
 \newcommand\@ddedToInitVarsEOL@mlpr
@@ -431,10 +449,11 @@
 \newcommand\addedToPreInitHook@mlpr
 {%
   \ifx\lst@language\languageNormedDefd@mlpr%
+    \scaleInlineCode@mlpr%
     \renewcommand\addedToInitVarsEOL@mlpr\@ddedToInitVarsEOL@mlpr%
     \renewcommand\addedToEndGroup@mlpr\@ddedToEndGroup@mlpr%
     \renewcommand\addedToPostOutput@mlpr\@ddedToPostOutput@mlpr%
-  \fi
+\fi
 }
 \lst@AddToHook{PreInit}{\addedToPreInitHook@mlpr}
 \newcommand\addedToDeInitHook@mlpr
