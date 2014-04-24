@@ -101,6 +101,8 @@
   {\renewcommand\phStyle@mlpr{#1}}
 \lst@Key{mlscaleinline}{true}[t]%
   {\lstKV@SetIf{#1}\ifScaleInline@mlpr@}
+\lst@Key{mlonlyheader}{false}[t]%
+  {\lstKV@SetIf{#1}\ifonlyheader@mlpr@}
 \newcommand\language@mlpr{Matlab-pretty}
 \expandafter\lst@NormedDef\expandafter\languageNormedDefd@mlpr%
   \expandafter{\language@mlpr}
@@ -177,8 +179,9 @@
 \newif\ifClosingEndKW@mlpr@             \ClosingEndKW@mlpr@true
 \newif\ifInClassdef@mlpr@                 \InClassdef@mlpr@false
 \newif\ifInStr@mlpr@                           \InStr@mlpr@false
-\newif\ifVisCharOccured@mlpr@       \VisCharOccured@mlpr@false
+\newif\ifVisCharOccured@mlpr@         \VisCharOccured@mlpr@false
 \newif\ifWithinSectionTitle@mlpr@ \WithinSectionTitle@mlpr@false
+\newif\ifOutputBeingDropped@mlpr@ \OutputBeingDropped@mlpr@false
 \newcommand\resetEndKW@mlpr
 {%
   \global\ClosingEndKW@mlpr@true%
@@ -406,6 +409,7 @@
   \egroup%
 }
 \newcommand\processSharedVar@mlpr{\sharedvarStyle@mlpr}
+
 \newcommand\localFontSize@mlpr{}
 \newcommand\localBaselineskip@mlpr{}
 \newcommand\scaleInlineCode@mlpr
@@ -420,6 +424,22 @@
         \lst@basicstyle%
         \fontsize{\localFontSize@mlpr}{\localBaselineskip@mlpr}\selectfont%
       }%
+    \fi
+  \fi
+}
+\newcommand\dropOutputAfterHeader@mlpr
+{%
+  \ifonlyheader@mlpr@%
+    \ifnum\lst@lineno>1%
+      \lst@ifLmode%
+      \else
+        \ifOutputBeingDropped@mlpr@%
+        \else
+          \lst@EnterMode\lst@Pmode{}%
+          \lst@BeginDropOutput\lst@Pmode%
+        \fi
+        \global\OutputBeingDropped@mlpr@true%
+      \fi
     \fi
   \fi
 }
@@ -446,6 +466,12 @@
     \global\VisCharOccured@mlpr@true%
   \fi
 }
+\newcommand\addedToOutput@mlpr{}
+\lst@AddToHook{Output}{\addedToOutput@mlpr}
+\newcommand\@ddedToOutput@mlpr{\dropOutputAfterHeader@mlpr}
+\newcommand\addedToOutputOther@mlpr{}
+\lst@AddToHook{OutputOther}{\addedToOutputOther@mlpr}
+\newcommand\@ddedToOutputOther@mlpr{\dropOutputAfterHeader@mlpr}
 \newcommand\addedToPreInitHook@mlpr
 {%
   \ifx\lst@language\languageNormedDefd@mlpr%
@@ -453,6 +479,9 @@
     \renewcommand\addedToInitVarsEOL@mlpr\@ddedToInitVarsEOL@mlpr%
     \renewcommand\addedToEndGroup@mlpr\@ddedToEndGroup@mlpr%
     \renewcommand\addedToPostOutput@mlpr\@ddedToPostOutput@mlpr%
+    \renewcommand\addedToOutput@mlpr\@ddedToOutput@mlpr%
+    \renewcommand\addedToOutputOther@mlpr\@ddedToOutputOther@mlpr%
+    \OutputBeingDropped@mlpr@false%
 \fi
 }
 \lst@AddToHook{PreInit}{\addedToPreInitHook@mlpr}
@@ -461,9 +490,10 @@
   \ifx\lst@language\languageNormedDefd@mlpr%
     \resetEndKW@mlpr%
     \resetClassdefKW@mlpr%
-    \InStr@mlpr@false%
-    \VisCharOccured@mlpr@false%
-    \WithinSectionTitle@mlpr@false%
+    \global\InStr@mlpr@false%
+    \global\VisCharOccured@mlpr@false%
+    \global\WithinSectionTitle@mlpr@false%
+    \global\OutputBeingDropped@mlpr@false%
   \fi
 }
 \lst@AddToHook{DeInit}{\addedToDeInitHook@mlpr}

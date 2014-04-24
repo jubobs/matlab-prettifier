@@ -66,7 +66,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{615}
+% \CheckSum{666}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -837,6 +837,13 @@ A = [ 1, 2, 3,... (I'm a comment)
 %     in other words, the font size of inline \matlab{} code is made to match
 %     the local font size.
 % 
+%   \item[0.1,false]
+%     \rkeyname{mlonlyheader}|=|\meta{\alternative{true,false}}
+%     \syntaxor\rkeyname{mlonlyheader}
+%
+%     If this key is set, only the signature and header of the \matlab{}
+%     function gets printed.
+%
 % \end{syntax}
 %
 %
@@ -1323,6 +1330,17 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \end{macro}
 % \end{lstkey}
 %
+% \begin{lstkey}{mlonlyheader}
+% \begin{macro}{\ifonlyheader@mlpr@}
+%   This key determines whether only the signature and header of the \matlab{}
+%   function header gets printed.
+%    \begin{macrocode}
+\lst@Key{mlonlyheader}{false}[t]%
+  {\lstKV@SetIf{#1}\ifonlyheader@mlpr@}
+%    \end{macrocode}
+% \end{macro}
+% \end{lstkey}
+%
 %
 % \section{Definition of the \mllng{} language}
 %
@@ -1595,13 +1613,20 @@ A = [ 1, 2, 3,... (I'm a comment)
 % This switch is used to keep track of whether visible characters have
 % occured on the current line.
 %    \begin{macrocode}
-\newif\ifVisCharOccured@mlpr@       \VisCharOccured@mlpr@false
+\newif\ifVisCharOccured@mlpr@         \VisCharOccured@mlpr@false
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\ifWithinSectionTitle@mlpr@}
 % This switch determines whether we're inside a section title or not.
 %    \begin{macrocode}
 \newif\ifWithinSectionTitle@mlpr@ \WithinSectionTitle@mlpr@false
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\ifOutputBeingDropped@mlpr@}
+% This switch determines whether we're passed the first contiguous block of
+% line comments (function header).
+%    \begin{macrocode}
+\newif\ifOutputBeingDropped@mlpr@ \OutputBeingDropped@mlpr@false
 %    \end{macrocode}
 % \end{macro}
 %
@@ -2192,6 +2217,8 @@ A = [ 1, 2, 3,... (I'm a comment)
 %
 % We hook into a few of \lstpkg{}'s hooks to apply some necessary patches.
 % But first, we define a few helper macros.
+
+% \paragraph{Helper macros related to hooks}
 % \begin{macro}{\localFontSize@mlpr}
 % This macro will be used to save the current font size.
 %    \begin{macrocode}
@@ -2227,6 +2254,37 @@ A = [ 1, 2, 3,... (I'm a comment)
         \lst@basicstyle%
         \fontsize{\localFontSize@mlpr}{\localBaselineskip@mlpr}\selectfont%
       }%
+    \fi
+  \fi
+}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\dropOutputAfterHeader@mlpr}
+% This macro detects when the first block (if any) of contiguous of line
+% comments (function header) ends and drops output thereafter.
+%    \begin{macrocode}
+\newcommand\dropOutputAfterHeader@mlpr
+{%
+  \ifonlyheader@mlpr@%
+    \ifnum\lst@lineno>1%  
+      \lst@ifLmode%
+      \else
+%    \end{macrocode}
+% At this stage, the header has definitely ended.
+% If we've already begun dropping output, we don't do anything.
+%    \begin{macrocode}
+        \ifOutputBeingDropped@mlpr@%
+%    \end{macrocode}
+% Otherwise, we begin dropping output now and we set the switch accordingly.
+%    \begin{macrocode}
+        \else
+          \lst@EnterMode\lst@Pmode{}%
+          \lst@BeginDropOutput\lst@Pmode%
+        \fi
+        \global\OutputBeingDropped@mlpr@true%
+%    \end{macrocode}
+%    \begin{macrocode}
+      \fi
     \fi
   \fi
 }
@@ -2327,6 +2385,44 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 % \end{macro}
 %
+% \paragraph{\hookname{Output}}
+% (See the
+% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation} 
+% for more details on this hook.)
+% \begin{macro}{\addedToOutput@mlpr}
+% We add this macro (initially empty) to \lstpkg{}'
+% \hookname{Output} hook.
+%    \begin{macrocode}
+\newcommand\addedToOutput@mlpr{}
+\lst@AddToHook{Output}{\addedToOutput@mlpr}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\@ddedToOutput@mlpr}
+% TODO
+%    \begin{macrocode}
+\newcommand\@ddedToOutput@mlpr{\dropOutputAfterHeader@mlpr}
+%    \end{macrocode}
+% \end{macro}
+% 
+% \paragraph{\hookname{OutputOther}}
+% (See the
+% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation} 
+% for more details on this hook.)
+% \begin{macro}{\addedToOutputOther@mlpr}
+% We add this macro (initially empty) to \lstpkg{}'
+% \hookname{OutputOther} hook.
+%    \begin{macrocode}
+\newcommand\addedToOutputOther@mlpr{}
+\lst@AddToHook{OutputOther}{\addedToOutputOther@mlpr}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\@ddedToOutputOther@mlpr}
+% TODO
+%    \begin{macrocode}
+\newcommand\@ddedToOutputOther@mlpr{\dropOutputAfterHeader@mlpr}
+%    \end{macrocode}
+% \end{macro}
+%
 % \paragraph{\hookname{PreInit}}
 % (See the
 % \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation} 
@@ -2349,6 +2445,9 @@ A = [ 1, 2, 3,... (I'm a comment)
     \renewcommand\addedToInitVarsEOL@mlpr\@ddedToInitVarsEOL@mlpr%
     \renewcommand\addedToEndGroup@mlpr\@ddedToEndGroup@mlpr%
     \renewcommand\addedToPostOutput@mlpr\@ddedToPostOutput@mlpr%
+    \renewcommand\addedToOutput@mlpr\@ddedToOutput@mlpr%
+    \renewcommand\addedToOutputOther@mlpr\@ddedToOutputOther@mlpr%
+    \OutputBeingDropped@mlpr@false%
 \fi
 }
 \lst@AddToHook{PreInit}{\addedToPreInitHook@mlpr}
@@ -2373,9 +2472,10 @@ A = [ 1, 2, 3,... (I'm a comment)
   \ifx\lst@language\languageNormedDefd@mlpr%
     \resetEndKW@mlpr%
     \resetClassdefKW@mlpr%
-    \InStr@mlpr@false%
-    \VisCharOccured@mlpr@false%
-    \WithinSectionTitle@mlpr@false%
+    \global\InStr@mlpr@false%
+    \global\VisCharOccured@mlpr@false%
+    \global\WithinSectionTitle@mlpr@false%
+    \global\OutputBeingDropped@mlpr@false%
   \fi
 }
 \lst@AddToHook{DeInit}{\addedToDeInitHook@mlpr}
