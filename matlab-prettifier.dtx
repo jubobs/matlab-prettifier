@@ -18,7 +18,7 @@
 % \iffalse
 %<package>\NeedsTeXFormat{LaTeX2e}[2011/06/27]
 %<package>\ProvidesPackage{matlab-prettifier}
-%<package>  [2014/04/24 v0.1a A package for prettyprinting Matlab source code]
+%<package>  [2014/04/24 v0.2 A package for prettyprinting Matlab source code]
 %
 %<*driver>
 \documentclass[a4paper]{ltxdoc}
@@ -85,6 +85,9 @@
 %   Right brace   \}     Tilde         \~}
 %
 % \changes{v0.1}{2014/04/24}{Initial release.}
+% \changes{v0.2}{2014/04/25}{Rewrote automatic scaling of inline code; 
+%   implemented mlscaleinline key;
+%   implemented mlonlyheader.}
 %
 % \GetFileInfo{matlab-prettifier.sty}
 %
@@ -134,7 +137,7 @@
 % \DoNotIndex{\selectfont,\setlength,\sldefault,\textlangle,\textrangle,^^A
 %   \ttfamily}
 % \DoNotIndex{\upshape}
-% \DoNotIndex{\WithinSectionTitle@mlpr@false,\WithinSectionTitle@mlpr@true}
+% \DoNotIndex{\InSecTitle@mlpr@false,\InSecTitle@mlpr@true}
 %
 % \title^^A
 % {^^A
@@ -240,19 +243,19 @@
 %     in particular, the |end| keyword gets typeset in the same style,
 %     regardless of the context (closing keyword or last-element keyword)
 %     in which it occurs.
-%   \itemm No highlighting of block comments.
-%   \itemm No highlighting of line-continuation token and associated comment.
+%   \itemm No highlighting of block comments
+%   \itemm No highlighting of line-continuation token and associated comment
 %   \itemm Section titles are not highlighted in a style distinct from that of
 %     comments.
-%   \itemm No highlighting of unquoted strings.
+%   \itemm No highlighting of unquoted strings
 % \end{itemize}
 %
 % \paragraph{\pkg{mcode}}
 %^^A
 % \begin{itemize}
-%   \itemp An honest attempt at improving \lstpkg{}' \lstlng{Matlab} language.
+%   \itemp An honest attempt at improving \lstpkg{}' \lstlng{Matlab} language
 %   \itemp Package options for quickly effecting global changes to the look
-%     of \matlab{} listings.
+%     of \matlab{} listings
 %   \itemp Block comments are highlighted as such.
 %   \itemp A line-continuation token activates comment style\ldots
 %   \itemm \ldots but also gets highlighted in comment style.
@@ -264,18 +267,19 @@
 %     literate replacements;
 %     this approach works well only in a limited number of cases in which
 %     that keyword occurs.
-%   \itemm Highlighting of class-definition keywords is not context-aware;
+%   \itemm Highlighting of the four context-sensitive class-definition
+%     keywords is not context-aware;
 %     in particular, |properties| gets typeset in the same style,
-%     regardless of the context (function of class-definition keyword)
+%     regardless of the context (function or class-definition keyword)
 %     in which it occurs.
 %   \itemm Undesirable literate replacements
 %     ("<=" by~\(\leq\), "delta" by~\(\Delta\)) are forced upon the user,
 %     and cannot be easily prevented without breaking other literate
 %     replacements put in place for highlighting the last-element keyword.
-%   \itemm No highlighting of line-continuation token and associated comment.
+%   \itemm No highlighting of line-continuation token and associated comment
 %   \itemm Section titles are not highlighted in a style distinct from that of
 %     comments.
-%   \itemm No highlighting of unquoted strings.
+%   \itemm No highlighting of unquoted strings
 %   \itemm The implementation of \pkg{mcode} lacks ``namespacing'',
 %     which increases the risk of conflict with other packages.
 %   \itemm \pkg{mcode} is currently not available on
@@ -289,17 +293,20 @@
 % \begin{itemize}
 %   \itemp Python!
 %   \itemp Pygments!
-%   \itemp Slick look.
+%   \itemp Slick look
+%   \itemp Block comments are highlighted as such.
+%   \itemp A line-continuation token activates comment style\ldots
+%   \itemm \ldots but also gets highlighted in comment style.
 %   \itemm \lstpkg{}' features are not available.
 %   \itemm Highlighting of keywords is not context-aware;
 %     in particular, the last-element keyword gets highlighted like the
 %     closing keyword does, which is very distracting.
-%   \itemm \matlab{}'s transpose operator (".'") is misinterpreted as a string
-%     delimiter; same problem with "}'".
+%   \itemm \matlab{}'s transpose operator (".'") and "}'" are incorrectly
+%     interpreted as starting a string literal.
+%   \itemm No highlighting of unquoted strings
 %   \itemm Escape to \LaTeX{} is only allowed in comments.
-%   \itemm Relatively slow; \pkg{minted}'s maintainer has plans to make that
-%     package faster, though.
-%   \itemm Requires |-shell-escape|.
+%   \itemm Slow compared to \lstpkg{}
+%   \itemm Requires |-shell-escape|
 % \end{itemize}
 %
 %
@@ -397,7 +404,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % To install \mlpkg{} manually, run
 %^^A
 % \begin{verbatim}
-%   tex matlab-prettifier.ins\end{verbatim}
+%   latex matlab-prettifier.ins\end{verbatim}
 %^^A
 % and copy \mlpkg{}.sty to a path where \LaTeX{} can find it.
 % To generate the documentation, run
@@ -559,7 +566,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % three \lstpkg{} \emph{styles} for \matlab{} listings: 
 % \lststy{Matlab-stdstyle}, \lststy{Matlab-bwstyle}, and
 % \lststy{Matlab-pygstyle}.
-
+%
 % Those styles differ in terms of color scheme, but all three have the
 % following effects on each listing that loads one of them:
 % a dark gray surrounding frame is drawn;
@@ -796,7 +803,6 @@ A = [ 1, 2, 3,... (I'm a comment)
 %     The last one determines the style applied to such variables;
 %     the last token can be a one-parameter command,
 %     such as |\textbf| or |\underbar|.
-
 %
 %   \item[0.1,{\color[RGB]{0,163,163}}]
 %     \rkeyname{mlsharedvarstyle}|=|\meta{style}
@@ -828,7 +834,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %     The last token can be a one-parameter command,
 %     such as |\textbf| or |\underbar|.
 %
-%   \item[0.1,true]
+%   \item[0.2,true]
 %     \rkeyname{mlscaleinline}|=|\meta{\alternative{true,false}}
 %     \syntaxor\rkeyname{mlscaleinline}
 %
@@ -837,7 +843,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %     in other words, the font size of inline \matlab{} code is made to match
 %     the local font size.
 % 
-%   \item[0.1,false]
+%   \item[0.2,false]
 %     \rkeyname{mlonlyheader}|=|\meta{\alternative{true,false}}
 %     \syntaxor\rkeyname{mlonlyheader}
 %
@@ -888,14 +894,16 @@ A = [ 1, 2, 3,... (I'm a comment)
 % Do not encourage your readers to copy listings from the PDF and then paste
 % them in the \matlab{} editor.
 % Unfortunately, it simply is \emph{not} a reliable way of distributing code,
-% for at least two reasons:
+% for at least three reasons:
 %
 % \begin{itemize}
+%   \item copying listings than span multiple pages of a PDF document is
+%     tedious and error-prone.
 %   \item the results of copying content from a PDF for
 %     subsequent pasting vary widely from one PDF viewer to another;
 %   \item line breaks introduced by \lstpkg{} for typesetting a \matlab{}
 %     listing may translate to invalid \matlab{} syntax, if copied and pasted
-%     \emph{verbatim}.
+%     \emph{verbatim};
 % \end{itemize}
 %
 % \paragraph{In \beamercls{}, use the \opt{fragile} option.}
@@ -963,12 +971,6 @@ A = [ 1, 2, 3,... (I'm a comment)
 % Note that this feature will make the \rkeyname{mlunquotedstringdelim} key
 % obsolete.
 %
-% \paragraph{Option to only print the header of a \matlab{} function file}
-% A partial solution is available at
-% \url{http://tex.stackexchange.com/q/164280/21891}
-% but is currently not compatible with \mlpkg{};
-% I have plans to implement this feature in a future release of \mlpkg{}.
-%
 % \section{Missing features and known issues}
 %
 % Although \mlpkg{} does a reasonably good job at replicating the syntax
@@ -989,10 +991,6 @@ A = [ 1, 2, 3,... (I'm a comment)
 % checking whether an opening string delimiter is missing a matching (closing)
 % string delimiter on the same line.
 %
-% \paragraph{No highlighting of invalid characters}
-% Characters occuring in places where they are invalid do not get highlighted
-% in red, as they would in the \matlab{} editor.
-%
 % \paragraph{Illegal syntax tends to yield incorrect syntax highlighting}
 % For example, the \matlab{} editor would highlight the |end| keyword in the
 % listing below, not as closing keyword ("end"), but as last-element keyword
@@ -1005,7 +1003,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{lstlisting}
 % \end{lstsample}
 %
-% \paragraph{A line composed only of \texttt{\%\%} fails to be highlighted
+% \paragraph{A line containing only \texttt{\%\%} fails to be highlighted
 % like a section title}
 % In \matlab{}, a line starting by blanks (spaces, tabs)
 % followed by ``\texttt{\%\%}'',
@@ -1039,7 +1037,6 @@ A = [ 1, 2, 3,... (I'm a comment)
 %        %% the rule gets pushed to the right...
 %    \end{lstlisting}
 % \end{lstsample}
-
 % 
 % \paragraph{``Runaway'' block comments end prematurely (in some cases)} 
 % \matlab{} requires opening and closing delimiters of block comments to each
@@ -1084,11 +1081,20 @@ A = [ 1, 2, 3,... (I'm a comment)
 %   \PrintIndex^^A
 % }
 %
+% \section{Acknowledgments}
+% Thanks to the developers of the \lstpkg{} package,
+% without which \mlpkg{} would never have existed.
+% I'm also in debt to many
+% \href{http://tex.stackexchange.com}{TeX.SX} users for their help,
+% encouragements, and suggestions.
+% Thanks in particular to David Carlisle, Marco Daniel,
+% Enrico Gregorio (egreg), Harish Kumar, and Heiko Oberdiek.
+%
 %
 % \part{Implementation}
 %
 % Be aware that, for ``namespacing'', the \mlpkg{} package uses, not a prefix,
-% but the |mlpretty|~suffix (preceded by an |@| character) throughout.
+% but the ``|mlpr|''~suffix (preceded by an |@| character) throughout.
 %
 %
 % \section{Preliminary checks}
@@ -1594,39 +1600,39 @@ A = [ 1, 2, 3,... (I'm a comment)
 % This switch determines whether the |end| keyword acts as a closing keyword
 % or as last-element keyword in the current context.
 %    \begin{macrocode}
-\newif\ifClosingEndKW@mlpr@             \ClosingEndKW@mlpr@true
+\newif\ifClosingEndKW@mlpr@    \ClosingEndKW@mlpr@true
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\ifInClassdef@mlpr@}
 % This macro determines whether we're within a class-definition block or not.
 %    \begin{macrocode}
-\newif\ifInClassdef@mlpr@                 \InClassdef@mlpr@false
+\newif\ifInClassdef@mlpr@        \InClassdef@mlpr@false
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\ifInStr@mlpr@}
 % This switch determines whether we're inside a string or not.
 %    \begin{macrocode}
-\newif\ifInStr@mlpr@                           \InStr@mlpr@false
+\newif\ifInStr@mlpr@                  \InStr@mlpr@false
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\ifVisCharOccured@mlpr@}
 % This switch is used to keep track of whether visible characters have
 % occured on the current line.
 %    \begin{macrocode}
-\newif\ifVisCharOccured@mlpr@         \VisCharOccured@mlpr@false
+\newif\ifVisCharOccured@mlpr@\VisCharOccured@mlpr@false
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\ifWithinSectionTitle@mlpr@}
+% \begin{macro}{\ifInSecTitle@mlpr@}
 % This switch determines whether we're inside a section title or not.
 %    \begin{macrocode}
-\newif\ifWithinSectionTitle@mlpr@ \WithinSectionTitle@mlpr@false
+\newif\ifInSecTitle@mlpr@        \InSecTitle@mlpr@false
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\ifOutputBeingDropped@mlpr@}
+% \begin{macro}{\ifDroppingOutput@mlpr@}
 % This switch determines whether we're passed the first contiguous block of
 % line comments (function header).
 %    \begin{macrocode}
-\newif\ifOutputBeingDropped@mlpr@ \OutputBeingDropped@mlpr@false
+\newif\ifDroppingOutput@mlpr@\DroppingOutput@mlpr@false
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1658,16 +1664,15 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \section{Default font and color settings}
 %%
 % \paragraph{Default fonts (family, series, shape, size)}
-% We start by defining a user macro for easily setting a scaled version of
-% the Bera Mono font, a typewriter font family which, contrary to typewriter
-% \TeX{} fonts, conveniently comes with a boldface version.
-% \begin{macro}{\ttfamilymlpr}
+% \begin{macro}{\mlttfamily}
+% This user macro can be used for selecting a scaled version of the Bera Mono
+% font, a typewriter font family which, contrary to typewriter \TeX{} fonts,
+% conveniently comes with a boldface version.
 %    \begin{macrocode}
-\newcommand\ttfamilymlpr
+\newcommand\mlttfamily
 {%
   \def\fvm@Scale{.85}%
   \fontfamily{fvm}\selectfont%
-  \normalsize%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1677,7 +1682,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % This macro holds the default font specs for the ``basic style'' of our
 % listings.
 %    \begin{macrocode}
-\newcommand\basicFontSpecs@mlpr\ttfamilymlpr
+\newcommand\basicFontSpecs@mlpr{\mlttfamily\normalsize}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\keywordFontSpecs@mlpr}
@@ -2148,7 +2153,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \begin{macrocode}
 \newcommand\processSectionTitle@mlpr
 {%
-  \ifWithinSectionTitle@mlpr@%
+  \ifInSecTitle@mlpr@%
     \sectionTitleStyle@mlpr%
   \else
 %    \end{macrocode}
@@ -2163,7 +2168,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % \rkeyname{mlshowsectionrules} key has been set, we draw a horizontal rule.
 %    \begin{macrocode}
     \else % a section title is starting here
-      \global\WithinSectionTitle@mlpr@true%
+      \global\InSecTitle@mlpr@true%
       \resetEndKW@mlpr%
       \ifShowCellrules@mlpr@%
         \drawSectionRule@mlpr%
@@ -2217,7 +2222,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 %
 % We hook into a few of \lstpkg{}'s hooks to apply some necessary patches.
 % But first, we define a few helper macros.
-
+%
 % \paragraph{Helper macros related to hooks}
 % \begin{macro}{\localFontSize@mlpr}
 % This macro will be used to save the current font size.
@@ -2273,7 +2278,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % At this stage, the header has definitely ended.
 % If we've already begun dropping output, we don't do anything.
 %    \begin{macrocode}
-        \ifOutputBeingDropped@mlpr@%
+        \ifDroppingOutput@mlpr@%
 %    \end{macrocode}
 % Otherwise, we begin dropping output now and we set the switch accordingly.
 %    \begin{macrocode}
@@ -2281,7 +2286,7 @@ A = [ 1, 2, 3,... (I'm a comment)
           \lst@EnterMode\lst@Pmode{}%
           \lst@BeginDropOutput\lst@Pmode%
         \fi
-        \global\OutputBeingDropped@mlpr@true%
+        \global\DroppingOutput@mlpr@true%
 %    \end{macrocode}
 %    \begin{macrocode}
       \fi
@@ -2327,7 +2332,7 @@ A = [ 1, 2, 3,... (I'm a comment)
 % within a section title, and no visible character has yet occured on that
 % line.
 %    \begin{macrocode}
-  \global\WithinSectionTitle@mlpr@false%
+  \global\InSecTitle@mlpr@false%
   \global\VisCharOccured@mlpr@false%
 }
 %    \end{macrocode}
@@ -2398,7 +2403,10 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\@ddedToOutput@mlpr}
-% TODO
+% The |\addedToOutput@mlpr| macro is let to this one under certain
+% conditions (more details follow).
+% If the \rkeyname{mlonlyheader} is set, we begin dropping output as soon as
+% we detect that the first contiguous block of line comments has been passed.
 %    \begin{macrocode}
 \newcommand\@ddedToOutput@mlpr{\dropOutputAfterHeader@mlpr}
 %    \end{macrocode}
@@ -2417,7 +2425,10 @@ A = [ 1, 2, 3,... (I'm a comment)
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\@ddedToOutputOther@mlpr}
-% TODO
+% The |\addedToOutputOther@mlpr| macro is let to this one under certain
+% conditions (more details follow).
+% If the \rkeyname{mlonlyheader} is set, we begin dropping output as soon as
+% we detect that the first contiguous block of line comments has been passed.
 %    \begin{macrocode}
 \newcommand\@ddedToOutputOther@mlpr{\dropOutputAfterHeader@mlpr}
 %    \end{macrocode}
@@ -2447,7 +2458,7 @@ A = [ 1, 2, 3,... (I'm a comment)
     \renewcommand\addedToPostOutput@mlpr\@ddedToPostOutput@mlpr%
     \renewcommand\addedToOutput@mlpr\@ddedToOutput@mlpr%
     \renewcommand\addedToOutputOther@mlpr\@ddedToOutputOther@mlpr%
-    \OutputBeingDropped@mlpr@false%
+    \DroppingOutput@mlpr@false%
 \fi
 }
 \lst@AddToHook{PreInit}{\addedToPreInitHook@mlpr}
@@ -2474,8 +2485,8 @@ A = [ 1, 2, 3,... (I'm a comment)
     \resetClassdefKW@mlpr%
     \global\InStr@mlpr@false%
     \global\VisCharOccured@mlpr@false%
-    \global\WithinSectionTitle@mlpr@false%
-    \global\OutputBeingDropped@mlpr@false%
+    \global\InSecTitle@mlpr@false%
+    \global\DroppingOutput@mlpr@false%
   \fi
 }
 \lst@AddToHook{DeInit}{\addedToDeInitHook@mlpr}

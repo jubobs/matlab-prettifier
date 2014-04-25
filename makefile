@@ -21,7 +21,7 @@ $(PKGNAME).pdf: $(PKGNAME).sty \
 
 $(PKGNAME).sty: $(PKGNAME).ins \
                 $(PKGNAME).dtx
-	tex $(PKGNAME).ins
+	latex $(PKGNAME).ins
 
 $(PKGNAME).gls: $(PKGNAME).glo 
 	makeindex -s gglo.ist -o $(PKGNAME).gls $(PKGNAME).glo

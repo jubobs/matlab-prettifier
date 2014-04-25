@@ -29,10 +29,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
 \ProvidesPackage{matlab-prettifier}
-  [2014/04/24 v0.1a A package for prettyprinting Matlab source code]
-
-
-
+  [2014/04/24 v0.2 A package for prettyprinting Matlab source code]
 \newcommand\lstoptcheck@mlpr[1]
 {%
   \@ifpackagewith{listings}{#1}%
@@ -176,12 +173,12 @@
 \newcount\netBracketCount@mlpr
 \newcount\blkLvl@mlpr
 \newcount\blkLvlAtClassdef@mlpr
-\newif\ifClosingEndKW@mlpr@             \ClosingEndKW@mlpr@true
-\newif\ifInClassdef@mlpr@                 \InClassdef@mlpr@false
-\newif\ifInStr@mlpr@                           \InStr@mlpr@false
-\newif\ifVisCharOccured@mlpr@         \VisCharOccured@mlpr@false
-\newif\ifWithinSectionTitle@mlpr@ \WithinSectionTitle@mlpr@false
-\newif\ifOutputBeingDropped@mlpr@ \OutputBeingDropped@mlpr@false
+\newif\ifClosingEndKW@mlpr@    \ClosingEndKW@mlpr@true
+\newif\ifInClassdef@mlpr@        \InClassdef@mlpr@false
+\newif\ifInStr@mlpr@                  \InStr@mlpr@false
+\newif\ifVisCharOccured@mlpr@\VisCharOccured@mlpr@false
+\newif\ifInSecTitle@mlpr@        \InSecTitle@mlpr@false
+\newif\ifDroppingOutput@mlpr@\DroppingOutput@mlpr@false
 \newcommand\resetEndKW@mlpr
 {%
   \global\ClosingEndKW@mlpr@true%
@@ -194,13 +191,12 @@
   \global\blkLvlAtClassdef@mlpr=0%
 }
 %%
-\newcommand\ttfamilymlpr
+\newcommand\mlttfamily
 {%
   \def\fvm@Scale{.85}%
   \fontfamily{fvm}\selectfont%
-  \normalsize%
 }
-\newcommand\basicFontSpecs@mlpr\ttfamilymlpr
+\newcommand\basicFontSpecs@mlpr{\mlttfamily\normalsize}
 \newcommand\keywordFontSpecs@mlpr{}
 \newcommand\lastElemFontSpecs@mlpr{}
 \newcommand\stringFontSpecs@mlpr{}
@@ -374,13 +370,13 @@
 \newlength\sectionRuleOffset@mlpr
 \newcommand\processSectionTitle@mlpr
 {%
-  \ifWithinSectionTitle@mlpr@%
+  \ifInSecTitle@mlpr@%
     \sectionTitleStyle@mlpr%
   \else
     \ifVisCharOccured@mlpr@%
       \commentStyle@mlpr%
     \else % a section title is starting here
-      \global\WithinSectionTitle@mlpr@true%
+      \global\InSecTitle@mlpr@true%
       \resetEndKW@mlpr%
       \ifShowCellrules@mlpr@%
         \drawSectionRule@mlpr%
@@ -409,7 +405,6 @@
   \egroup%
 }
 \newcommand\processSharedVar@mlpr{\sharedvarStyle@mlpr}
-
 \newcommand\localFontSize@mlpr{}
 \newcommand\localBaselineskip@mlpr{}
 \newcommand\scaleInlineCode@mlpr
@@ -433,12 +428,12 @@
     \ifnum\lst@lineno>1%
       \lst@ifLmode%
       \else
-        \ifOutputBeingDropped@mlpr@%
+        \ifDroppingOutput@mlpr@%
         \else
           \lst@EnterMode\lst@Pmode{}%
           \lst@BeginDropOutput\lst@Pmode%
         \fi
-        \global\OutputBeingDropped@mlpr@true%
+        \global\DroppingOutput@mlpr@true%
       \fi
     \fi
   \fi
@@ -451,7 +446,7 @@
     \global\InStr@mlpr@false%
     \lst@LeaveMode%
   \fi
-  \global\WithinSectionTitle@mlpr@false%
+  \global\InSecTitle@mlpr@false%
   \global\VisCharOccured@mlpr@false%
 }
 \newcommand\addedToEndGroup@mlpr{}
@@ -481,7 +476,7 @@
     \renewcommand\addedToPostOutput@mlpr\@ddedToPostOutput@mlpr%
     \renewcommand\addedToOutput@mlpr\@ddedToOutput@mlpr%
     \renewcommand\addedToOutputOther@mlpr\@ddedToOutputOther@mlpr%
-    \OutputBeingDropped@mlpr@false%
+    \DroppingOutput@mlpr@false%
 \fi
 }
 \lst@AddToHook{PreInit}{\addedToPreInitHook@mlpr}
@@ -492,8 +487,8 @@
     \resetClassdefKW@mlpr%
     \global\InStr@mlpr@false%
     \global\VisCharOccured@mlpr@false%
-    \global\WithinSectionTitle@mlpr@false%
-    \global\OutputBeingDropped@mlpr@false%
+    \global\InSecTitle@mlpr@false%
+    \global\DroppingOutput@mlpr@false%
   \fi
 }
 \lst@AddToHook{DeInit}{\addedToDeInitHook@mlpr}
