@@ -18,7 +18,7 @@
 % \iffalse
 %<package>\NeedsTeXFormat{LaTeX2e}[2011/06/27]
 %<package>\ProvidesPackage{matlab-prettifier}
-%<package>  [2014/04/24 v0.2 A package for prettyprinting Matlab source code]
+%<package>  [2014/04/24 v0.1a A package for prettyprinting Matlab source code]
 %
 %<*driver>
 \documentclass[a4paper]{ltxdoc}
@@ -95,9 +95,12 @@
 %   Right brace   \}     Tilde         \~}
 %
 % \changes{v0.1}{2014/04/24}{Initial release.}
-% \changes{v0.2}{2014/04/25}{Rewrote automatic scaling of inline code; 
+% \changes{v0.1a}{2014/04/25}{
+%   Extensive refactoring of the code;
+%   rewrote automatic scaling of inline code; 
 %   implemented mlscaleinline key;
-%   implemented mlonlyheader.}
+%   implemented mlonlyheader.
+% }
 %
 % \GetFileInfo{matlab-prettifier.sty}
 %
@@ -280,7 +283,7 @@
 %     regardless of the context (function or class-definition keyword)
 %     in which it occurs.
 %   \itemm Undesirable literate replacements
-%     ("<=" by~\(\leq\), "delta" by~\(\Delta\)) are forced upon the user,
+%     ("<=" by~\(\leq\), "delta" by~\(\Delta\)) are forced upon the users,
 %     and cannot be easily prevented without breaking other literate
 %     replacements put in place for highlighting the last-element keyword.
 %   \itemm No highlighting of line-continuation token and associated comment
@@ -560,7 +563,7 @@ y = x(end:-1:1);
 %
 % To typeset a \matlab{} listing embedded in your |tex| file, simply enclose
 % it in an |lstlisting| environment, and load some style in the environment's
-% optional argument, using \lstpkg{}' \rkeyname{style} key.
+% optional argument, using \lstpkg{}' \keyname{style} key.
 %^^A
 % \begin{verbatim}
 %   \begin{lstlisting}[style=Matlab-editor]
@@ -630,7 +633,7 @@ y = x(end:-1:1);
 %   \snippetPlaceholder{initial-value}\end{verbatim}
 %^^A
 %
-% I deliberately chose a rather long-winded name for this user macro
+% I deliberately chose a rather long-winded name for this user-level macro
 % in order to minimise the risk of conflict with other macros.
 % Of course, for convenience, you can define a custom macro with a
 % shorter name for typesetting placeholders, e.g.~|\ph|:
@@ -643,7 +646,7 @@ y = x(end:-1:1);
 % within an \emph{escape to \LaTeX{}}; see subsection~4.14 of the \lstpkg{}
 % manual.
 % If you choose to define a single character for escaping to \LaTeX{} (via
-% \lstpkg{}'s \rkeyname{escapechar} key), I recommend you define
+% \lstpkg{}'s \keyname{escapechar} key), I recommend you define
 % either the double-quote character~(|"|)
 % or the backtick character~(\texttt{\`{}})
 % as escape character,
@@ -653,9 +656,6 @@ y = x(end:-1:1);
 % escape-to-\LaTeX{} character inside listings is perfectly allowed.
 % The following example illustrates how placeholders may be used to describe
 % the syntax of the \matlab{} while loop.
-% 
-% The following example shows the output on the left-hand side and the
-% corresponding input on the right-hand side.
 %^^A
 % \begin{lstsample}{}{\lstset{style=nonbnoframe}}
 %    \begin{lstlisting}[
@@ -702,7 +702,7 @@ y = x(end:-1:1);
 %
 % For instance, if you want to change the way \matlab{} keywords are typeset,
 % you should use the dedicated \mlpkg{} key called \rkeyname{mlkeywordstyle}
-% and eschew the \lstpkg{} key called \rkeyname{keywordstyle}.
+% and eschew the \lstpkg{} key called \keyname{keywordstyle}.
 % More generally, if \lstpkg{} provides a key called \meta{something} and
 % \mlpkg{} provides a key called |ml|\meta{something},
 % customization of your \matlab{} listings should be done with the latter, not
@@ -846,7 +846,7 @@ y = x(end:-1:1);
 %     The last token can be a one-parameter command,
 %     such as |\textbf| or |\underbar|.
 %
-%   \item[0.2,true]
+%   \item[0.1a,true]
 %     \rkeyname{mlscaleinline}|=|\meta{\alternative{true,false}}
 %     \syntaxor\rkeyname{mlscaleinline}
 %
@@ -855,7 +855,7 @@ y = x(end:-1:1);
 %     in other words, the font size of inline \matlab{} code is made to match
 %     the local font size.
 % 
-%   \item[0.2,false]
+%   \item[0.1a,false]
 %     \rkeyname{mlonlyheader}|=|\meta{\alternative{true,false}}
 %     \syntaxor\rkeyname{mlonlyheader}
 %
@@ -868,9 +868,7 @@ y = x(end:-1:1);
 % \section{Tips and tricks}
 %
 % Here is a list of recommendations^^A
-% ---some more opinionated than others---^^A
-% that, if followed, should make your experience with \mlpkg{} more pleasant.
-%
+% ---some more opinionated than others.
 % \paragraph{Stick with the \mllng{} language.}
 % Defining a \lstpkg{} language based on \mllng{} is discouraged,
 % for the following reason:
@@ -889,7 +887,7 @@ y = x(end:-1:1);
 %
 % \paragraph{Load the base language/style first; customize later.}
 % If you want to customize the appearance of your \matlab{} listings, 
-% you should use the \rkeyname{language} key or the \rkeyname{style} key
+% you should use \lstpkg{}' \keyname{language} key or \keyname{style} key
 % before using any other (\lstpkg{} or \mlpkg{}) key,
 % because loading a language or a style ``too late'' has the potential to
 % wipe out most of the current settings.
@@ -900,46 +898,33 @@ y = x(end:-1:1);
 %^^A
 % \begin{verbatim}
 %   \newcommand\phcond{\snippetPlaceholder{condition}}\end{verbatim}
-%^^A
+%
+% \paragraph{For more highlights, use \lstpkg{}' \keyname{emph} key}
+% If you want to highlight some identifiers in \matlab{} listings, use
+% \lstpkg{}'s \keyname{emph} key. Do \emph{not} use \lstpkg{}'
+% \keyname{keywords} or \keyname{morekeywords} keys.
 %
 % \paragraph{Don't copy \& paste!}
-% Do not encourage your readers to copy listings from the PDF and then paste
-% them in the \matlab{} editor.
+% Do not encourage your readers to copy listings from their PDF viewer and
+% then paste them in the \matlab{} editor.
 % Unfortunately, it simply is \emph{not} a reliable way of distributing code,
 % for at least three reasons:
-%
+%^^A
 % \begin{itemize}
 %   \item copying listings than span multiple pages of a PDF document is
-%     tedious and error-prone.
+%     tedious and error-prone;
 %   \item the results of copying content from a PDF for
 %     subsequent pasting vary widely from one PDF viewer to another;
 %   \item line breaks introduced by \lstpkg{} for typesetting a \matlab{}
 %     listing may translate to invalid \matlab{} syntax, if copied and pasted
-%     \emph{verbatim};
+%     \emph{verbatim}.
 % \end{itemize}
-%
-% \paragraph{In \beamercls{}, use the \opt{fragile} option.}
-% If you want to typeset listings in a \beamercls{} frame, remember that you
-% need to use the |fragile| option for that frame.
-%
-% \paragraph{Prefer Latin Modern to Computer Modern.}
-% If you are satisfied with Computer Modern fonts
-% (the default \TeX{} fonts), 
-% do yourself a favour and load the \pkg{lmodern} package,
-% which loads the very similar but much better Latin Modern fonts.
-% I also recommend you load \pkg{fontenc} with the \opt{T1} option,
-% if possible.
-%
-% \paragraph{Allowing for inline code in footnotes}
-% Using inline code in footnotes may generate an error,
-% because verbatim content is not normally allowed in footnotes.
-% One workaround is to load the \pkg{bigfoot} package.
 %
 % \paragraph{Typesetting a vertically centered tilde}
 % Unfortunately, not all fonts typeset the tilde character ("~") vertically
 % centered---as it is in the \matlab{} editor.
 % Be aware that, if you set a font for your \matlab{} listings
-% (via \lstpkg{}' \rkeyname{basicstyle} key) that is different from \mlpkg{}'s
+% (via \lstpkg{}' \keyname{basicstyle} key) that is different from \mlpkg{}'s
 % default (a scaled-down version of Bera Mono), tilde characters occuring in
 % your listings may get typeset vertically off-center.
 % Because a good, font-independent workaround seems out of reach,
@@ -947,21 +932,20 @@ y = x(end:-1:1);
 % where you will find a list of ad-hoc solutions.
 %
 % \paragraph{Avoid literate replacements like the plague!}
-% The \pkg{mcode} package predefines so-called literate replacements
+% The \pkg{mcode} package predefines so-called ``literate replacements''
 % (see subsection~5.4 in the
 % \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}),
-% e.g.\ for printing~\(\leq\) in place of each instance of~"<=".
-% I deliberately chose not to define any such literate replacements in the
-% \mlpkg{} package because I think that,
-% rather than improving code readability,
+% e.g.\ for printing~``\(\leq\)'' in place of each instance of~``"<="''.
+% I deliberately chose not to define any such literate replacements \mlpkg{}
+% because I think that, rather than improving code readability,
 % they have a potential to confuse and mislead your readers.
-% In particular, a newcomer to the programming language may not immediately
+% In particular, newcomers to the programming language may not immediately
 % realize that those symbols are not part of the language's syntax;
-% she may ascribe literal meaning to them and attempt to reproduce them in her
-% editor or IDE.
+% they may ascribe literal meaning to them and attempt to reproduce them in
+% their editor or IDE.
 % How counterproductive!
 % Of course, if you insist, you can still define your own literate
-% replacements (via \lstpkg{}' \rkeyname{literate} key).
+% replacements.
 %
 %
 % \part{Miscellaneous}
@@ -1009,14 +993,10 @@ y = x(end:-1:1);
 %    \end{lstlisting}
 % \end{lstsample}
 %
-% \paragraph{A line containing only \texttt{\%\%} fails to be highlighted
-% like a section title}
-% In \matlab{}, a line starting by blanks (spaces, tabs)
-% followed by ``\texttt{\%\%}'',
-% followed by more blanks,
-% followed by a newline
-% is a section title.
-% \mlpkg{} incorrectly highlights it in comment style.
+% \paragraph{Some section titles fail to be highlighted as such}
+% In \matlab{}, a line containing only ``\texttt{\%\%}'' and blank
+% characters is a section title.
+% \mlpkg{} incorrectly highlights such a line in comment style.
 %^^A
 % \begin{lstsample}{}{\lstset{style=nonbnoframe}}
 %    \begin{lstlisting}[
@@ -1031,7 +1011,7 @@ y = x(end:-1:1);
 %
 % \paragraph{\lstpkg{}' \keyname{keespaces} key messes up section-title rules}
 % If both \lstpkg{}' \keyname{keepspaces} and \mlpkg{}'s
-% \keyname{mlshowsectionrules} are set, section titles that start by some
+% \rkeyname{mlshowsectionrules} are set, section titles that start by some
 % white space get pushed to the right.
 %^^A
 % \begin{lstsample}{}{\lstset{style=nonbnoframe}}
@@ -1069,7 +1049,7 @@ y = x(end:-1:1);
 % The development version of \mlpkg{} is currently hosted on Bitbucket at
 % \href{http://bitbucket.org/Jubobs/matlab-prettifier/}
 %   {Jubobs/matlab-prettifier}.
-% If you find a bug in \mlpkg{} that this manual does not mention,
+% If you find an issue in \mlpkg{} that this manual does not mention,
 % if you would like to see a feature implemented in the package,
 % or if you can think of ways in which the \mlpkg{} documentation could be
 % improved, please add an entry to the Bitbucket repository's issue tracker;
@@ -1095,6 +1075,8 @@ y = x(end:-1:1);
 % encouragements, and suggestions.
 % Thanks in particular to David Carlisle, Marco Daniel,
 % Enrico Gregorio (egreg), Harish Kumar, and Heiko Oberdiek.
+% Thanks also to the good people at \href{http://www.ctan.org}{CTAN}
+% for hosting the package.
 %
 %
 % \part{Implementation}
@@ -1156,7 +1138,7 @@ y = x(end:-1:1);
 % \section{Required packages}
 % 
 % The \mlpkg{} package require three packages without any package option:
-% the \pkg{textcomp} package, in order to use \lstpkg{}' \rkeyname{upquote}
+% the \pkg{textcomp} package, in order to use \lstpkg{}' \keyname{upquote}
 % key;
 % the \pkg{xcolor} package, in order to color our \matlab{} code;
 % and, of course, the \lstpkg{} package.
@@ -1180,8 +1162,8 @@ y = x(end:-1:1);
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\languageNormedDefd@mlpr}
-%   However, because \lstpkg{} ``normalises'' language names internally,
-%   we will also need to define a macro that expands to the normalised name of
+%   However, because \lstpkg{} ``normalizes'' language names internally,
+%   we will also need to define a macro that expands to the normalized name of
 %   the new language.
 %    \begin{macrocode}
 \expandafter\lst@NormedDef\expandafter\languageNormedDefd@mlpr%
@@ -1225,12 +1207,8 @@ y = x(end:-1:1);
 % ---which are omitted by the "iskeyword" function.
 % Because different \matlab{} keywords affect the context in different ways,
 % we use several classes of \pkg{listings} keywords to handle them.
-% For precaution, we use relatively large class numbers to allow the user to
-% define her own keywords, in addition to \matlab{}'s,
-% should she wish to do so.
 %
-% The following keywords open a block that has nothing to do with class
-% definition. 
+% The following keywords open a block unrelated to class definition. 
 %    \begin{macrocode}
   morekeywords=[1]%
   {% 
@@ -1322,7 +1300,7 @@ y = x(end:-1:1);
   moredelim=**[il][\processDotDotDot@mlpr]{...},
 %    \end{macrocode}
 % Section titles, as special comments that get highlighted in a style
-% different to that of regular comments, must also be handled separately.
+% different to that of regular comments, must also be treated separately.
 %    \begin{macrocode}
   moredelim=[l][\processSectionTitle@mlpr]{\%\%\ },
 %    \end{macrocode}
@@ -1336,8 +1314,7 @@ y = x(end:-1:1);
 %
 % \paragraph{Required \lstpkg{} aspects}
 % We've reached the end of the definition of \mllng{}.
-% We only need to specify the three \lstpkg{} aspects required for our
-% definition of \mllng{}.
+% We only need to specify the required \lstpkg{} ``aspects''.
 %    \begin{macrocode}
 }[
   keywords,
@@ -1354,19 +1331,19 @@ y = x(end:-1:1);
 % \paragraph{Counters}
 % \begin{macro}{\netBracketCount@mlpr}
 % This counter is used to keep a net running count of opening and closing
-% brackets (roughly speaking).
-% When an opening bracket (be it round, square or curly) is encountered,
+% brackets---roughly speaking.
+% When an opening bracket---be it round, square or curly---is encountered,
 % the counter is incremented;
 % conversely, when a closing bracket is encountered, the counter is
 % decremented.
 % I write ``roughly speaking'', because that counter gets reset on some
-% occasions (more details follow).
+% occasions; more details follow.
 %    \begin{macrocode}
 \newcount\netBracketCount@mlpr
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\blkLvl@mlpr}
-% The following counter is used to keep track of the block nesting level.
+% This counter counter is used to keep track of the block nesting level.
 %    \begin{macrocode}
 \newcount\blkLvl@mlpr
 %    \end{macrocode}
@@ -1388,7 +1365,7 @@ y = x(end:-1:1);
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\ifInClassdef@mlpr@}
-% This macro determines whether we're within a class-definition block or not.
+% This switch determines whether we're within a class-definition block or not.
 %    \begin{macrocode}
 \newif\ifInClassdef@mlpr@        \InClassdef@mlpr@false
 %    \end{macrocode}
@@ -1463,57 +1440,57 @@ y = x(end:-1:1);
 % a bracket is encountered.
 %
 % \begin{macro}{\MoreSelectCharTable@mlpr}
-% This macro, which is passed to \lstpkg{}' \rkeyname{MoreSelectCharTable} key
+% This macro, which is passed to \lstpkg{}' \keyname{MoreSelectCharTable} key
 % in the definition of \mllng{}, allows us to dictate what happens when an
-% opening of a closing bracket is encountered.
+% opening or a closing bracket is encountered.
 %    \begin{macrocode}
 \newcommand\MoreSelectCharTable@mlpr
 {%
 %    \end{macrocode}
 %
 % \begin{macro}{\roundBktOp@mlpr}
-% In this macro is stored the definition of ``|(|'' from the default character
-% table.
+% We store the original definition of ``|(|'' from the default character
+% table in a dedicated macro and modify the behavior of that character.
 %    \begin{macrocode}
   \processOpenBracket@mlpr{`(}{\roundBktOp@mlpr}%
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\squareBktOp@mlpr}
-% In this macro is stored the definition of ``|[|'' from the default character
-% table.
+% We store the original definition of ``|[|'' from the default character
+% table in a dedicated macro and modify the behavior of that character.
 %    \begin{macrocode}
   \processOpenBracket@mlpr{`[}{\squareBktOp@mlpr}%
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\curlyBktOp@mlpr}
-% In this macro is stored the definition of ``|{|'' from the default character
-% table.
+% We store the original definition of ``|{|'' from the default character
+% table in a dedicated macro and modify the behavior of that character.
 %    \begin{macrocode}
   \processOpenBracket@mlpr{`\{}{\curlyBktOp@mlpr}%
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\roundBktCl@mlpr}
-% In this macro is stored the definition of ``|)|'' from the default character
-% table.
+% We store the original definition of ``|)|'' from the default character
+% table in a dedicated macro and modify the behavior of that character.
 %    \begin{macrocode}
   \processCloseBracket@mlpr{`)}{\roundBktCl@mlpr}%
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\squareBktCl@mlpr}
-% In this macro is stored the definition of ``|]|'' from the default character
-% table.
+% We store the original definition of ``|]|'' from the default character
+% table in a dedicated macro and modify the behavior of that character.
 %    \begin{macrocode}
   \processCloseBracket@mlpr{`]}{\squareBktCl@mlpr}%
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\curlyBktCl@mlpr}
-% In this macro is stored the definition of ``|}|'' from the default character
-% table.
+% We store the original definition of ``|}|'' from the default character
+% table in a dedicated macro and modify the behavior of that character.
 %    \begin{macrocode}
   \processCloseBracket@mlpr{`\}}{\curlyBktCl@mlpr}%
 %    \end{macrocode}
@@ -1525,7 +1502,7 @@ y = x(end:-1:1);
 % \end{macro}
 %
 % \begin{macro}{\processOpenBracket@mlpr}
-% This macro is used to ``hook into'' opening bracket characters and update
+% This macro is used to ``hook into'' opening-bracket characters and update
 % state variables every time such a character is encountered in \lstpkg{}'
 % ``processing mode''.
 %    \begin{macrocode}
@@ -1544,7 +1521,7 @@ y = x(end:-1:1);
 % \end{macro}
 %
 % \begin{macro}{\processCloseBracket@mlpr}
-% This macro is used to ``hook into'' closing bracket characters and update
+% This macro is used to ``hook into'' closing-bracket characters and update
 % state variables every time such a character is encountered in \lstpkg{}'
 % ``processing mode''.
 %    \begin{macrocode}
@@ -1575,7 +1552,7 @@ y = x(end:-1:1);
 %
 % \begin{macro}{\processOpRegKW@mlpr}
 % This macro updates state variables every time an opening keyword is
-% processed.
+% processed, and applies keyword style.
 %    \begin{macrocode}
 \newcommand\processOpRegKW@mlpr
 {%
@@ -1588,7 +1565,7 @@ y = x(end:-1:1);
 %
 % \begin{macro}{\processMidKW@mlpr}
 % This macro updates state variables every time a ``middle'' keyword is
-% processed.
+% processed, and applies keyword style.
 %    \begin{macrocode}
 \newcommand\processMidKW@mlpr
 {%
@@ -1607,7 +1584,7 @@ y = x(end:-1:1);
 % \end{macro}
 % \begin{macro}{\processClassdefKW@mlpr}
 % This macro updates state variables every time the "classdef" keyword is
-% processed.
+% processed, and applies keyword style.
 %    \begin{macrocode}
 \newcommand\processClassdefKW@mlpr
 {%
@@ -1621,7 +1598,8 @@ y = x(end:-1:1);
 % \end{macro}
 % \begin{macro}{\processMidClassdefKW@mlpr}
 % This macro updates state variables every time one of the four keywords
-% that occur within a class-definition block is processed.
+% that only occur within a class-definition block is processed, and applies
+% the appropriate style.
 %    \begin{macrocode}
 \newcommand\processMidClassdefKW@mlpr
 {%
@@ -1639,7 +1617,7 @@ y = x(end:-1:1);
 % \end{macro}
 % \begin{macro}{\processEndKW@mlpr}
 % This macro updates state variables every time the |end| keyword is
-% processed.
+% processed, and applies the appropriate style.
 %    \begin{macrocode}
 \newcommand\processEndKW@mlpr
 {%
@@ -1664,8 +1642,8 @@ y = x(end:-1:1);
 %
 % \paragraph{Processing of strings}
 % \begin{macro}{\processString@mlpr}
-% Because we've just entered a string, we set the corresponding switch and
-% apply string style.
+% This macro records that a string has just started by setting the appropriate
+% switch, and applies string style.
 %    \begin{macrocode}
 \newcommand\processString@mlpr
 {%
@@ -1680,7 +1658,7 @@ y = x(end:-1:1);
 % This macro typesets the line-continuation token in the style of our
 % \matlab{} keywords,
 % tells \lstpkg{} that the current mode ends at the end of the current line,
-% and applies our comment style to the rest of the current line.
+% and applies comment style to the rest of the current line.
 %    \begin{macrocode}
 \newcommand\processDotDotDot@mlpr
 {%
@@ -1783,8 +1761,8 @@ y = x(end:-1:1);
 %
 % \section{Hooking into \lstpkg{}' hooks}
 %
-% We hook into a few of \lstpkg{}'s hooks to apply some necessary patches.
-% But first, we define a few helper macros.
+% We apply some necessary patches in a a number of \lstpkg{}'s hooks;
+% but first, we define a few helper macros.
 %
 % \paragraph{Helper macros related to hooks}
 % \begin{macro}{\localFontSize@mlpr}
@@ -1801,7 +1779,7 @@ y = x(end:-1:1);
 % \end{macro}
 % \begin{macro}{\scaleInlineCode@mlpr}
 % This helper macro is for setting the font size of inline code to the local
-% font size (only if the \keyname{mlscaleinline} key is set).
+% font size (only if the \rkeyname{mlscaleinline} key is set).
 %    \begin{macrocode}
 \newcommand\scaleInlineCode@mlpr
 {%
@@ -1940,7 +1918,7 @@ y = x(end:-1:1);
 % The |\addedToPostOutput@mlpr| macro is let to this one under certain
 % conditions (more details follow).
 % If the last processed character was not white space
-% (this check is necessary if \lstpkg{}' \rkeyname{keepspaces} key is set),
+% (this check is necessary if \lstpkg{}' \keyname{keepspaces} key is set),
 % we set the relevant switch.
 %    \begin{macrocode}
 \newcommand\@ddedToPostOutput@mlpr
@@ -2064,7 +2042,7 @@ y = x(end:-1:1);
 %
 % We extend \lstpkg{}' key-value interface by defining several additional
 % keys, which we will use to define three \lstpkg{} styles, and which will
-% allow users to customize the style of their \matlab{} listings,
+% allow the user to customize the style of their \matlab{} listings,
 % should they which to do so.
 % All \mlpkg{} keys are prefixed by~``|ml|'', so that the user can easily
 % distinguish them from ``native'' \lstpkg{} keys.
@@ -2270,7 +2248,7 @@ y = x(end:-1:1);
 % \begin{lstkey}{mlscaleinline}
 % \begin{macro}{\ifScaleInline@mlpr@}
 %   This key determines whether the font size of inline \matlab{} code should
-%   match the local font size of ``normal'' text.
+%   match the local font size.
 %    \begin{macrocode}
 \lst@Key{mlscaleinline}{true}[t]%
   {\lstKV@SetIf{#1}\ifScaleInline@mlpr@}
@@ -2282,7 +2260,7 @@ y = x(end:-1:1);
 % \begin{lstkey}{mlonlyheader}
 % \begin{macro}{\ifonlyheader@mlpr@}
 %   This key determines whether only the signature and header of the \matlab{}
-%   function header gets printed.
+%   function header get printed.
 %    \begin{macrocode}
 \lst@Key{mlonlyheader}{false}[t]%
   {\lstKV@SetIf{#1}\ifonlyheader@mlpr@}
@@ -2291,12 +2269,12 @@ y = x(end:-1:1);
 % \end{lstkey}
 %
 %
-% \section{User macros}
+% \section{User-level macros}
 %
 % \begin{macro}{\mlttfamily}
-% This user macro can be used for selecting a scaled version of the Bera Mono
-% font, a typewriter font family which, contrary to typewriter \TeX{} fonts,
-% conveniently comes with a boldface version.
+% This user-level macro can be used for selecting a scaled version of the
+% Bera Mono font, a typewriter font family which, contrary to typewriter
+% \TeX{} fonts, conveniently comes with a boldface version.
 %    \begin{macrocode}
 \newcommand\mlttfamily
 {%
@@ -2308,7 +2286,7 @@ y = x(end:-1:1);
 %
 % \paragraph{Code-snippet placeholders}
 % \begin{macro}{\snippetPlaceholder}
-% This user macro can be used to typeset placeholders in code snippets.
+% This user-level macro can be used to typeset placeholders in code snippets.
 %    \begin{macrocode}
 \newcommand\snippetPlaceholder[1]
 {%
@@ -2329,7 +2307,7 @@ y = x(end:-1:1);
 % \end{macro}
 %
 % 
-% \section{Other helper macros for styles}
+% \section{Other helper macros}
 %
 %    \begin{macrocode}
 \newcommand\phDelimStyle@mlpr{\rmfamily\upshape}
@@ -2373,7 +2351,7 @@ y = x(end:-1:1);
 % We now define three \lstpkg{} styles for \matlab{} listings.
 %
 % \paragraph{Base style}
-% This style is used internally to define the three ``user'' styles.
+% This style is used internally to define the three user-level styles.
 % It's not meant to be used outside this package file.
 %    \begin{macrocode}
 \lstdefinestyle{MatlabBaseStyle@mlpr}
