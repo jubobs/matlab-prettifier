@@ -1,13 +1,13 @@
-Matlab-prettifier package
+matlab-prettifier package
 
 Copyright 2014--     Julien Cretel
 
 Released under the LaTeX Project Public License 1.3 or later
 
-Built on top of the listings package, the matlab-prettifier package allows you
-to effortlessly prettyprint Matlab source code in documents typeset with LATEX
-& friends. Three predefined styles, one of which closely mimicks that of the
-Matlab editor, are available and can be invoked by listings macros and
-environments in conjunction with (most) options provided by the listings
-package. Fine-tuning of the output is possible via a key-value interface
-extending that of listings.
+Built on top of the listings package, the matlab-prettifier package allows
+you to effortlessly prettyprint Matlab source code in documents typeset with
+LaTeX & friends. Three predefined styles, one of which closely mimicks that
+of the Matlab editor, are available and can be invoked by listings macros
+and environments in conjunction with (most) options provided by the listings
+package. The appearance of your Matlab listings can be further tweaked via a
+key-value interface extending that of listings’.

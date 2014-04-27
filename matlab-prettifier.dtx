@@ -16,9 +16,11 @@
 % \fi
 %
 % \iffalse
-%<package>\NeedsTeXFormat{LaTeX2e}[2011/06/27]
-%<package>\ProvidesPackage{matlab-prettifier}
-%<package>  [2014/04/24 v0.1a A package for prettyprinting Matlab source code]
+%<*package>
+\NeedsTeXFormat{LaTeX2e}[2011/06/27]
+\ProvidesPackage{matlab-prettifier}
+  [2014/04/27 v0.1a A package for prettyprinting Matlab source code]
+%</package>
 %
 %<*driver>
 \documentclass[a4paper]{ltxdoc}
@@ -47,7 +49,7 @@
   numbers = none,
 }
 \lstMakeShortInline"
-\let\ph\snippetPlaceholder
+\newcommand\ph\snippetPlaceholder
 \newcommand*{\pkg}[1]{\textsf{#1}}
 \newcommand*{\opt}[1]{\texttt{#1}}
 \newcommand*{\lststy}[1]{\texttt{#1}}
@@ -172,8 +174,9 @@
 %   \LaTeX{} \& friends. Three predefined styles, one of which closely mimicks
 %   that of the \matlab{} editor, are available and can be invoked by
 %   \lstpkg{} macros and environments in conjunction with (most) options
-%   provided by the \lstpkg{} package. Fine-tuning of the output is possible
-%   via a key-value interface extending that of \lstpkg{}.
+%   provided by the \lstpkg{} package. The appearance of your \matlab{}
+%   listings can be further tweaked via a key-value interface extending that
+%   of \lstpkg{}'.
 % \end{abstract}
 %
 % \tableofcontents\newpage
@@ -350,7 +353,7 @@
 % Now let's assign the value of pi to variable a
 a = pi
 %{
- Now that a has the value of pi,
+ Now that a holds the value of pi,
  here is what we're going to do...
  blah blah blah
 %}
@@ -492,14 +495,14 @@ y = x(end:-1:1);
 %
 % \begin{itemize}
 %   \item a key-value interface extending that of the \lstpkg{} package,
-%   \item automatic scaling of inline code according to its surroundings,
-%   \item an option to only print the header of a \matlab{} function,
 %   \item manual highlighting of variables with shared scope
 %     (e.g.\ "myglobalvar"),
 %   \item manual highlighting of unquoted strings
 %     (e.g.\ ``on'' in ``"hold /*on*/"''),
 %   \item a macro for easily typesetting placeholders
-%     (e.g.\ \ph{initial-value}).
+%     (e.g.\ \ph{initial-value}),
+%   \item automatic scaling of inline code according to its surroundings,
+%   \item an option to only print the header of a \matlab{} function.
 % \end{itemize}
 % 
 %
@@ -608,7 +611,11 @@ y = x(end:-1:1);
 %   \lstMakeShortInline[style=Matlab-editor]"\end{verbatim}
 %^^A
 % and you would then be able to typeset this "break" keyword simply by writing
-% |"break"| in your |tex| file (but outside displayed listings, of course).
+%^^A
+% \begin{verbatim}
+%   "break"\end{verbatim}
+%^^A
+% in your |tex| file (but outside displayed listings, of course).
 % 
 % You should choose a character that does not otherwise occur in your
 % |tex| file, especially in the inline \matlab{} code itself,
@@ -622,31 +629,25 @@ y = x(end:-1:1);
 %
 % \subsection{Placeholders}
 %
-% The \mlpkg{} package defines a macro, called \rcmdname{\snippetPlaceholder},
-% for typesetting code-snippet placeholders.
-% Such placeholders are particularly useful for educational purposes,
-% e.g.\ to describe elements of \matlab{} syntax.
-% Here is an example: \ph{initial-value}.
-% In order to typeset that placeholder, you could use
+% Code-snippet placeholders, such as \ph{initial-value}, are particularly
+% useful for educational purposes, e.g.\ to describe the syntax of a
+% programming language to students.
+% The following macro allows you to typeset such placeholders, both
+% inside and outside listings:
 %^^A
-% \begin{verbatim}
-%   \snippetPlaceholder{initial-value}\end{verbatim}
-%^^A
+% \begin{syntax}
 %
-% I deliberately chose a rather long-winded name for this user-level macro
-% in order to minimise the risk of conflict with other macros.
-% Of course, for convenience, you can define a custom macro with a
-% shorter name for typesetting placeholders, e.g.~|\ph|:
-%^^A
-% \begin{verbatim}
-%   \let\ph\snippetPlaceholder\end{verbatim}
-%^^A
+%   \item[0.1] \rcmdname\snippetPlaceholder|{|\meta{placeholder content}|}|
 %
-% To use \rcmdname{\snippetPlaceholder} inside listings, you must invoke it
-% within an \emph{escape to \LaTeX{}}; see subsection~4.14 of the \lstpkg{}
-% manual.
+%     typesets a code-snippet placeholder.
+%     You can use this macro both inside and outside listings.
+%     When used inside listings, it must be invoked it within an
+%     \emph{escape to \LaTeX{}}; see subsection~4.14 of the \lstpkg{} manual.
+%
+% \end{syntax}
+%
 % If you choose to define a single character for escaping to \LaTeX{} (via
-% \lstpkg{}'s \keyname{escapechar} key), I recommend you define
+% \lstpkg{}' \keyname{escapechar} key), I recommend you define
 % either the double-quote character~(|"|)
 % or the backtick character~(\texttt{\`{}})
 % as escape character,
@@ -662,8 +663,8 @@ y = x(end:-1:1);
 %      style   = Matlab-editor,
 %      escapechar = `,
 %    ]
-%    while `\ph{condition}`
-%      if `\ph{something-bad-happens}`
+%    while `\snippetPlaceholder{condition}`
+%      if `\snippetPlaceholder{something-bad-happens}`
 %        break
 %      else
 %        % do something useful
@@ -671,8 +672,14 @@ y = x(end:-1:1);
 %    end
 %    \end{lstlisting}
 % \end{lstsample}
-%^^A
 %
+% I deliberately chose a rather long-winded name for this user-level macro
+% in order to minimise the risk of conflict with other macros.
+% Of course, for convenience, you can define a custom macro with a
+% shorter name for typesetting placeholders, e.g.~|\ph|:
+%^^A
+% \begin{verbatim}
+%   \newcommand\ph\snippetPlaceholder\end{verbatim}
 %
 %
 % \section{Advanced customization}
@@ -687,7 +694,7 @@ y = x(end:-1:1);
 % to help you distinguish them from ``native'' \lstpkg{} keys.
 % 
 %
-% \subsection{\lstpkg{} keys you should not use}
+% \subsection{Keys from the \lstpkg{} that you should not use}
 %
 % The great majority of keys provided by \lstpkg{} can be used in conjunction
 % with keys provided by \mlpkg{} without any detrimental side effects,
@@ -709,12 +716,41 @@ y = x(end:-1:1);
 % the former.
 %
 %
-% \subsection{Key-value interface}
+% \subsection{Changing the font}
+%
+% The \matlab{} editor displays some elements of \matlab{} syntax
+% (i.e.\ section titles) in boldface. Unfortunately, though, the font used by
+% \TeX{} by default does not come with a boldface typewriter font;
+% none of the \TeX{} fonts do, actually.
+% Therefore, I chose the Bera Mono font family^^A
+% ---which does provide a boldface typewriter font---^^A
+% as the default font for \mlpkg{}'s styles.
+% Bera Mono is very similar to the proprietary font (called Monospaced)
+% that the \matlab{} editor uses by default.
+%
+% However, if you're not happy with Bera Mono, you're welcome to select a
+% different font for your listings, using \lstpkg{}'
+% \rkeyname{basicstyle} key; 
+% see subsection~4.6 of the
+% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}
+% for more details.
+% In case you change the font and later want to revert to Bera Mono, you can
+% select the latter using the \rcmdname\mlttfamily{} macro:
+%^^A
+% \begin{syntax}
+%
+%   \item[0.1] \rcmdname\mlttfamily
+%
+%     selects a somewhat scaled-down version of the Bera Mono font.
+%
+% \end{syntax}
+%
+% \subsection{\mlpkg{}'s key-value interface}
 %
 % For each of the \mlpkg{} keys described below,
 % the value assigned to it in the \lststy{Matlab-editor} style is indicated
 % on the right-hand side.
-%
+%^^A
 % \begin{syntax}
 %
 %   \item[0.1,\color{blue}]
@@ -745,13 +781,13 @@ y = x(end:-1:1);
 %     \syntaxor\rkeyname{mloverride}
 %
 %     By default, in inline code, \mlpkg{} highlights the |end| keyword as
-%     as the closing keyword (\emph{not} as the last-element keyword)
+%     the closing keyword (\emph{not} as the last-element keyword)
 %     and highlights the four class-definition identifiers as \matlab{}
 %     functions (\emph{not} as keywords), like so:
 %     "end", "events", "enumeration", "methods", and "properties".
-%     This key allows you to overrides the current context, so that those
-%     five context-sensitive keywords be typeset in the style associated with
-%     the alternative context, like so:
+%     This key allows you to override the current context, so that those
+%     five context-sensitive keywords be typeset in the style of the
+%     alternative context, like so:
 %     \overrideEnd{},
 %     \overrideEvents{}, 
 %     \overrideEnumeration{},
@@ -815,7 +851,7 @@ y = x(end:-1:1);
 %     \rkeyname{mlmoresharedvars}|=|\meta{list of variables}
 %   \item[0.1]
 %     \rkeyname{mldeletesharedvars}|=|\meta{list of variables}
-%   \item[0.1,{\color[RGB]{000,163,163}}]
+%   \item[0.1,{\color[RGB]{0,163,163}}]
 %     \rkeyname{mlsharedvarstyle}|=|\meta{style}
 %
 %     The first three of these four keys allow you to define, add, or remove
@@ -859,8 +895,9 @@ y = x(end:-1:1);
 %     \rkeyname{mlonlyheader}|=|\meta{\alternative{true,false}}
 %     \syntaxor\rkeyname{mlonlyheader}
 %
-%     If this key is set, only the signature and header of the \matlab{}
-%     function gets printed.
+%     If this key is set, output is dropped after the first block of
+%     contiguous line comments, which normally corresponds to the function's
+%     header, if any.
 %
 % \end{syntax}
 %
@@ -901,7 +938,7 @@ y = x(end:-1:1);
 %
 % \paragraph{For more highlights, use \lstpkg{}' \keyname{emph} key}
 % If you want to highlight some identifiers in \matlab{} listings, use
-% \lstpkg{}'s \keyname{emph} key. Do \emph{not} use \lstpkg{}'
+% \lstpkg{}' \keyname{emph} key. Do \emph{not} use \lstpkg{}'
 % \keyname{keywords} or \keyname{morekeywords} keys.
 %
 % \paragraph{Don't copy \& paste!}
@@ -1149,8 +1186,6 @@ y = x(end:-1:1);
 %    \end{macrocode}
 %
 %
-%
-%
 % \section{Definition of the \mllng{} language}
 %
 % \paragraph{Language name}
@@ -1312,9 +1347,8 @@ y = x(end:-1:1);
   moredelim=[l][\syscomStyle@mlpr]!,
 %    \end{macrocode}
 %
-% \paragraph{Required \lstpkg{} aspects}
-% We've reached the end of the definition of \mllng{}.
-% We only need to specify the required \lstpkg{} ``aspects''.
+% \paragraph{Required \lstpkg{} aspects} 
+% We now only need to specify the required \lstpkg{} ``aspects''.
 %    \begin{macrocode}
 }[
   keywords,
@@ -1761,7 +1795,7 @@ y = x(end:-1:1);
 %
 % \section{Hooking into \lstpkg{}' hooks}
 %
-% We apply some necessary patches in a a number of \lstpkg{}'s hooks;
+% We apply some necessary patches in a a number of \lstpkg{}' hooks;
 % but first, we define a few helper macros.
 %
 % \paragraph{Helper macros related to hooks}
@@ -1798,7 +1832,8 @@ y = x(end:-1:1);
       \expandafter\def\expandafter\lst@basicstyle\expandafter%
       {%
         \lst@basicstyle%
-        \fontsize{\localFontSize@mlpr}{\localBaselineskip@mlpr}\selectfont%
+        \fontsize{\localFontSize@mlpr}{\localBaselineskip@mlpr}%
+        \selectfont%
       }%
     \fi
   \fi
@@ -2035,9 +2070,6 @@ y = x(end:-1:1);
 % \end{macro}
 %
 %
-%
-%
-%
 % \section{Key-value interface}
 %
 % We extend \lstpkg{}' key-value interface by defining several additional
@@ -2083,7 +2115,7 @@ y = x(end:-1:1);
 % \end{macro}
 % \end{lstkey}
 %
-% \paragraph{Quoted strings}
+% \paragraph{Strings}
 % \begin{lstkey}{mlstringstyle}
 % \begin{macro}{\stringStyle@mlpr}
 %   This key determines the style applied to \matlab{} (quoted and unquoted)
@@ -2216,7 +2248,7 @@ y = x(end:-1:1);
 % \end{lstkey}
 % \end{lstkey}
 %
-% \paragraph{Unquoted strings}
+% \paragraph{Delimiters for unquoted strings}
 % \begin{lstkey}{mlunquotedstringdelim}
 %   This key allows the user to define custom delimiters^^A
 %   ---which do not get printed in the output---^^A
@@ -2256,11 +2288,11 @@ y = x(end:-1:1);
 % \end{macro}
 % \end{lstkey}
 %
-% \paragraph{Printing only a \matlab{} function's signature and header}
+% \paragraph{Printing only a function's signature and header}
 % \begin{lstkey}{mlonlyheader}
 % \begin{macro}{\ifonlyheader@mlpr@}
-%   This key determines whether only the signature and header of the \matlab{}
-%   function header get printed.
+%   This key determines whether output is dropped after the first block of
+%   contiguous line comments.
 %    \begin{macrocode}
 \lst@Key{mlonlyheader}{false}[t]%
   {\lstKV@SetIf{#1}\ifonlyheader@mlpr@}
@@ -2329,7 +2361,8 @@ y = x(end:-1:1);
 % We define a (long) macro that expands (once) to the current font shape,
 % for comparison purposes.
 %    \begin{macrocode}
-  \expandafter\newcommand\expandafter\long@f@shape@mlpr\expandafter{\f@shape}%
+  \expandafter\newcommand\expandafter\long@f@shape@mlpr%
+    \expandafter{\f@shape}%
 %    \end{macrocode}
 % If the current font shape is either italic or slanted, we apply italic
 % correction.
@@ -2371,7 +2404,7 @@ y = x(end:-1:1);
 }
 %    \end{macrocode}
 %
-% \paragraph{Style of the \matlab{} editor}
+% \paragraph{Standard style}
 % Standard style of the \matlab{} editor.
 %    \begin{macrocode}
 \lstdefinestyle{Matlab-editor}
@@ -2405,7 +2438,7 @@ y = x(end:-1:1);
 %    \end{macrocode}
 %
 % \paragraph{Style of Pygments' MatlabLexer}
-% Style that closely mimicks that of Pygments's `MatlabLexer'.
+% Style that closely mimicks that of Pygments' `MatlabLexer'.
 %    \begin{macrocode}
 \lstdefinestyle{Matlab-Pyglike}
 {

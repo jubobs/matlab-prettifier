@@ -29,7 +29,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
 \ProvidesPackage{matlab-prettifier}
-  [2014/04/24 v0.1a A package for prettyprinting Matlab source code]
+  [2014/04/27 v0.1a A package for prettyprinting Matlab source code]
 %%
 %%
 \newcommand\lstoptcheck@mlpr[1]
@@ -292,7 +292,8 @@
       \expandafter\def\expandafter\lst@basicstyle\expandafter%
       {%
         \lst@basicstyle%
-        \fontsize{\localFontSize@mlpr}{\localBaselineskip@mlpr}\selectfont%
+        \fontsize{\localFontSize@mlpr}{\localBaselineskip@mlpr}%
+        \selectfont%
       }%
     \fi
   \fi
@@ -446,7 +447,8 @@
 \newcommand\phClDelim@mlpr{\textrangle}
 \newcommand\itcorr@mlpr
 {%
-  \expandafter\newcommand\expandafter\long@f@shape@mlpr\expandafter{\f@shape}%
+  \expandafter\newcommand\expandafter\long@f@shape@mlpr%
+    \expandafter{\f@shape}%
   \ifx\long@f@shape@mlpr\itdefault%
     \/%
   \else
