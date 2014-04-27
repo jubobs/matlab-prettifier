@@ -18,7 +18,7 @@
 % \iffalse
 %<package>\NeedsTeXFormat{LaTeX2e}[2011/06/27]
 %<package>\ProvidesPackage{matlab-prettifier}
-%<package>  [2014/04/27 v0.1a A package for prettyprinting Matlab source code]
+%<package>  [2014/04/27 v0.2 A package for prettyprinting Matlab source code]
 %
 %<*driver>
 \documentclass[a4paper]{ltxdoc}
@@ -59,7 +59,6 @@
 \newcommand*\trademark[1]{#1\textsuperscript{\textregistered}}
 \newcommand\mlpkg{\pkg{matlab-prettifier}}
 \newcommand\mllng{\texttt{Matlab-pretty}}
-\newcommand\rmllng{\texttt{\rstyle Matlab-pretty}}
 \newcommand*{\mlsty}[1]{\texttt{#1}}
 \newcommand\overrideEnd{\lstinline[mloverride]|end|}
 \newcommand\overrideEnumeration{\lstinline[mloverride]|enumeration|}
@@ -77,7 +76,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{642}
+% \CheckSum{648}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -96,7 +95,7 @@
 %   Right brace   \}     Tilde         \~}
 %
 % \changes{v0.1}{2014/04/24}{Initial release.}
-% \changes{v0.1a}{2014/04/25}{
+% \changes{v0.2}{2014/04/25}{
 %   Extensive refactoring of the code;
 %   rewrote automatic scaling of inline code; 
 %   implemented mlscaleinline key;
@@ -325,11 +324,11 @@
 % \section{Syntactic elements automatically highlighted by \mlpkg{}}
 % 
 % The \mlpkg{} package defines a \pkg{listings} \emph{language} called
-% \rmllng{}, which is designed to keep track of the context behind the scenes
+% \mllng{}, which is designed to keep track of the context behind the scenes
 % and, therefore, facilitates context-sensitive highlighting of various
 % elements of \matlab{} syntax.
-% That language is used as a basis for the definition of three \lstpkg{}
-% styles, one of which, called \mlsty{Matlab-editor}, is showcased below.
+% That language is used as a basis for three \lstpkg{} styles,
+% one of which, called \mlsty{Matlab-editor}, is showcased below.
 % 
 % \paragraph{Context-insensitive keywords}
 % "while", "for", "break", etc.
@@ -404,11 +403,10 @@ A = [ 1, 2, 3,... (second row defined on next line)
 % The package defines three \lstpkg{} \emph{styles} for \matlab{} code:
 % \mlsty{Matlab-editor}, \mlsty{Matlab-bw}, and
 % \mlsty{Matlab-Pyglike}.
-% Those styles differ in terms of color scheme, but all three have the
-% following effects on each listing that loads one of them:
-% a dark gray surrounding frame is drawn;
-% line numbers are printed in light gray to the left of the listing;
-% and automatic line-breaking is activated.
+% Those styles differ in terms of color scheme but, for convenience,
+% all three activate automatic line breaking;
+% for more defails about automatic line breaking, see subsection~4.10 in
+% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}.
 % 
 % Here is a comparison of the three styles defined by \mlpkg{}.
 %
@@ -558,7 +556,37 @@ y = x(end:-1:1);
 % options are passed to those two packages \emph{before} loading the \mlpkg{}
 % package.
 %
-% The \mlpkg{} package currently offers no package options.
+% The \mlpkg{} package currently offers four options.
+% The first two are inspired from the \pkg{mcode} package.
+% The last two are simply \lstpkg{} options that \mlpkg{} passes to \lstpkg{}
+% behind the scenes;
+% I chose to define those two options as \mlpkg{} options to save you
+% the hassle of loading them with \lstpkg{} separately,
+% should you wish to use them.
+%^^A
+% \begin{description}
+% \item[\opt{framed}]\leavevmode
+%
+%       Draws (by default) a dark gray frame around each listing that uses
+%       one of the three styles defined by \mlpkg{}.
+%
+% \item[\opt{numbered}]\leavevmode
+%
+%       Prints (by default) line numbers in light gray to the left of each
+%       listing that uses one of the three styles defined by \mlpkg{}.
+%
+% \item[\opt{draft}]\leavevmode
+%
+%       This is simply \lstpkg{}' \opt{draft} option.
+%       For more details, see subsection~2.2 of the
+%       \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}.
+%
+% \item[\opt{final}]\leavevmode
+%
+%       This is simply \lstpkg{}' \opt{final} option.
+%       For more details, see subsection~2.2 of the
+%       \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}.
+% \end{description}
 %
 %
 % \subsection{Displayed listings}
@@ -640,7 +668,7 @@ y = x(end:-1:1);
 %
 %     typesets a code-snippet placeholder.
 %     You can use this macro both inside and outside listings.
-%     When used inside listings, it must be invoked it within an
+%     When used inside listings, it must be invoked within an
 %     \emph{escape to \LaTeX{}}; see subsection~4.14 of the \lstpkg{} manual.
 %
 % \end{syntax}
@@ -719,29 +747,37 @@ y = x(end:-1:1);
 % \subsection{Changing the font}
 %
 % The \matlab{} editor displays some elements of \matlab{} syntax
-% (i.e.\ section titles) in boldface. Unfortunately, though, the font used by
-% \TeX{} by default does not come with a boldface typewriter font;
-% none of the \TeX{} fonts do, actually.
-% Therefore, I chose the Bera Mono font family^^A
+% (i.e.\ section titles) in boldface. Unfortunately, though, the font family
+% used by default by \TeX{} does not come with a boldface typewriter font;
+% none of the \TeX{} font families do, actually.
+% Therefore, I chose the Bera Mono^^A
 % ---which does provide a boldface typewriter font---^^A
-% as the default font for \mlpkg{}'s styles.
-% Bera Mono is very similar to the proprietary font (called Monospaced)
+% as the default font family for \mlpkg{}'s styles.
+% Bera Mono is very similar to the proprietary typeface (called Monospaced)
 % that the \matlab{} editor uses by default.
 %
-% However, if you're not happy with Bera Mono, you're welcome to select a
-% different font for your listings, using \lstpkg{}'
-% \rkeyname{basicstyle} key; 
-% see subsection~4.6 of the
+% Note that you need to load the \pkg{fontenc}~package with option~\opt{T1}
+% for Bera Mono to actually be used:
+%^^A
+% \begin{verbatim}
+%   \usepackage[T1]{fontenc}\end{verbatim}%
+%^^A
+% The \mlpkg{} package does not automatically do this, because I do not want
+% to force the use of that package and option upon you.
+%
+% If you're not happy with \mlpkg{}'s default font, you're welcome to select a
+% different font for your listings, using \lstpkg{}' \rkeyname{basicstyle}
+% key; see subsection~4.6 of the
 % \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}
 % for more details.
-% In case you change the font and later want to revert to Bera Mono, you can
-% select the latter using the \rcmdname\mlttfamily{} macro:
+% In case you change the font and later want to revert to \mlpkg{}'s default
+% font, you can select the latter using the \rcmdname\mlttfamily{} macro.
 %^^A
 % \begin{syntax}
 %
 %   \item[0.1] \rcmdname\mlttfamily
 %
-%     selects a somewhat scaled-down version of the Bera Mono font.
+%     selects the Bera Mono font (somewhat scaled down).
 %
 % \end{syntax}
 %
@@ -882,7 +918,7 @@ y = x(end:-1:1);
 %     The last token can be a one-parameter command,
 %     such as |\textbf| or |\underbar|.
 %
-%   \item[0.1a,true]
+%   \item[0.2,true]
 %     \rkeyname{mlscaleinline}|=|\meta{\alternative{true,false}}
 %     \syntaxor\rkeyname{mlscaleinline}
 %
@@ -891,7 +927,7 @@ y = x(end:-1:1);
 %     in other words, the font size of inline \matlab{} code is made to match
 %     the local font size.
 % 
-%   \item[0.1a,false]
+%   \item[0.2,false]
 %     \rkeyname{mlonlyheader}|=|\meta{\alternative{true,false}}
 %     \syntaxor\rkeyname{mlonlyheader}
 %
@@ -906,14 +942,14 @@ y = x(end:-1:1);
 %
 % Here is a list of recommendations^^A
 % ---some more opinionated than others.
-% \paragraph{Stick with the \rmllng{} language.}
-% Defining a \lstpkg{} language based on \rmllng{} is discouraged,
+% \paragraph{Stick with the \mllng{} language.}
+% Defining a \lstpkg{} language based on \mllng{} is discouraged,
 % for the following reason:
 % \mlpkg{} performs some necessary housekeeping tasks at the beginning and
 % end of each listing, but only under the condition that the name of the
-% language used by the listing be \rmllng{};
+% language used by the listing be \mllng{};
 % therefore, \matlab{} listings are unlikely to get correctly highlighted if
-% the language name differs from \rmllng{}.
+% the language name differs from \mllng{}.
 %
 % \paragraph{Define your own style.}
 % For maintainability reasons, if you're not completely satisfied with any of
@@ -1159,15 +1195,38 @@ y = x(end:-1:1);
 %
 % \section{Package options}
 %
-% TODO
+% \paragraph{Framed listings}
+% \begin{macro}{\ifframed@mlpr@}
+% This option draws a frame around each listing by default.
 %    \begin{macrocode}
 \newif\ifframed@mlpr@
 \DeclareOption{framed}{\framed@mlpr@true}
+%    \end{macrocode}
+% \end{macro}
+%
+% \paragraph{Numbered lines}
+% \begin{macro}{\ifnumbered@mlpr@}
+% This option prints line numbers to the left of each listing by default.
+%    \begin{macrocode}
 \newif\ifnumbered@mlpr@
 \DeclareOption{numbered}{\numbered@mlpr@true}
 %    \end{macrocode}
-% \mlpkg{} currently offers no package option; therefore, if the user
-% mistakenly specifies any option for the package, we discard that option
+% \end{macro}
+%
+% \paragraph{Draft}
+% This option is simply passed to \lstpkg{}.
+%    \begin{macrocode}
+\DeclareOption{draft}{\PassOptionsToPackage{\CurrentOption}{listings}}
+%    \end{macrocode}
+%
+% \paragraph{Final}
+% This option is simply passed to \lstpkg{}.
+%    \begin{macrocode}
+\DeclareOption{final}{\PassOptionsToPackage{\CurrentOption}{listings}}
+%    \end{macrocode}
+%
+% \paragraph{Discard undefined options}
+% We discard any other option passed to \mlpkg{} by the user
 % and issue a warning.
 %    \begin{macrocode}
 \DeclareOption*%
@@ -1175,6 +1234,9 @@ y = x(end:-1:1);
   \OptionNotUsed
   \PackageWarning{matlab-prettifier}{Unknown `\CurrentOption' option}
 }
+%    \end{macrocode}
+% \paragraph{Process options}
+%    \begin{macrocode}
 \ProcessOptions\relax
 %    \end{macrocode}
 %
@@ -1193,12 +1255,12 @@ y = x(end:-1:1);
 %    \end{macrocode}
 %
 %
-% \section{Definition of the \texorpdfstring{\rmllng}{\mllng} language}
+% \section{Definition of the \texorpdfstring{\mllng}{\mllng} language}
 %
 % \paragraph{Language name}
 % \begin{macro}{\language@mlpr}
 %   To avoid code duplication in this package file, we define a macro that
-% expands to the name of our new language, \rmllng{}.
+% expands to the name of our new language, \mllng{}.
 %    \begin{macrocode}
 \newcommand\language@mlpr{Matlab-pretty}
 %    \end{macrocode}
@@ -1482,7 +1544,7 @@ y = x(end:-1:1);
 %
 % \begin{macro}{\MoreSelectCharTable@mlpr}
 % This macro, which is passed to \lstpkg{}' \keyname{MoreSelectCharTable} key
-% in the definition of \rmllng{}, allows us to dictate what happens when an
+% in the definition of \mllng{}, allows us to dictate what happens when an
 % opening or a closing bracket is encountered.
 %    \begin{macrocode}
 \newcommand\MoreSelectCharTable@mlpr
@@ -2024,7 +2086,7 @@ y = x(end:-1:1);
 % Because the |\lst@AddToHook| affects hooks globally
 % (i.e.\ for all listings),
 % we must apply our patches only when required, i.e.\ 
-% in listings that use \rmllng{}, and not in others.
+% in listings that use \mllng{}, and not in others.
 % The \hookname{PreInit}, which is called at the very beginning of each
 % listing, is where we do that.
 % \begin{macro}{\addedToPreInitHook@mlpr}
@@ -2054,7 +2116,7 @@ y = x(end:-1:1);
 % for more details on this hook.)
 % In the \hookname{DeInit} hook, which is called at the very end of each
 % listing, we carry out some housekeeping tasks if the current listing uses
-% \rmllng{}.
+% \mllng{}.
 % \begin{macro}{\addedToDeInitHook@mlpr}
 % In this macro, which we add to \lstpkg{}' \hookname{DeInit} hook, we check
 % whether |\lst@language| and |\languageNormedDefd@mlpr| expand (once) to the
@@ -2089,7 +2151,7 @@ y = x(end:-1:1);
 % \paragraph{Keywords}
 % \begin{lstkey}{mlkeywordstyle}
 % \begin{macro}{\keywordStyle@mlpr}
-%   In the definition of \rmllng{}, we used several classes of \lstpkg{}
+%   In the definition of \mllng{}, we used several classes of \lstpkg{}
 %   keywords to handle the different \matlab{} keywords;
 %   here is a style key to ``rule them all''.
 %    \begin{macrocode}
@@ -2391,7 +2453,7 @@ y = x(end:-1:1);
 % We now define three \lstpkg{} styles for \matlab{} listings.
 %
 % \paragraph{Base style}
-% TODO
+%
 % This style is used internally to define the three user-level styles.
 % It's not meant to be used outside this package file.
 %    \begin{macrocode}
@@ -2409,16 +2471,14 @@ y = x(end:-1:1);
   mlonlyheader           = false,
 }
 \ifframed@mlpr@
-  \toks@=\expandafter{\the\toks@
-    frame=single,}
+  \toks@=\expandafter{\the\toks@ frame=single,}
 \fi
 \ifnumbered@mlpr@
-  \toks@=\expandafter{\the\toks@
-    numbers=left,}
+  \toks@=\expandafter{\the\toks@ numbers=left,}
 \fi
-\begingroup\edef\@tempa{\endgroup
+\begingroup\edef\x{\endgroup
   \noexpand\lstdefinestyle{MatlabBaseStyle@mlpr}{\the\toks@}
-}\@tempa
+}\x
 %    \end{macrocode}
 %
 % \paragraph{Standard style}

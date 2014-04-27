@@ -29,7 +29,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
 \ProvidesPackage{matlab-prettifier}
-  [2014/04/27 v0.1a A package for prettyprinting Matlab source code]
+  [2014/04/27 v0.2 A package for prettyprinting Matlab source code]
 \newcommand\lstoptcheck@mlpr[1]
 {%
   \@ifpackagewith{listings}{#1}%
@@ -50,6 +50,8 @@
 \DeclareOption{framed}{\framed@mlpr@true}
 \newif\ifnumbered@mlpr@
 \DeclareOption{numbered}{\numbered@mlpr@true}
+\DeclareOption{draft}{\PassOptionsToPackage{\CurrentOption}{listings}}
+\DeclareOption{final}{\PassOptionsToPackage{\CurrentOption}{listings}}
 \DeclareOption*%
 {%
   \OptionNotUsed
@@ -473,16 +475,14 @@
   mlonlyheader           = false,
 }
 \ifframed@mlpr@
-  \toks@=\expandafter{\the\toks@
-    frame=single,}
+  \toks@=\expandafter{\the\toks@ frame=single,}
 \fi
 \ifnumbered@mlpr@
-  \toks@=\expandafter{\the\toks@
-    numbers=left,}
+  \toks@=\expandafter{\the\toks@ numbers=left,}
 \fi
-\begingroup\edef\@tempa{\endgroup
+\begingroup\edef\x{\endgroup
   \noexpand\lstdefinestyle{MatlabBaseStyle@mlpr}{\the\toks@}
-}\@tempa
+}\x
 \lstdefinestyle{Matlab-editor}
 {
   style               = MatlabBaseStyle@mlpr,
