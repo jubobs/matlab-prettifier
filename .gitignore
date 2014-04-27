@@ -11,6 +11,7 @@
 *.m
 *.makefile.swp
 *.out
+*.swp
 *.tar.gz
 *.tmp
 *.toc

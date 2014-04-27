@@ -46,6 +46,10 @@
 \lstoptcheck@mlpr{noaspects}
 \lstoptcheck@mlpr{0.21}
 \lstoptcheck@mlpr{savemem}
+\newif\ifframed@mlpr@
+\DeclareOption{framed}{\framed@mlpr@true}
+\newif\ifnumbered@mlpr@
+\DeclareOption{numbered}{\numbered@mlpr@true}
 \DeclareOption*%
 {%
   \OptionNotUsed
@@ -455,7 +459,7 @@
     \fi
   \fi
 }
-\lstdefinestyle{MatlabBaseStyle@mlpr}
+\toks@=%
 {
   language               = \languageNormedDefd@mlpr,
   basicstyle             = \color{black}\mlttfamily\normalsize,
@@ -463,13 +467,22 @@
   showspaces             = false,
   showstringspaces       = false,
   upquote                = true,
-  frame                  = single,
-  numbers                = left,
   rulecolor              = \color{black!67},
   numberstyle            = \color{black!33},
   mlscaleinline          = true,
   mlonlyheader           = false,
 }
+\ifframed@mlpr@
+  \toks@=\expandafter{\the\toks@
+    frame=single,}
+\fi
+\ifnumbered@mlpr@
+  \toks@=\expandafter{\the\toks@
+    numbers=left,}
+\fi
+\begingroup\edef\@tempa{\endgroup
+  \noexpand\lstdefinestyle{MatlabBaseStyle@mlpr}{\the\toks@}
+}\@tempa
 \lstdefinestyle{Matlab-editor}
 {
   style               = MatlabBaseStyle@mlpr,

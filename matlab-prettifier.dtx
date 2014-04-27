@@ -30,7 +30,7 @@
 \usepackage{lmodern}
 \usepackage{xcolor}
 \usepackage{lstdoc}
-\usepackage{matlab-prettifier}
+\usepackage[framed,numbered]{matlab-prettifier}
 \usepackage{hyperref}
 \usepackage{cleveref}
 
@@ -77,7 +77,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{613}
+% \CheckSum{642}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -1159,6 +1159,13 @@ y = x(end:-1:1);
 %
 % \section{Package options}
 %
+% TODO
+%    \begin{macrocode}
+\newif\ifframed@mlpr@
+\DeclareOption{framed}{\framed@mlpr@true}
+\newif\ifnumbered@mlpr@
+\DeclareOption{numbered}{\numbered@mlpr@true}
+%    \end{macrocode}
 % \mlpkg{} currently offers no package option; therefore, if the user
 % mistakenly specifies any option for the package, we discard that option
 % and issue a warning.
@@ -2384,10 +2391,11 @@ y = x(end:-1:1);
 % We now define three \lstpkg{} styles for \matlab{} listings.
 %
 % \paragraph{Base style}
+% TODO
 % This style is used internally to define the three user-level styles.
 % It's not meant to be used outside this package file.
 %    \begin{macrocode}
-\lstdefinestyle{MatlabBaseStyle@mlpr}
+\toks@=%
 {
   language               = \languageNormedDefd@mlpr,
   basicstyle             = \color{black}\mlttfamily\normalsize,
@@ -2395,13 +2403,22 @@ y = x(end:-1:1);
   showspaces             = false,
   showstringspaces       = false,
   upquote                = true,
-  frame                  = single,
-  numbers                = left,
   rulecolor              = \color{black!67},
   numberstyle            = \color{black!33},
   mlscaleinline          = true,
   mlonlyheader           = false,
 }
+\ifframed@mlpr@
+  \toks@=\expandafter{\the\toks@
+    frame=single,}
+\fi
+\ifnumbered@mlpr@
+  \toks@=\expandafter{\the\toks@
+    numbers=left,}
+\fi
+\begingroup\edef\@tempa{\endgroup
+  \noexpand\lstdefinestyle{MatlabBaseStyle@mlpr}{\the\toks@}
+}\@tempa
 %    \end{macrocode}
 %
 % \paragraph{Standard style}
