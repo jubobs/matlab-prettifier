@@ -50,6 +50,7 @@
 \newcommand\ph\snippetPlaceholder
 \newcommand*{\pkg}[1]{\textsf{#1}}
 \newcommand*{\opt}[1]{\texttt{#1}}
+\newcommand\lstpkg{\pkg{listings}}
 \newcommand*{\lststy}[1]{\texttt{#1}}
 \newcommand*{\lstlng}[1]{\texttt{#1}}
 \newcommand\matlab{\textsc{Matlab}}
@@ -57,9 +58,9 @@
 \newcommand\mathworks{MathWorks}
 \newcommand*\trademark[1]{#1\textsuperscript{\textregistered}}
 \newcommand\mlpkg{\pkg{matlab-prettifier}}
-\newcommand\lstpkg{\pkg{listings}}
-\newcommand\beamercls{\pkg{beamer}}
 \newcommand\mllng{\texttt{Matlab-pretty}}
+\newcommand\rmllng{\texttt{\rstyle Matlab-pretty}}
+\newcommand*{\mlsty}[1]{\texttt{#1}}
 \newcommand\overrideEnd{\lstinline[mloverride]|end|}
 \newcommand\overrideEnumeration{\lstinline[mloverride]|enumeration|}
 \newcommand\overrideMethods{\lstinline[mloverride]|methods|}
@@ -221,7 +222,7 @@
 % ---such as those provided by syntax highlighting---^^A
 % play an important role for recognising patterns,
 % and students of a programming language are more likely to quickly and
-% effectively learn and recognise its syntax if they see it highlighted in a
+% effectively learn and recognize its syntax if they see it highlighted in a
 % consistent manner, whether it be in a text editor or in some course material
 % (lab handout, assignment paper, etc.).
 %
@@ -324,11 +325,11 @@
 % \section{Syntactic elements automatically highlighted by \mlpkg{}}
 % 
 % The \mlpkg{} package defines a \pkg{listings} \emph{language} called
-% \mllng{}, which is designed to keep track of the context behind the scenes
+% \rmllng{}, which is designed to keep track of the context behind the scenes
 % and, therefore, facilitates context-sensitive highlighting of various
 % elements of \matlab{} syntax.
 % That language is used as a basis for the definition of three \lstpkg{}
-% styles, one of which, called \lststy{Matlab-editor}, is showcased below.
+% styles, one of which, called \mlsty{Matlab-editor}, is showcased below.
 % 
 % \paragraph{Context-insensitive keywords}
 % "while", "for", "break", etc.
@@ -401,8 +402,8 @@ A = [ 1, 2, 3,... (second row defined on next line)
 % \section{Styles provided by \mlpkg{}}
 %
 % The package defines three \lstpkg{} \emph{styles} for \matlab{} code:
-% \lststy{Matlab-editor}, \lststy{Matlab-bw}, and
-% \lststy{Matlab-Pyglike}.
+% \mlsty{Matlab-editor}, \mlsty{Matlab-bw}, and
+% \mlsty{Matlab-Pyglike}.
 % Those styles differ in terms of color scheme, but all three have the
 % following effects on each listing that loads one of them:
 % a dark gray surrounding frame is drawn;
@@ -411,7 +412,7 @@ A = [ 1, 2, 3,... (second row defined on next line)
 % 
 % Here is a comparison of the three styles defined by \mlpkg{}.
 %
-% \paragraph{\lststy{Matlab-editor}}
+% \paragraph{\mlsty{Matlab-editor}}
 % This style mimicks the default style of the \matlab{} editor.
 % \iffalse
 %<*example>
@@ -435,7 +436,7 @@ y = x(end:-1:1);
 %</example>
 % \fi
 %
-% \paragraph{\lststy{Matlab-bw}}
+% \paragraph{\mlsty{Matlab-bw}}
 % This style is mainly for black \& white printing.
 % \iffalse
 %<*example>
@@ -459,7 +460,7 @@ y = x(end:-1:1);
 %</example>
 % \fi
 %
-% \paragraph{\lststy{Matlab-Pyglike}}
+% \paragraph{\mlsty{Matlab-Pyglike}}
 % The \pkg{minted}, \pkg{verbments}, and \pkg{pythontex} packages all use
 % \href{http://pygments.org}{Pygments} lexers for syntax highlighting of
 % listings. This \mlpkg{} style closely mimics that of the Pygments
@@ -515,7 +516,7 @@ y = x(end:-1:1);
 % distributions. It loads those three packages without any options.
 %
 %
-% \subsection{Installing \texorpdfstring{\mlpkg{}}{matlab-prettifier}}
+% \subsection{Installing \mlpkg{}}
 %
 % To install \mlpkg{} manually, run
 %^^A
@@ -653,6 +654,7 @@ y = x(end:-1:1);
 % ---although they may occur in \matlab{} string literals.
 % Note that using~|"| both as shorthand for inline code and as an
 % escape-to-\LaTeX{} character inside listings is perfectly allowed.
+% 
 % The following example illustrates how placeholders may be used to describe
 % the syntax of the \matlab{} while loop.
 %^^A
@@ -672,7 +674,7 @@ y = x(end:-1:1);
 % \end{lstsample}
 %
 % I deliberately chose a rather long-winded name for this user-level macro
-% in order to minimise the risk of conflict with other macros.
+% in order to minimize the risk of conflict with other macros.
 % Of course, for convenience, you can define a custom macro with a
 % shorter name for typesetting placeholders, e.g.~|\ph|:
 %^^A
@@ -689,7 +691,7 @@ y = x(end:-1:1);
 % defining several additional keys that allow you to customize the style of
 % your \matlab{} listings, should you wish to do so.
 % All the keys provided by \mlpkg{} are prefixed by ``|ml|'',
-% to help you distinguish them from ``native'' \lstpkg{} keys.
+% to help you distinguish them from native \lstpkg{} keys.
 % 
 %
 % \subsection{Keys from the \lstpkg{} that you should not use}
@@ -746,7 +748,7 @@ y = x(end:-1:1);
 % \subsection{\mlpkg{}'s key-value interface}
 %
 % For each of the \mlpkg{} keys described below,
-% the value assigned to it in the \lststy{Matlab-editor} style is indicated
+% the value assigned to it in the \mlsty{Matlab-editor} style is indicated
 % on the right-hand side.
 %^^A
 % \begin{syntax}
@@ -904,14 +906,14 @@ y = x(end:-1:1);
 %
 % Here is a list of recommendations^^A
 % ---some more opinionated than others.
-% \paragraph{Stick with the \mllng{} language.}
-% Defining a \lstpkg{} language based on \mllng{} is discouraged,
+% \paragraph{Stick with the \rmllng{} language.}
+% Defining a \lstpkg{} language based on \rmllng{} is discouraged,
 % for the following reason:
 % \mlpkg{} performs some necessary housekeeping tasks at the beginning and
 % end of each listing, but only under the condition that the name of the
-% language used by the listing be \mllng{};
+% language used by the listing be \rmllng{};
 % therefore, \matlab{} listings are unlikely to get correctly highlighted if
-% the language name differs from \mllng{}.
+% the language name differs from \rmllng{}.
 %
 % \paragraph{Define your own style.}
 % For maintainability reasons, if you're not completely satisfied with any of
@@ -1184,12 +1186,12 @@ y = x(end:-1:1);
 %    \end{macrocode}
 %
 %
-% \section{Definition of the \mllng{} language}
+% \section{Definition of the \texorpdfstring{\rmllng}{\mllng} language}
 %
 % \paragraph{Language name}
 % \begin{macro}{\language@mlpr}
 %   To avoid code duplication in this package file, we define a macro that
-% expands to the name of our new language, \mllng{}.
+% expands to the name of our new language, \rmllng{}.
 %    \begin{macrocode}
 \newcommand\language@mlpr{Matlab-pretty}
 %    \end{macrocode}
@@ -1442,7 +1444,7 @@ y = x(end:-1:1);
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\resetClassdefKW@mlpr}
-% This macro reinitialises state variables related to class definition.
+% This macro reinitializes state variables related to class definition.
 %    \begin{macrocode}
 \newcommand\resetClassdefKW@mlpr
 {%
@@ -1473,7 +1475,7 @@ y = x(end:-1:1);
 %
 % \begin{macro}{\MoreSelectCharTable@mlpr}
 % This macro, which is passed to \lstpkg{}' \keyname{MoreSelectCharTable} key
-% in the definition of \mllng{}, allows us to dictate what happens when an
+% in the definition of \rmllng{}, allows us to dictate what happens when an
 % opening or a closing bracket is encountered.
 %    \begin{macrocode}
 \newcommand\MoreSelectCharTable@mlpr
@@ -2015,7 +2017,7 @@ y = x(end:-1:1);
 % Because the |\lst@AddToHook| affects hooks globally
 % (i.e.\ for all listings),
 % we must apply our patches only when required, i.e.\ 
-% in listings that use \mllng{}, and not in others.
+% in listings that use \rmllng{}, and not in others.
 % The \hookname{PreInit}, which is called at the very beginning of each
 % listing, is where we do that.
 % \begin{macro}{\addedToPreInitHook@mlpr}
@@ -2045,7 +2047,7 @@ y = x(end:-1:1);
 % for more details on this hook.)
 % In the \hookname{DeInit} hook, which is called at the very end of each
 % listing, we carry out some housekeeping tasks if the current listing uses
-% \mllng{}.
+% \rmllng{}.
 % \begin{macro}{\addedToDeInitHook@mlpr}
 % In this macro, which we add to \lstpkg{}' \hookname{DeInit} hook, we check
 % whether |\lst@language| and |\languageNormedDefd@mlpr| expand (once) to the
@@ -2080,7 +2082,7 @@ y = x(end:-1:1);
 % \paragraph{Keywords}
 % \begin{lstkey}{mlkeywordstyle}
 % \begin{macro}{\keywordStyle@mlpr}
-%   In the definition of \mllng{}, we used several classes of \lstpkg{}
+%   In the definition of \rmllng{}, we used several classes of \lstpkg{}
 %   keywords to handle the different \matlab{} keywords;
 %   here is a style key to ``rule them all''.
 %    \begin{macrocode}
