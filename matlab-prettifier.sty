@@ -29,7 +29,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
 \ProvidesPackage{matlab-prettifier}
-  [2014/04/27 v0.2 A package for prettyprinting Matlab source code]
+  [2014/04/28 v0.2a A package for prettyprinting Matlab source code]
 \newcommand\lstoptcheck@mlpr[1]
 {%
   \@ifpackagewith{listings}{#1}%
@@ -480,9 +480,9 @@
 \ifnumbered@mlpr@
   \toks@=\expandafter{\the\toks@ numbers=left,}
 \fi
-\begingroup\edef\x{\endgroup
+\begingroup\edef\@tempa{\endgroup
   \noexpand\lstdefinestyle{MatlabBaseStyle@mlpr}{\the\toks@}
-}\x
+}\@tempa
 \lstdefinestyle{Matlab-editor}
 {
   style               = MatlabBaseStyle@mlpr,

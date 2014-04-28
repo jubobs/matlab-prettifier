@@ -18,7 +18,7 @@
 % \iffalse
 %<package>\NeedsTeXFormat{LaTeX2e}[2011/06/27]
 %<package>\ProvidesPackage{matlab-prettifier}
-%<package>  [2014/04/27 v0.2 A package for prettyprinting Matlab source code]
+%<package>  [2014/04/28 v0.2a A package for prettyprinting Matlab source code]
 %
 %<*driver>
 \documentclass[a4paper]{ltxdoc}
@@ -119,18 +119,19 @@
 %    }%^^A
 %  \expandafter\endgroup\x
 %
-% \DoNotIndex{\@empty,\@ifpackagewith,\@lst,\@namedef,\@ne}
+% \DoNotIndex{\@empty,\@ifpackagewith,\@lst,\@namedef,\@ne,\@tempa}
 % \DoNotIndex{\advance}
-% \DoNotIndex{\baselineskip,\bfseries,\bgroup}
+% \DoNotIndex{\baselineskip,\begingroup,\bfseries,\bgroup}
 % \DoNotIndex{\ClosingEndKW@mlpr@false,\ClosingEndKW@mlpr@true,^^A
 %   \color,\colorlet,\csname,\CurrentOption}
 % \DoNotIndex{\DeclareOption,\def,\definecolor,\dimexpr}
-% \DoNotIndex{\edef,\egroup,\else,\endcsname,\expandafter}
+% \DoNotIndex{\edef,\egroup,\else,\endcsname,\endgroup,\expandafter}
 % \DoNotIndex{\f@baselineskip,\f@shape,\f@size,\fi,\font,\fontsize,^^A
 %   \fontchardp,\fontcharht,\fontfamily,\fvm@Scale}
 % \DoNotIndex{\gdef,\global}
 % \DoNotIndex{\ifnum,\ifx,^^A
 %   \InClassdef@mlpr@false,\InClassdef@mlpr@true,^^A
+%   \InSecTitle@mlpr@false,\InSecTitle@mlpr@true,^^A
 %   \InStr@mlpr@false,\InStr@mlpr@true,^^A
 %   \itdefault,\itshape}
 % \DoNotIndex{\let,\lst@basicstyle,\lst@AddToHook,^^A
@@ -142,15 +143,15 @@
 %   \lstdefinelanguage,\lstdefinestyle,\lstKV@SetIf}
 % \DoNotIndex{\m@ne,\makebox}
 % \DoNotIndex{\newcommand,\newcount,\newif,\newlength,^^A,
-%   \VisCharOccured@mlpr@true,\VisCharOccured@mlpr@false,^^A
-%   \normalsize}
+%   \normalsize,\noexpand}
 % \DoNotIndex{\OptionNotUsed}
 % \DoNotIndex{\PackageError,\PackageWarning,\ProcessOptions}
 % \DoNotIndex{\raisebox,\relax,\renewcommand,\RequirePackage,\rule,\rmfamily}
 % \DoNotIndex{\selectfont,\setlength,\sldefault,\textlangle,\textrangle,^^A
 %   \ttfamily}
+% \DoNotIndex{\the,\toks@}
 % \DoNotIndex{\upshape}
-% \DoNotIndex{\InSecTitle@mlpr@false,\InSecTitle@mlpr@true}
+% \DoNotIndex{\VisCharOccured@mlpr@true,\VisCharOccured@mlpr@false}
 %
 % \title^^A
 % {^^A
@@ -1009,8 +1010,8 @@ y = x(end:-1:1);
 % (see subsection~5.4 in the
 % \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}),
 % e.g.\ for printing~``\(\leq\)'' in place of each instance of~``"<="''.
-% I deliberately chose not to define any such literate replacements \mlpkg{}
-% because I think that, rather than improving code readability,
+% I deliberately chose not to define any such literate replacements in
+% \mlpkg{} because I think that, rather than improving code readability,
 % they have a potential to confuse and mislead your readers.
 % In particular, newcomers to the programming language may not immediately
 % realize that those symbols are not part of the language's syntax;
@@ -1376,7 +1377,7 @@ y = x(end:-1:1);
   },
   keywordstyle=[5]\processMidClassdefKW@mlpr,
 %    \end{macrocode}
-% The |end| keyword has a very peculiar behaviour and deserves its own keyword
+% The |end| keyword has a very peculiar behavior and deserves its own keyword
 % class.
 %    \begin{macrocode}
   morekeywords=[6]{end},
@@ -2476,9 +2477,9 @@ y = x(end:-1:1);
 \ifnumbered@mlpr@
   \toks@=\expandafter{\the\toks@ numbers=left,}
 \fi
-\begingroup\edef\x{\endgroup
+\begingroup\edef\@tempa{\endgroup
   \noexpand\lstdefinestyle{MatlabBaseStyle@mlpr}{\the\toks@}
-}\x
+}\@tempa
 %    \end{macrocode}
 %
 % \paragraph{Standard style}
