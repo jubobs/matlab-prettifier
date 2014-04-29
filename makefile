@@ -44,4 +44,3 @@ cleanall: clean
 	$(RM) $(PKGNAME).pdf $(PKGNAME).zip
 
 .PHONY: all doc dist clean cleanall
-

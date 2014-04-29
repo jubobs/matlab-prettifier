@@ -748,23 +748,25 @@ y = x(end:-1:1);
 % \subsection{Changing the font}
 %
 % The \matlab{} editor displays some elements of \matlab{} syntax
-% (i.e.\ section titles) in boldface. Unfortunately, though, the font family
-% used by default by \TeX{} does not come with a boldface typewriter font;
-% none of the \TeX{} font families do, actually.
+% (section titles) in boldface.
+% Unfortunately, though, the font family used by default by \TeX{},
+% Computer Modern, does not come with a boldface typewriter font.
 % Therefore, I chose the Bera Mono^^A
 % ---which does provide a boldface typewriter font---^^A
 % as the default font family for \mlpkg{}'s styles.
-% Bera Mono is very similar to the proprietary typeface (called Monospaced)
-% that the \matlab{} editor uses by default.
+% I actually find Bera Mono more pleasing to the eye than the proprietary
+% typeface (called Monospaced) that the \matlab{} editor uses by default.
 %
 % Note that you need to load the \pkg{fontenc}~package with option~\opt{T1}
-% for Bera Mono to actually be used:
+% for Bera Mono to actually be used in your \matlab{} listings:
 %^^A
 % \begin{verbatim}
 %   \usepackage[T1]{fontenc}\end{verbatim}%
 %^^A
-% The \mlpkg{} package does not automatically do this, because I do not want
-% to force the use of that package and option upon you.
+% Otherwise, \TeX{} will issue a warning and use a different font instead.
+% The \mlpkg{} package does not automatically load the \pkg{fontenc} package
+% with option~\opt{T1} because I do not want to force the use of that package
+% and option upon you.
 %
 % If you're not happy with \mlpkg{}'s default font, you're welcome to select a
 % different font for your listings, using \lstpkg{}' \rkeyname{basicstyle}
@@ -1148,7 +1150,7 @@ y = x(end:-1:1);
 % \href{http://tex.stackexchange.com}{TeX.SX} users for their help,
 % encouragements, and suggestions.
 % Thanks in particular to David Carlisle, Marco Daniel,
-% Enrico Gregorio (egreg), Harish Kumar, and Heiko Oberdiek.
+% Enrico Gregorio (egreg), Harish Kumar, Heiko Oberdiek, and Robert Schlicht.
 % Thanks also to the good people at \href{http://www.ctan.org}{CTAN}
 % for hosting the package.
 %
@@ -1524,9 +1526,6 @@ y = x(end:-1:1);
 }
 %    \end{macrocode}
 % \end{macro}
-%
-%
-%
 %
 %
 % \section{Processing of syntactic elements}
