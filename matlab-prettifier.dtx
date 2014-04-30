@@ -170,7 +170,7 @@
 % \begin{abstract}
 %   Built on top of the \lstpkg{} package, the \mlpkg{} package allows you to
 %   effortlessly prettyprint \matlab{} source code in documents typeset with
-%   \LaTeX{} \& friends. Three predefined styles, one of which closely mimicks
+%   \LaTeX{} \& friends. Three predefined styles, one of which closely mimics
 %   that of the \matlab{} editor, are available and can be invoked by
 %   \lstpkg{} macros and environments in conjunction with (most) options
 %   provided by the \lstpkg{} package. The appearance of your \matlab{}
@@ -324,7 +324,7 @@
 %
 % \section{Syntactic elements automatically highlighted by \mlpkg{}}
 % 
-% The \mlpkg{} package defines a \pkg{listings} \emph{language} called
+% The \mlpkg{} package defines a \pkg{listings} language called
 % \mllng{}, which is designed to keep track of the context behind the scenes
 % and, therefore, facilitates context-sensitive highlighting of various
 % elements of \matlab{} syntax.
@@ -341,14 +341,23 @@
 % etc.
 % 
 % \paragraph{Quoted strings}
-% "'The sleeper must awaken.'"
+% \mbox{}
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}[numbers=none]
+'The sleeper must awaken.'
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
 %
 % \paragraph{To-end-of-line and block comments}
 % \mbox{}
 % \iffalse
 %<*example>
 % \fi
-\begin{lstlisting}[style=nonbnoframe]
+\begin{lstlisting}[numbers=none]
 % Now let's assign the value of pi to variable a
 a = pi
 %{
@@ -366,7 +375,7 @@ a = pi
 % \iffalse
 %<*example>
 % \fi
-\begin{lstlisting}[style=nonbnoframe]
+\begin{lstlisting}[numbers=none]
 A = [ 1, 2, 3,... (second row defined on next line)
       4, 5, 6];
 \end{lstlisting}
@@ -379,7 +388,7 @@ A = [ 1, 2, 3,... (second row defined on next line)
 % \iffalse
 %<*example>
 % \fi
-\begin{lstlisting}[style=nonbnoframe]
+\begin{lstlisting}[numbers=none]
 %% Variable initialization
 \end{lstlisting}
 % \iffalse
@@ -391,7 +400,7 @@ A = [ 1, 2, 3,... (second row defined on next line)
 % \iffalse
 %<*example>
 % \fi
-\begin{lstlisting}[style=nonbnoframe]
+\begin{lstlisting}[numbers=none]
 ! gzip sample.m
 \end{lstlisting}
 % \iffalse
@@ -412,7 +421,7 @@ A = [ 1, 2, 3,... (second row defined on next line)
 % Here is a comparison of the three styles defined by \mlpkg{}.
 %
 % \paragraph{\mlsty{Matlab-editor}}
-% This style mimicks the default style of the \matlab{} editor.
+% This style mimics the default style of the \matlab{} editor.
 % \iffalse
 %<*example>
 % \fi
@@ -517,12 +526,17 @@ y = x(end:-1:1);
 %
 % \subsection{Installing \mlpkg{}}
 %
-% To install \mlpkg{} manually, run
+% Since the package has been officially released on
+% \href{http://www.ctan.org/pkg/matlab-prettifier}{CTAN},
+% you should be able to install it directly through your package manager.
+%
+% However, if you need to install \mlpkg{} manually, you should run
 %^^A
 % \begin{verbatim}
 %   latex matlab-prettifier.ins\end{verbatim}
 %^^A
-% and copy \mlpkg{}.sty to a path where \LaTeX{} can find it.
+% and copy the file called |matlab-prettifier.sty| to a path
+% where \LaTeX{} (or your preferred typesetting engine) can find it.
 % To generate the documentation, run
 %^^A
 % \begin{verbatim}
@@ -552,7 +566,9 @@ y = x(end:-1:1);
 % \begin{verbatim}
 %   \usepackage{matlab-prettifier}\end{verbatim}
 %^^A
-% somewhere in your preamble. You may want to load the \lstpkg{} and
+% somewhere in your preamble.
+%
+% You may want to load the \lstpkg{} and
 % \pkg{xcolor} packages with some options; in that case, make sure those
 % options are passed to those two packages \emph{before} loading the \mlpkg{}
 % package.
@@ -621,14 +637,14 @@ y = x(end:-1:1);
 %
 % You may want to typeset fragments of \matlab{} code within the main text of
 % your document. For instance, you may want to typeset the "break" keyword in
-% a sentence, in order to explain it usage.
+% a sentence, in order to explain its usage.
 % The |\lstinline| macro can be used for typesetting such inline code.
 %^^A
 % \begin{verbatim}
 %   \lstinline[style=Matlab-style]!break!\end{verbatim}
 %^^A
 % Well, that's quite a mouthful for such a simple \matlab{} keyword!
-% Writing |\lstinline| for each instance of inline Matlab code in your
+% Writing |\lstinline| for each instance of inline \matlab{} code in your
 % document can rapidly become tedious.
 % Fortunately, \lstpkg{} allows its users to define a character as a shorthand
 % for inline code via the |\lstMakeShortInline| macro.
@@ -714,8 +730,8 @@ y = x(end:-1:1);
 % \section{Advanced customization}
 %
 % The \lstpkg{} package provides a large number of options accessible via a
-% nifty key-value interface, which is described in the excellent
-% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}.
+% nifty key-value interface, which is described in its excellent
+% \href{http://www.ctan.org/pkg/listings}{documentation}.
 % The \mlpkg{} package extends \lstpkg{}' key-value interface interface by
 % defining several additional keys that allow you to customize the style of
 % your \matlab{} listings, should you wish to do so.
@@ -745,7 +761,7 @@ y = x(end:-1:1);
 % the former.
 %
 %
-% \subsection{Changing the font}
+% \subsection{Changing the font of Matlab listings}
 %
 % The \matlab{} editor displays some elements of \matlab{} syntax
 % (section titles) in boldface.
@@ -769,12 +785,13 @@ y = x(end:-1:1);
 % and option upon you.
 %
 % If you're not happy with \mlpkg{}'s default font, you're welcome to select a
-% different font for your listings, using \lstpkg{}' \rkeyname{basicstyle}
+% different font for your listings, using \lstpkg{}' \keyname{basicstyle}
 % key; see subsection~4.6 of the
 % \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}
 % for more details.
 % In case you change the font and later want to revert to \mlpkg{}'s default
-% font, you can select the latter using the \rcmdname\mlttfamily{} macro.
+% font, you can select the latter by passing \rcmdname\mlttfamily{} to
+% \lstpkg{}' \keyname{basicstyle} key.
 %^^A
 % \begin{syntax}
 %
@@ -1133,15 +1150,6 @@ y = x(end:-1:1);
 % \href{mailto:jubobs.matlab.prettifier@gmail.com}
 %   {jubobs.matlab.prettifier@gmail.com}
 %
-% \makeatletter
-% \def\index@prologue{\part{Index}\markboth{Index}{Index}}
-% \makeatother
-% \StopEventually{^^A
-%   \clearpage^^A
-%   \PrintChanges^^A
-%   \setcounter{IndexColumns}{2}^^A
-%   \PrintIndex^^A
-% }
 %
 % \section{Acknowledgments}
 % Thanks to the developers of the \lstpkg{} package,
@@ -1153,6 +1161,17 @@ y = x(end:-1:1);
 % Enrico Gregorio (egreg), Harish Kumar, Heiko Oberdiek, and Robert Schlicht.
 % Thanks also to the good people at \href{http://www.ctan.org}{CTAN}
 % for hosting the package.
+%
+%
+% \makeatletter
+% \def\index@prologue{\part{Index}\markboth{Index}{Index}}
+% \makeatother
+% \StopEventually{^^A
+%   \clearpage^^A
+%   \PrintChanges^^A
+%   \setcounter{IndexColumns}{2}^^A
+%   \PrintIndex^^A
+% }
 %
 %
 % \part{Implementation}
@@ -1258,7 +1277,7 @@ y = x(end:-1:1);
 %    \end{macrocode}
 %
 %
-% \section{Definition of the \texorpdfstring{\mllng}{\mllng} language}
+% \section{Definition of the \texorpdfstring{\mllng}{Matlab-pretty} language}
 %
 % \paragraph{Language name}
 % \begin{macro}{\language@mlpr}
@@ -1864,7 +1883,7 @@ y = x(end:-1:1);
 %
 % \section{Hooking into \lstpkg{}' hooks}
 %
-% We apply some necessary patches in a a number of \lstpkg{}' hooks;
+% We apply some necessary patches in a number of \lstpkg{}' hooks;
 % but first, we define a few helper macros.
 %
 % \paragraph{Helper macros related to hooks}
@@ -2515,7 +2534,7 @@ y = x(end:-1:1);
 %    \end{macrocode}
 %
 % \paragraph{Style of Pygments' MatlabLexer}
-% Style that closely mimicks that of Pygments' `MatlabLexer'.
+% Style that closely mimics that of Pygments' `MatlabLexer'.
 %    \begin{macrocode}
 \lstdefinestyle{Matlab-Pyglike}
 {
