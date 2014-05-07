@@ -18,7 +18,7 @@
 % \iffalse
 %<package>\NeedsTeXFormat{LaTeX2e}[2011/06/27]
 %<package>\ProvidesPackage{matlab-prettifier}
-%<package>  [2014/04/28 v0.2a A package for prettyprinting Matlab source code]
+%<package>  [2014/04/28 v0.3 A package for prettyprinting Matlab source code]
 %
 %<*driver>
 \documentclass[a4paper]{ltxdoc}
@@ -37,6 +37,7 @@
 \lstset
 {
   style                 = Matlab-editor,
+  basicstyle            = \normalsize\mlttfamily,
   upquote               = true,
   mlunquotedstringdelim = {/*}{*/},
   mlmoresharedvars      = {myglobalvar},
@@ -96,10 +97,14 @@
 %
 % \changes{v0.1}{2014/04/24}{Initial release.}
 % \changes{v0.2}{2014/04/25}{
-%   Extensive refactoring of the code;
-%   rewrote automatic scaling of inline code; 
-%   implemented mlscaleinline key;
-%   implemented mlonlyheader.
+%   Refactor code extensively;
+%   rewrite automatic scaling of inline code; 
+%   implement mlscaleinline key;
+%   implement mlonlyheader.
+% }
+% \changes{v0.3}{2014/05/07}{
+%   Change default font from Bera Mono to Computer Modern typewriter
+%   (for compatibility reasons).
 % }
 %
 % \GetFileInfo{matlab-prettifier.sty}
@@ -425,7 +430,7 @@ A = [ 1, 2, 3,... (second row defined on next line)
 % \iffalse
 %<*example>
 % \fi
-\begin{lstlisting}[style=Matlab-editor]
+\begin{lstlisting}[style=Matlab-editor,basicstyle=\mlttfamily]
 %% Sample Matlab code
 !mv test.txt test2.txt
 A = [1, 2, 3;... foo
@@ -449,7 +454,7 @@ y = x(end:-1:1);
 % \iffalse
 %<*example>
 % \fi
-\begin{lstlisting}[style=Matlab-bw]
+\begin{lstlisting}[style=Matlab-bw,basicstyle=\mlttfamily]
 %% Sample Matlab code
 !mv test.txt test2.txt
 A = [1, 2, 3;... foo
@@ -476,7 +481,7 @@ y = x(end:-1:1);
 % \iffalse
 %<*example>
 % \fi
-\begin{lstlisting}[style=Matlab-Pyglike]
+\begin{lstlisting}[style=Matlab-Pyglike,basicstyle=\mlttfamily]
 %% Sample Matlab code
 !mv test.txt test2.txt
 A = [1, 2, 3;... foo
@@ -705,8 +710,9 @@ y = x(end:-1:1);
 %^^A
 % \begin{lstsample}{}{\lstset{style=nonbnoframe}}
 %    \begin{lstlisting}[
-%      style   = Matlab-editor,
-%      escapechar = `,
+%      style=Matlab-editor,
+%      basicstyle=\mlttfamily,
+%      escapechar=`,
 %    ]
 %    while `\snippetPlaceholder{condition}`
 %      if `\snippetPlaceholder{something-bad-happens}`
@@ -763,35 +769,19 @@ y = x(end:-1:1);
 %
 % \subsection{Changing the font of Matlab listings}
 %
-% The \matlab{} editor displays some elements of \matlab{} syntax
+% For compatibility reasons, the \mlpkg{} package uses the Computer Modern
+% typewriter font by default.
+% However, this font is far from ideal,
+% because it doesn't come with a boldface version,
+% and the \matlab{} editor does display some elements of \matlab{} syntax
 % (section titles) in boldface.
-% Unfortunately, though, the font family used by default by \TeX{},
-% Computer Modern, does not come with a boldface typewriter font.
-% Therefore, I chose the Bera Mono^^A
-% ---which does provide a boldface typewriter font---^^A
-% as the default font family for \mlpkg{}'s styles.
-% I actually find Bera Mono more pleasing to the eye than the proprietary
-% typeface (called Monospaced) that the \matlab{} editor uses by default.
+% Therefore, I encourage you to switch to your preferred ``programmer font''
+% instead; how to do that depends on which typesetting engine you use.
 %
-% Note that you need to load the \pkg{fontenc}~package with option~\opt{T1}
-% for Bera Mono to actually be used in your \matlab{} listings:
-%^^A
-% \begin{verbatim}
-%   \usepackage[T1]{fontenc}\end{verbatim}%
-%^^A
-% Otherwise, \TeX{} will issue a warning and use a different font instead.
-% The \mlpkg{} package does not automatically load the \pkg{fontenc} package
-% with option~\opt{T1} because I do not want to force the use of that package
-% and option upon you.
-%
-% If you're not happy with \mlpkg{}'s default font, you're welcome to select a
-% different font for your listings, using \lstpkg{}' \keyname{basicstyle}
-% key; see subsection~4.6 of the
-% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}
-% for more details.
-% In case you change the font and later want to revert to \mlpkg{}'s default
-% font, you can select the latter by passing \rcmdname\mlttfamily{} to
-% \lstpkg{}' \keyname{basicstyle} key.
+% For |pdflatex| users,
+% \mlpkg{} conveniently provides a macro for easily selecting the Bera Mono
+% font---which is a popular monospaced font for listings,
+% and the one I used for all listings in this manual.
 %^^A
 % \begin{syntax}
 %
@@ -800,6 +790,16 @@ y = x(end:-1:1);
 %     selects the Bera Mono font (somewhat scaled down).
 %
 % \end{syntax}
+%^^A
+% To use Bera Mono in your \matlab{} listings, you must pass |\mltttfamily| to
+% \lstpkg{}' \keyname{basicstyle} key (\emph{after} loading one of the three
+% styles defined by \mlpkg{}) and also---this is important---^^A
+% load the \pkg{fontenc} package with option \opt{T1}:
+%^^A
+% \begin{verbatim}
+%   \usepackage[T1]{fontenc}\end{verbatim}
+%^^A
+%
 %
 % \subsection{\mlpkg{}'s key-value interface}
 %
@@ -1081,7 +1081,9 @@ y = x(end:-1:1);
 %^^A
 % \begin{lstsample}{}{\lstset{style=nonbnoframe}}
 %    \begin{lstlisting}[
-%      style=Matlab-editor]
+%      style=Matlab-editor,
+%      basicstyle=\mlttfamily,
+%      numbers=none]
 %    if=end
 %    \end{lstlisting}
 % \end{lstsample}
@@ -1093,7 +1095,10 @@ y = x(end:-1:1);
 %^^A
 % \begin{lstsample}{}{\lstset{style=nonbnoframe}}
 %    \begin{lstlisting}[
-%      style=Matlab-editor]
+%      style=Matlab-editor,
+%      numbers=none,
+%      basicstyle=\mlttfamily,
+%      numbers=none]
 %    %% This is a section title
 %    %  and so is the next line
 %    %%
@@ -1110,6 +1115,7 @@ y = x(end:-1:1);
 % \begin{lstsample}{}{\lstset{style=nonbnoframe}}
 %    \begin{lstlisting}[
 %      style=Matlab-editor,
+%      basicstyle=\mlttfamily,
 %      numbers=none,
 %      keepspaces,
 %      mlshowsectionrules]
@@ -1127,7 +1133,9 @@ y = x(end:-1:1);
 %^^A
 % \begin{lstsample}{}{\lstset{style=nonbnoframe}}
 %    \begin{lstlisting}[
-%      style=Matlab-editor]
+%      style=Matlab-editor,
+%      basicstyle=\mlttfamily,
+%      numbers=none]
 %    %{
 %      "runaway"
 %     block
@@ -2480,7 +2488,7 @@ y = x(end:-1:1);
 \toks@=%
 {
   language               = \languageNormedDefd@mlpr,
-  basicstyle             = \color{black}\mlttfamily\normalsize,
+  basicstyle             = \color{black}\ttfamily\normalsize,
   breaklines             = true,
   showspaces             = false,
   showstringspaces       = false,

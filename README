@@ -10,4 +10,4 @@ LaTeX & friends. Three predefined styles, one of which closely mimicks that
 of the Matlab editor, are available and can be invoked by listings macros
 and environments in conjunction with (most) options provided by the listings
 package. The appearance of your Matlab listings can be further tweaked via a
-key-value interface extending that of listings’.
+key-value interface extending that of listings'.

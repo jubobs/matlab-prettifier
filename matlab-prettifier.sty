@@ -29,7 +29,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
 \ProvidesPackage{matlab-prettifier}
-  [2014/04/28 v0.2a A package for prettyprinting Matlab source code]
+  [2014/04/28 v0.3 A package for prettyprinting Matlab source code]
 \newcommand\lstoptcheck@mlpr[1]
 {%
   \@ifpackagewith{listings}{#1}%
@@ -465,7 +465,7 @@
 \toks@=%
 {
   language               = \languageNormedDefd@mlpr,
-  basicstyle             = \color{black}\mlttfamily\normalsize,
+  basicstyle             = \color{black}\ttfamily\normalsize,
   breaklines             = true,
   showspaces             = false,
   showstringspaces       = false,
