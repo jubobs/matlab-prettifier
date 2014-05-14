@@ -153,6 +153,7 @@
   \processCloseBracket@mlpr{`)}{\roundBktCl@mlpr}%
   \processCloseBracket@mlpr{`]}{\squareBktCl@mlpr}%
   \processCloseBracket@mlpr{`\}}{\curlyBktCl@mlpr}%
+  \processSemicolon@mlpr{`;}{\semicolon@mlpr}%
 }
 \newcommand\processOpenBracket@mlpr[2]
 {%
@@ -180,6 +181,16 @@
           \global\ClosingEndKW@mlpr@true%
         \fi
       \fi
+    \fi
+  }%
+}
+\newcommand\processSemicolon@mlpr[2]
+{%
+  \lst@DefSaveDef{#1}#2%
+  {%
+    #2%
+    \ifnum\lst@mode=\lst@Pmode\relax%
+      \resetEndKW@mlpr%
     \fi
   }%
 }

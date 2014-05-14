@@ -77,7 +77,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{649}
+% \CheckSum{660}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -1571,8 +1571,8 @@ y = x(end:-1:1);
 %
 % \begin{macro}{\MoreSelectCharTable@mlpr}
 % This macro, which is passed to \lstpkg{}' \keyname{MoreSelectCharTable} key
-% in the definition of \mllng{}, allows us to dictate what happens when an
-% opening or a closing bracket is encountered.
+% in the definition of \mllng{}, allows us to dictate what happens when a
+% bracket or a semicolon is encountered.
 %    \begin{macrocode}
 \newcommand\MoreSelectCharTable@mlpr
 {%
@@ -1626,6 +1626,13 @@ y = x(end:-1:1);
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\semicolon@mlpr}
+% We store the original definition of ``|;|'' from the default character
+% table in a dedicated macro and modify the behavior of that character.
+%    \begin{macrocode}
+  \processSemicolon@mlpr{`;}{\semicolon@mlpr}%
+%    \end{macrocode}
+% \end{macro}
 %    \begin{macrocode}
 }
 %    \end{macrocode}
@@ -1676,6 +1683,24 @@ y = x(end:-1:1);
 %    \end{macrocode}
 % \end{macro}
 % 
+% \begin{macro}{\processSemicolon@mlpr}
+% This macro is used to ``hook into'' the semicolon character and update
+% state variables every time such a character is encountered in \lstpkg{}'
+% ``processing mode''.
+%    \begin{macrocode}
+\newcommand\processSemicolon@mlpr[2]
+{%
+  \lst@DefSaveDef{#1}#2%
+  {%
+    #2%
+    \ifnum\lst@mode=\lst@Pmode\relax%
+      \resetEndKW@mlpr%
+    \fi
+  }%  
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \paragraph{Processing of keywords}
 % The following macros are used for updating state variables every time a
 % keyword is encountered in \lstpkg{} ``processing mode''.
