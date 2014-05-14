@@ -76,7 +76,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{648}
+% \CheckSum{649}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -1779,13 +1779,14 @@ y = x(end:-1:1);
 % \begin{macro}{\processDotDotDot@mlpr}
 % This macro typesets the line-continuation token in the style of our
 % \matlab{} keywords,
-% tells \lstpkg{} that the current mode ends at the end of the current line,
+% prohibits any mode changes on the rest of the current line,
 % and applies comment style to the rest of the current line.
 %    \begin{macrocode}
 \newcommand\processDotDotDot@mlpr
 {%
   \lst@CalcLostSpaceAndOutput%
   {\keywordStyle@mlpr...}%
+  \lst@modetrue%
   \lst@Lmodetrue%
   \commentStyle@mlpr%
 }
