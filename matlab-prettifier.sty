@@ -443,7 +443,7 @@
   \def\fvm@Scale{.85}%
   \fontfamily{fvm}\selectfont%
 }
-\newcommand\snippetPlaceholder[1]
+\newcommand\mlplaceholder[1]
 {%
   \bgroup%
     \phStyle@mlpr%
@@ -495,40 +495,43 @@
 \begingroup\edef\@tempa{\endgroup
   \noexpand\lstdefinestyle{MatlabBaseStyle@mlpr}{\the\toks@}
 }\@tempa
+\newcommand\mleditorphstyle{\color[RGB]{209,000,086}\rmfamily\itshape}
 \lstdefinestyle{Matlab-editor}
 {
   style               = MatlabBaseStyle@mlpr,
-  mllastelementstyle  = \color{black}                              ,
-  mlkeywordstyle      = \color[RGB]{000,000,255}                   ,
-  mlcommentstyle      = \color[RGB]{034,139,034}                   ,
-  mlstringstyle       = \color[RGB]{160,032,240}                   ,
-  mlsyscomstyle       = \color[RGB]{178,140,000}                   ,
-  mlsectiontitlestyle = \commentStyle@mlpr      \bfseries          ,
-  mlsharedvarstyle    = \color[RGB]{000,163,163}                   ,
-  mlplaceholderstyle  = \color[RGB]{209,000,086}\rmfamily  \itshape,
+  mllastelementstyle  = \color{black}                    ,
+  mlkeywordstyle      = \color[RGB]{000,000,255}         ,
+  mlcommentstyle      = \color[RGB]{034,139,034}         ,
+  mlstringstyle       = \color[RGB]{160,032,240}         ,
+  mlsyscomstyle       = \color[RGB]{178,140,000}         ,
+  mlsectiontitlestyle = \commentStyle@mlpr      \bfseries,
+  mlsharedvarstyle    = \color[RGB]{000,163,163}         ,
+  mlplaceholderstyle  = \mleditorphstyle,
 }
+\newcommand\mlbwphstyle{\color[gray]{0}\rmfamily\itshape}
 \lstdefinestyle{Matlab-bw}
 {
   style               = MatlabBaseStyle@mlpr,
-  mlkeywordstyle      = \color[gray]{0}  \bfseries          ,
-  mlcommentstyle      = \color[gray]{.75}           \itshape,
-  mlstringstyle       = \color[gray]{.5}                    ,
-  mlsyscomstyle       = \color[gray]{.25}                   ,
-  mlsectiontitlestyle = \color[gray]{.75}\bfseries  \itshape,
-  mlsharedvarstyle    = \color[gray]{0}                     ,
-  mlplaceholderstyle  = \color[gray]{0}  \rmfamily  \itshape,
+  mlkeywordstyle      = \color[gray]{0}  \bfseries        ,
+  mlcommentstyle      = \color[gray]{.75}         \itshape,
+  mlstringstyle       = \color[gray]{.5}                  ,
+  mlsyscomstyle       = \color[gray]{.25}                 ,
+  mlsectiontitlestyle = \color[gray]{.75}\bfseries\itshape,
+  mlsharedvarstyle    = \color[gray]{0}                   ,
+  mlplaceholderstyle  = \mlbwphstyle,
 }
+\newcommand\mlpyglikephstyle{\color[RGB]{127,063,127}\rmfamily\itshape}
 \lstdefinestyle{Matlab-Pyglike}
 {
   style               = MatlabBaseStyle@mlpr,
-  mllastelementstyle  = \color[RGB]{127,000,000}                   ,
-  mlkeywordstyle      = \color[RGB]{000,127,000}\bfseries          ,
-  mlcommentstyle      = \color[RGB]{063,127,127}           \itshape,
-  mlstringstyle       = \color[RGB]{186,034,034}                   ,
-  mlsyscomstyle       = \color[RGB]{000,127,000}                   ,
-  mlsectiontitlestyle = \color[RGB]{063,127,127}           \itshape,
-  mlsharedvarstyle    = \color[RGB]{034,034,186}                   ,
-  mlplaceholderstyle  = \color[RGB]{127,063,127}\rmfamily  \itshape,
+  mllastelementstyle  = \color[RGB]{127,000,000}                 ,
+  mlkeywordstyle      = \color[RGB]{000,127,000}\bfseries        ,
+  mlcommentstyle      = \color[RGB]{063,127,127}         \itshape,
+  mlstringstyle       = \color[RGB]{186,034,034}                 ,
+  mlsyscomstyle       = \color[RGB]{000,127,000}                 ,
+  mlsectiontitlestyle = \color[RGB]{063,127,127}         \itshape,
+  mlsharedvarstyle    = \color[RGB]{034,034,186}                 ,
+  mlplaceholderstyle  = \mlpyglikephstyle,
 }
 \endinput
 %%

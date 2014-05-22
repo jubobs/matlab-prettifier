@@ -48,7 +48,7 @@
   numbers = none,
 }
 \lstMakeShortInline"
-\newcommand\ph\snippetPlaceholder
+\newcommand\ph\mlplaceholder
 \newcommand*{\pkg}[1]{\textsf{#1}}
 \newcommand*{\opt}[1]{\texttt{#1}}
 \newcommand\lstpkg{\pkg{listings}}
@@ -77,7 +77,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{660}
+% \CheckSum{669}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -686,7 +686,7 @@ y = x(end:-1:1);
 %^^A
 % \begin{syntax}
 %
-%   \item[0.1] \rcmdname\snippetPlaceholder|{|\meta{placeholder content}|}|
+%   \item[0.1] \rcmdname\mlplaceholder|{|\meta{placeholder content}|}|
 %
 %     typesets a code-snippet placeholder.
 %     You can use this macro both inside and outside listings.
@@ -714,8 +714,8 @@ y = x(end:-1:1);
 %      basicstyle=\mlttfamily,
 %      escapechar=`,
 %    ]
-%    while `\snippetPlaceholder{condition}`
-%      if `\snippetPlaceholder{something-bad-happens}`
+%    while `\mlplaceholder{condition}`
+%      if `\mlplaceholder{something-bad-happens}`
 %        break
 %      else
 %        % do something useful
@@ -724,13 +724,11 @@ y = x(end:-1:1);
 %    \end{lstlisting}
 % \end{lstsample}
 %
-% I deliberately chose a rather long-winded name for this user-level macro
-% in order to minimize the risk of conflict with other macros.
-% Of course, for convenience, you can define a custom macro with a
-% shorter name for typesetting placeholders, e.g.~|\ph|:
+% For convenience, you can of course define a custom macro with a shorter
+% name for typesetting placeholders, e.g.~|\ph|:
 %^^A
 % \begin{verbatim}
-%   \newcommand\ph\snippetPlaceholder\end{verbatim}
+%   \newcommand\ph\mlplaceholder\end{verbatim}
 %
 %
 % \section{Advanced customization}
@@ -990,7 +988,7 @@ y = x(end:-1:1);
 % placeholders, e.g.
 %^^A
 % \begin{verbatim}
-%   \newcommand\phcond{\snippetPlaceholder{condition}}\end{verbatim}
+%   \newcommand\phcond{\mlplaceholder{condition}}\end{verbatim}
 %
 % \paragraph{For more highlights, use \lstpkg{}' \keyname{emph} key}
 % If you want to highlight some identifiers in \matlab{} listings, use
@@ -2423,7 +2421,7 @@ y = x(end:-1:1);
 % \end{lstkey}
 %
 %
-% \section{User-level macros}
+% \section{Two user-level macros}
 %
 % \begin{macro}{\mlttfamily}
 % This user-level macro can be used for selecting a scaled version of the
@@ -2439,10 +2437,10 @@ y = x(end:-1:1);
 % \end{macro}
 %
 % \paragraph{Code-snippet placeholders}
-% \begin{macro}{\snippetPlaceholder}
+% \begin{macro}{\mlplaceholder}
 % This user-level macro can be used to typeset placeholders in code snippets.
 %    \begin{macrocode}
-\newcommand\snippetPlaceholder[1]
+\newcommand\mlplaceholder[1]
 {%
   \bgroup%
     \phStyle@mlpr%
@@ -2536,51 +2534,72 @@ y = x(end:-1:1);
 %
 % \paragraph{Standard style}
 % Standard style of the \matlab{} editor.
+% \begin{macro}{\mlbwphstyle}^^A FIXME: to be documented
+% This user macro holds the placeholder style used in the
+% \mlsty{Matlab-editor} style.
+%    \begin{macrocode}
+\newcommand\mleditorphstyle{\color[RGB]{209,000,086}\rmfamily\itshape}
+%    \end{macrocode}
+% \end{macro}
 %    \begin{macrocode}
 \lstdefinestyle{Matlab-editor}
 {
   style               = MatlabBaseStyle@mlpr,
-  mllastelementstyle  = \color{black}                              ,
-  mlkeywordstyle      = \color[RGB]{000,000,255}                   ,
-  mlcommentstyle      = \color[RGB]{034,139,034}                   ,
-  mlstringstyle       = \color[RGB]{160,032,240}                   ,
-  mlsyscomstyle       = \color[RGB]{178,140,000}                   ,
-  mlsectiontitlestyle = \commentStyle@mlpr      \bfseries          ,
-  mlsharedvarstyle    = \color[RGB]{000,163,163}                   ,
-  mlplaceholderstyle  = \color[RGB]{209,000,086}\rmfamily  \itshape,
+  mllastelementstyle  = \color{black}                    ,
+  mlkeywordstyle      = \color[RGB]{000,000,255}         ,
+  mlcommentstyle      = \color[RGB]{034,139,034}         ,
+  mlstringstyle       = \color[RGB]{160,032,240}         ,
+  mlsyscomstyle       = \color[RGB]{178,140,000}         ,
+  mlsectiontitlestyle = \commentStyle@mlpr      \bfseries,
+  mlsharedvarstyle    = \color[RGB]{000,163,163}         ,
+  mlplaceholderstyle  = \mleditorphstyle,
 }
 %    \end{macrocode}
 %
 % \paragraph{Black \& white style}
 % Black \& white, printer-friendly style.
+% \begin{macro}{\mlbwphstyle}^^A FIXME: to be documented
+% This user macro holds the placeholder style used in the
+% \mlsty{Matlab-bw} style.
+%    \begin{macrocode}
+\newcommand\mlbwphstyle{\color[gray]{0}\rmfamily\itshape}
+%    \end{macrocode}
+% \end{macro}
 %    \begin{macrocode}
 \lstdefinestyle{Matlab-bw}
 {
   style               = MatlabBaseStyle@mlpr,
-  mlkeywordstyle      = \color[gray]{0}  \bfseries          ,
-  mlcommentstyle      = \color[gray]{.75}           \itshape,
-  mlstringstyle       = \color[gray]{.5}                    ,
-  mlsyscomstyle       = \color[gray]{.25}                   ,
-  mlsectiontitlestyle = \color[gray]{.75}\bfseries  \itshape,
-  mlsharedvarstyle    = \color[gray]{0}                     ,
-  mlplaceholderstyle  = \color[gray]{0}  \rmfamily  \itshape,
+  mlkeywordstyle      = \color[gray]{0}  \bfseries        ,
+  mlcommentstyle      = \color[gray]{.75}         \itshape,
+  mlstringstyle       = \color[gray]{.5}                  ,
+  mlsyscomstyle       = \color[gray]{.25}                 ,
+  mlsectiontitlestyle = \color[gray]{.75}\bfseries\itshape,
+  mlsharedvarstyle    = \color[gray]{0}                   ,
+  mlplaceholderstyle  = \mlbwphstyle,
 }
 %    \end{macrocode}
 %
 % \paragraph{Style of Pygments' MatlabLexer}
 % Style that closely mimics that of Pygments' `MatlabLexer'.
+% \begin{macro}{\mlpyglikephstyle}^^A FIXME: to be documented
+% This user macro holds the placeholder style used in the
+% \mlsty{Matlab-Pyglike} style.
+%    \begin{macrocode}
+\newcommand\mlpyglikephstyle{\color[RGB]{127,063,127}\rmfamily\itshape}
+%    \end{macrocode}
+% \end{macro}
 %    \begin{macrocode}
 \lstdefinestyle{Matlab-Pyglike}
 {
   style               = MatlabBaseStyle@mlpr,
-  mllastelementstyle  = \color[RGB]{127,000,000}                   ,
-  mlkeywordstyle      = \color[RGB]{000,127,000}\bfseries          ,
-  mlcommentstyle      = \color[RGB]{063,127,127}           \itshape,
-  mlstringstyle       = \color[RGB]{186,034,034}                   ,
-  mlsyscomstyle       = \color[RGB]{000,127,000}                   ,
-  mlsectiontitlestyle = \color[RGB]{063,127,127}           \itshape,
-  mlsharedvarstyle    = \color[RGB]{034,034,186}                   ,
-  mlplaceholderstyle  = \color[RGB]{127,063,127}\rmfamily  \itshape,
+  mllastelementstyle  = \color[RGB]{127,000,000}                 ,
+  mlkeywordstyle      = \color[RGB]{000,127,000}\bfseries        ,
+  mlcommentstyle      = \color[RGB]{063,127,127}         \itshape,
+  mlstringstyle       = \color[RGB]{186,034,034}                 ,
+  mlsyscomstyle       = \color[RGB]{000,127,000}                 ,
+  mlsectiontitlestyle = \color[RGB]{063,127,127}         \itshape,
+  mlsharedvarstyle    = \color[RGB]{034,034,186}                 ,
+  mlplaceholderstyle  = \mlpyglikephstyle,
 }
 %    \end{macrocode}
 %

@@ -4,4 +4,4 @@ if [ -f ${PKGNAME}.tar.gz ]; then
 fi
 make
 make clean
-ctanify ${PKGNAME}.ins ${PKGNAME}.pdf  README makefile
+ctanify ${PKGNAME}.ins ${PKGNAME}.pdf README makefile
