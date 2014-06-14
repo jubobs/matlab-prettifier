@@ -473,7 +473,8 @@
     \fi
   \fi
 }
-\toks@=%
+\newtoks\toks@mlpr
+\toks@mlpr=%
 {
   language               = \languageNormedDefd@mlpr,
   basicstyle             = \color{black}\ttfamily\normalsize,
@@ -487,13 +488,13 @@
   mlonlyheader           = false,
 }
 \ifframed@mlpr@
-  \toks@=\expandafter{\the\toks@ frame=single,}
+  \toks@mlpr=\expandafter{\the\toks@mlpr frame=single,}
 \fi
 \ifnumbered@mlpr@
-  \toks@=\expandafter{\the\toks@ numbers=left,}
+  \toks@mlpr=\expandafter{\the\toks@mlpr numbers=left,}
 \fi
 \begingroup\edef\@tempa{\endgroup
-  \noexpand\lstdefinestyle{MatlabBaseStyle@mlpr}{\the\toks@}
+  \noexpand\lstdefinestyle{MatlabBaseStyle@mlpr}{\the\toks@mlpr}
 }\@tempa
 \newcommand\mleditorphstyle{\color[RGB]{209,000,086}\rmfamily\itshape}
 \lstdefinestyle{Matlab-editor}

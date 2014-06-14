@@ -77,7 +77,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{669}
+% \CheckSum{671}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -154,7 +154,7 @@
 % \DoNotIndex{\raisebox,\relax,\renewcommand,\RequirePackage,\rule,\rmfamily}
 % \DoNotIndex{\selectfont,\setlength,\sldefault,\textlangle,\textrangle,^^A
 %   \ttfamily}
-% \DoNotIndex{\the,\toks@}
+% \DoNotIndex{\the}
 % \DoNotIndex{\upshape}
 % \DoNotIndex{\VisCharOccured@mlpr@true,\VisCharOccured@mlpr@false}
 %
@@ -2507,8 +2507,12 @@ y = x(end:-1:1);
 %
 % This style is used internally to define the three user-level styles.
 % It's not meant to be used outside this package file.
+% \begin{macro}{\toks@mlpr}
+% We allocate a token list register in which we store settings that we'll use
+% to define the style.
 %    \begin{macrocode}
-\toks@=%
+\newtoks\toks@mlpr
+\toks@mlpr=%
 {
   language               = \languageNormedDefd@mlpr,
   basicstyle             = \color{black}\ttfamily\normalsize,
@@ -2521,14 +2525,17 @@ y = x(end:-1:1);
   mlscaleinline          = true,
   mlonlyheader           = false,
 }
+%    \end{macrocode}
+% \end{macro}
+%    \begin{macrocode}
 \ifframed@mlpr@
-  \toks@=\expandafter{\the\toks@ frame=single,}
+  \toks@mlpr=\expandafter{\the\toks@mlpr frame=single,}
 \fi
 \ifnumbered@mlpr@
-  \toks@=\expandafter{\the\toks@ numbers=left,}
+  \toks@mlpr=\expandafter{\the\toks@mlpr numbers=left,}
 \fi
 \begingroup\edef\@tempa{\endgroup
-  \noexpand\lstdefinestyle{MatlabBaseStyle@mlpr}{\the\toks@}
+  \noexpand\lstdefinestyle{MatlabBaseStyle@mlpr}{\the\toks@mlpr}
 }\@tempa
 %    \end{macrocode}
 %
