@@ -18,7 +18,7 @@
 % \iffalse
 %<package>\NeedsTeXFormat{LaTeX2e}[2011/06/27]
 %<package>\ProvidesPackage{matlab-prettifier}
-%<package>  [2014/04/28 v0.3 A package for prettyprinting Matlab source code]
+%<package>  [2014/06/19 v0.3 A package for prettyprinting Matlab source code]
 %
 %<*driver>
 \documentclass[a4paper]{ltxdoc}
@@ -55,6 +55,7 @@
 \newcommand*{\lststy}[1]{\texttt{#1}}
 \newcommand*{\lstlng}[1]{\texttt{#1}}
 \newcommand\matlab{\textsc{Matlab}}
+\newcommand\octave{\textsc{Octave}}
 \newcommand\matlabver{\matlab~(R2013a)}
 \newcommand\mathworks{MathWorks}
 \newcommand*\trademark[1]{#1\textsuperscript{\textregistered}}
@@ -98,13 +99,16 @@
 % \changes{v0.1}{2014/04/24}{Initial release.}
 % \changes{v0.2}{2014/04/25}{
 %   Refactor code extensively;
-%   rewrite automatic scaling of inline code; 
+%   rewrite automatic scaling of inline code;
 %   implement mlscaleinline key;
 %   implement mlonlyheader.
 % }
-% \changes{v0.3}{2014/05/07}{
+% \changes{v0.3}{2014/06/19}{
 %   Change default font from Bera Mono to Computer Modern typewriter
-%   (for compatibility reasons).
+%   (for compatibility reasons);
+%   fix bug (end keyword now gets reset by a semicolon);
+%   rename placeholder user macro; 
+%   mention support for a subset of Octave's syntax.
 % }
 %
 % \GetFileInfo{matlab-prettifier.sty}
@@ -129,26 +133,28 @@
 % \DoNotIndex{\baselineskip,\begingroup,\bfseries,\bgroup}
 % \DoNotIndex{\ClosingEndKW@mlpr@false,\ClosingEndKW@mlpr@true,^^A
 %   \color,\colorlet,\csname,\CurrentOption}
-% \DoNotIndex{\DeclareOption,\def,\definecolor,\dimexpr}
+% \DoNotIndex{\DeclareOption,\def,\definecolor,\dimexpr,^^A
+%   \DroppingOutput@mlpr@false,\DroppingOutput@mlpr@true}
 % \DoNotIndex{\edef,\egroup,\else,\endcsname,\endgroup,\expandafter}
 % \DoNotIndex{\f@baselineskip,\f@shape,\f@size,\fi,\font,\fontsize,^^A
-%   \fontchardp,\fontcharht,\fontfamily,\fvm@Scale}
+%   \fontchardp,\fontcharht,\fontfamily,\framed@mlpr@true,\fvm@Scale}
 % \DoNotIndex{\gdef,\global}
 % \DoNotIndex{\ifnum,\ifx,^^A
 %   \InClassdef@mlpr@false,\InClassdef@mlpr@true,^^A
 %   \InSecTitle@mlpr@false,\InSecTitle@mlpr@true,^^A
 %   \InStr@mlpr@false,\InStr@mlpr@true,^^A
 %   \itdefault,\itshape}
-% \DoNotIndex{\let,\lst@basicstyle,\lst@AddToHook,^^A
+% \DoNotIndex{\let,\lst@basicstyle,\lst@BeginDropOutput,\lst@AddToHook,^^A
 %   \lst@CalcLostSpaceAndOutput,\lst@DefSaveDef,\lst@DelimKey,^^A
-%   \lst@ifdisplaystyle,\lst@ifwhitespace,\lst@InstallKeywords,\lst@Key,^^A
-%   \lst@language,\lst@LeaveMode,\lst@linewidth,\lst@Lmodetrue,\lst@mode,^^A
+%   \lst@EnterMode,\lst@ifdisplaystyle,\lst@ifLmode,\lst@ifwhitespace,^^A
+%   \lst@InstallKeywords,\lst@Key,\lst@language,\lst@LeaveMode,^^A
+%   \lst@lineno,\lst@linewidth,\lst@Lmodetrue,\lst@mode,\lst@modetrue,^^A
 %   \lst@NormedDef,\lst@Pmode,\lst@DeleteKeywords,\lst@InstallFamily@,^^A
 %   \lst@MakeKeywords,\lst@MakeMoreKeywords,\lst@UseFamily,^^A
 %   \lstdefinelanguage,\lstdefinestyle,\lstKV@SetIf}
 % \DoNotIndex{\m@ne,\makebox}
-% \DoNotIndex{\newcommand,\newcount,\newif,\newlength,^^A,
-%   \normalsize,\noexpand}
+% \DoNotIndex{\newcommand,\newcount,\newif,\newlength,\newtoks,\normalsize,^^A
+%   \numbered@mlpr@true,\noexpand}
 % \DoNotIndex{\OptionNotUsed}
 % \DoNotIndex{\PackageError,\PackageWarning,\ProcessOptions}
 % \DoNotIndex{\raisebox,\relax,\renewcommand,\RequirePackage,\rule,\rmfamily}
@@ -180,7 +186,7 @@
 %   \lstpkg{} macros and environments in conjunction with (most) options
 %   provided by the \lstpkg{} package. The appearance of your \matlab{}
 %   listings can be further tweaked via a key-value interface extending that
-%   of \lstpkg{}'.
+%   of \lstpkg{}'. Partial support for Octave syntax is provided.
 % \end{abstract}
 %
 % \tableofcontents\newpage
@@ -233,9 +239,18 @@
 %
 % The \mlpkg{} package is intended to fill that gap.
 % Built on top of the feature-rich \lstpkg{} package, \mlpkg{} allows you to
-%  beautifully and effortlessly typeset \matlab{} listings, as it configures
+% beautifully and effortlessly typeset \matlab{} listings, as it configures
 % \lstpkg{} ``behind the scenes'' to replicate, as closely as possible, the
 % syntax-highlighting style of the \matlab{} editor.
+%
+% What about code written in \octave{} (a free alternative to \matlab{})?
+% Because \octave{}'s syntax and \matlab{}'s syntax
+% \href{http://wiki.octave.org/FAQ#How_is_Octave_different_from_Matlab.3F}
+%   {overlap a lot},
+% \mlpkg{} correctly highlights \octave{} listings that strictly adhere to
+% the subset of syntax that lies in this overlap.
+% More support for \octave{} is expected to ship with a future release.
+%
 % Furthermore, \mlpkg{} comes with a few additional features that should make
 % your life easier. Read on!
 %
@@ -1044,13 +1059,19 @@ y = x(end:-1:1);
 % \section{To-do list}
 %
 % \paragraph{Automatic highlighting of unquoted strings}
-% In the current version of \mlpkg{}, unquoted strings will only be highlighted
-% as strings if you delimit them with custom delimiters
+% In the current version of \mlpkg{}, unquoted strings will only be
+% highlighted as strings if you delimit them with custom delimiters
 % (defined via the \rkeyname{mlunquotedstringdelim} key).
 % However, I have plans to implement an automatic approach in a future
 % release.
 % Note that this feature will make the \rkeyname{mlunquotedstringdelim} key
 % obsolete.
+%
+% \paragraph{Increased support for \octave{}'s syntax}
+% Support for \octave{}'s idiosyncratic syntax---^^A
+% e.g. |endif| and |endwhile| keywords---^^A
+% will be added in a future release of \mlpkg{}.
+%
 %
 % \section{Missing features and known issues}
 %
@@ -1694,7 +1715,7 @@ y = x(end:-1:1);
     \ifnum\lst@mode=\lst@Pmode\relax%
       \resetEndKW@mlpr%
     \fi
-  }%  
+  }%
 }
 %    \end{macrocode}
 % \end{macro}
