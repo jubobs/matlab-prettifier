@@ -714,10 +714,12 @@ y = x(end:-1:1);
 % \lstpkg{}' \keyname{escapechar} key), I recommend you define
 % either the double-quote character~(|"|)
 % or the backtick character~(\texttt{\`{}})
-% as escape character,
-% because neither is allowed in \matlab{} statements and expressions^^A
+% as escape character;
+% doing so should be relatively safe
+% because neither character is allowed in \matlab{} statements and
+% expressions^^A
 % ---although they may occur in \matlab{} string literals.
-% Note that using~|"| both as shorthand for inline code and as an
+% Note that using~|"| both as shorthand for inline code \emph{and} as an
 % escape-to-\LaTeX{} character inside listings is perfectly allowed.
 % 
 % The following example illustrates how placeholders may be used to describe
@@ -1069,7 +1071,7 @@ y = x(end:-1:1);
 %
 % \paragraph{Increased support for \octave{}'s syntax}
 % Support for \octave{}'s idiosyncratic syntax---^^A
-% e.g. |endif| and |endwhile| keywords---^^A
+% e.g.\ |endif| and |endwhile| keywords---^^A
 % will be added in a future release of \mlpkg{}.
 %
 %
