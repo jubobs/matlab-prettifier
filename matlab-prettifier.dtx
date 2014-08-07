@@ -337,7 +337,7 @@
 %   \itemm No highlighting of unquoted strings
 %   \itemm Escape to \LaTeX{} is only allowed in comments.
 %   \itemm Slow compared to \lstpkg{}
-%   \itemm Requires |-shell-escape|
+%   \itemm Requires |--shell-escape|
 % \end{itemize}
 %
 %
@@ -718,7 +718,7 @@ y = x(end:-1:1);
 % doing so should be relatively safe
 % because neither character is allowed in \matlab{} statements and
 % expressions^^A
-% ---although they may occur in \matlab{} string literals.
+% ---although they may occur in \matlab{} string literals and system commands.
 % Note that using~|"| both as shorthand for inline code \emph{and} as an
 % escape-to-\LaTeX{} character inside listings is perfectly allowed.
 % 
