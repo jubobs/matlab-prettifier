@@ -1,7 +1,7 @@
 % \iffalse meta-comment
 %
 % Copyright (C) 2014 by Julien Cretel
-%                       <jubobs.matlab.prettifier at gmail.com>
+%                       <jubobs.tex at gmail.com>
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
@@ -32,8 +32,10 @@
 \usepackage{lstdoc}
 \usepackage[framed,numbered]{matlab-prettifier}
 \usepackage{hyperref}
+\usepackage{url}
 \usepackage{cleveref}
 
+\DeclareUrlCommand\email{\urlstyle{tt}}
 \lstset
 {
   style                 = Matlab-editor,
@@ -173,7 +175,7 @@
 %     dated~\filedate.^^A
 %   }^^A
 %  }
-% \author{Julien Cretel\\ \texttt{jubobs.matlab.prettifier at gmail.com}}
+% \author{Julien Cretel\\ \texttt{jubobs.tex at gmail.com}}
 % \date{\filedate}
 % \thispagestyle{empty}
 % \maketitle
@@ -1176,8 +1178,7 @@ y = x(end:-1:1);
 % or if you can think of ways in which the \mlpkg{} documentation could be
 % improved, please open a ticket in the Bitbucket repository's issue tracker;
 % alternatively, you can send me an email at
-% \href{mailto:jubobs.matlab.prettifier@gmail.com}
-%   {jubobs.matlab.prettifier@gmail.com}
+% \email{jubobs.tex@gmail.com}
 %
 %
 % \section{Acknowledgments}
