@@ -109,7 +109,7 @@
 %   Change default font from Bera Mono to Computer Modern typewriter
 %   (for compatibility reasons);
 %   fix bug (end keyword now gets reset by a semicolon);
-%   rename placeholder user macro; 
+%   rename placeholder user macro;
 %   mention support for a subset of Octave's syntax.
 % }
 %
@@ -225,7 +225,7 @@
 % specific syntax-highlighting style performed on the fly by the \matlab{}
 % editor.^^A
 %   \footnote{see ... for a comparison.}
-%  
+%
 % The lack of tools for faithfully mimicking the style of the \matlab{}
 % editor is unfortunate, especially from an educational standpoint, for the
 % following reason.
@@ -263,7 +263,7 @@
 % ---other than the \mlpkg{} package and \matlab{}'s "publish" function---^^A
 % available for typesetting \matlab{} listings in \LaTeX{} documents.
 %
-% \paragraph{\lstpkg{}' \lstlng{Matlab} language} 
+% \paragraph{\lstpkg{}' \lstlng{Matlab} language}
 %^^A
 % \begin{itemize}
 %   \itemp A starting point!
@@ -342,14 +342,14 @@
 %
 %
 % \section{Syntactic elements automatically highlighted by \mlpkg{}}
-% 
+%
 % The \mlpkg{} package defines a \pkg{listings} language called
 % \mllng{}, which is designed to keep track of the context behind the scenes
 % and, therefore, facilitates context-sensitive highlighting of various
 % elements of \matlab{} syntax.
 % That language is used as a basis for three \lstpkg{} styles,
 % one of which, called \mlsty{Matlab-editor}, is showcased below.
-% 
+%
 % \paragraph{Context-insensitive keywords}
 % "while", "for", "break", etc.
 %
@@ -358,7 +358,7 @@
 % \overrideEvents{},
 % \overrideProperties{},
 % etc.
-% 
+%
 % \paragraph{Quoted strings}
 % \mbox{}
 % \iffalse
@@ -388,7 +388,7 @@ a = pi
 % \iffalse
 %</example>
 % \fi
-% 
+%
 % \paragraph{Line-continuation token (and associated to-end-of-line comment)}
 % \mbox{}
 % \iffalse
@@ -436,7 +436,7 @@ A = [ 1, 2, 3,... (second row defined on next line)
 % all three activate automatic line breaking;
 % for more defails about automatic line breaking, see subsection~4.10 in
 % \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}.
-% 
+%
 % Here is a comparison of the three styles defined by \mlpkg{}.
 %
 % \paragraph{\mlsty{Matlab-editor}}
@@ -531,7 +531,7 @@ y = x(end:-1:1);
 %   \item automatic scaling of inline code according to its surroundings,
 %   \item an option to only print the header of a \matlab{} function.
 % \end{itemize}
-% 
+%
 %
 % \part{User's guide}
 %
@@ -680,7 +680,7 @@ y = x(end:-1:1);
 %   "break"\end{verbatim}
 %^^A
 % in your |tex| file (but outside displayed listings, of course).
-% 
+%
 % You should choose a character that does not otherwise occur in your
 % |tex| file, especially in the inline \matlab{} code itself,
 % or you run the risk of confusing \TeX{}.
@@ -721,7 +721,7 @@ y = x(end:-1:1);
 % ---although they may occur in \matlab{} string literals and system commands.
 % Note that using~|"| both as shorthand for inline code \emph{and} as an
 % escape-to-\LaTeX{} character inside listings is perfectly allowed.
-% 
+%
 % The following example illustrates how placeholders may be used to describe
 % the syntax of the \matlab{} while loop.
 %^^A
@@ -758,14 +758,14 @@ y = x(end:-1:1);
 % your \matlab{} listings, should you wish to do so.
 % All the keys provided by \mlpkg{} are prefixed by ``|ml|'',
 % to help you distinguish them from native \lstpkg{} keys.
-% 
 %
-% \subsection{Keys from the \lstpkg{} that you should not use}
+%
+% \subsection{Keys from \lstpkg{} that you should not use}
 %
 % The great majority of keys provided by \lstpkg{} can be used in conjunction
 % with keys provided by \mlpkg{} without any detrimental side effects,
 % but there are a few exceptions that you should keep in mind.
-% 
+%
 % Some \mlpkg{} keys rely on \lstpkg{} keys ``under the hood'',
 % and using those \mlpkg{} and \lstpkg{} keys in conjunction is
 % \emph{strongly discouraged},
@@ -860,7 +860,7 @@ y = x(end:-1:1);
 %     five context-sensitive keywords be typeset in the style of the
 %     alternative context, like so:
 %     \overrideEnd{},
-%     \overrideEvents{}, 
+%     \overrideEvents{},
 %     \overrideEnumeration{},
 %     \overrideMethods{},
 %     \overrideProperties{}.
@@ -883,11 +883,11 @@ y = x(end:-1:1);
 %
 %   \item[0.1,{\bfseries\color[RGB]{34,139,34}}]
 %     \rkeyname{mlsectiontitlestyle}|=|\meta{style}
-%   
+%
 %     This key determines the style applied to \matlab{} section titles.
 %     The last token can be a one-parameter command,
 %     such as |\textbf| or |\underbar|.
-%     
+%
 %   \item[0.1,false]
 %     \rkeyname{mlshowsectionrules}|=|\meta{\alternative{true,false}}
 %     \syntaxor\rkeyname{mlshowsectionrules}
@@ -897,7 +897,7 @@ y = x(end:-1:1);
 %
 %   \item[0.1,.05]
 %     \rkeyname{mlsectionrulethickness}|=|\meta{number}
-%     
+%
 %     This key determines the thickness of the horizontal rule above each
 %     \matlab{} section title.
 %     The resulting thickness corresponds to the product of the value passed
@@ -961,7 +961,7 @@ y = x(end:-1:1);
 %     overriden, and inline \matlab{} code is scaled to it surroundings;
 %     in other words, the font size of inline \matlab{} code is made to match
 %     the local font size.
-% 
+%
 %   \item[0.2,false]
 %     \rkeyname{mlonlyheader}|=|\meta{\alternative{true,false}}
 %     \syntaxor\rkeyname{mlonlyheader}
@@ -994,7 +994,7 @@ y = x(end:-1:1);
 % \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}).
 %
 % \paragraph{Load the base language/style first; customize later.}
-% If you want to customize the appearance of your \matlab{} listings, 
+% If you want to customize the appearance of your \matlab{} listings,
 % you should use \lstpkg{}' \keyname{language} key or \keyname{style} key
 % before using any other (\lstpkg{} or \mlpkg{}) key,
 % because loading a language or a style ``too late'' has the potential to
@@ -1057,7 +1057,7 @@ y = x(end:-1:1);
 %
 %
 % \part{Miscellaneous}
-% 
+%
 % \section{To-do list}
 %
 % \paragraph{Automatic highlighting of unquoted strings}
@@ -1080,7 +1080,7 @@ y = x(end:-1:1);
 % Although \mlpkg{} does a reasonably good job at replicating the syntax
 % highlighting performed by the \matlab{} editor, some problems remain.
 % Here is a list of known, currently unresolved problems.
-% 
+%
 % \paragraph{No automatic highlighting of variables with shared scope}
 % Unfortunately, automatic highlighting of variables with shared scope
 % would require multiple passes, which the \lstpkg{} package cannot do.
@@ -1089,7 +1089,7 @@ y = x(end:-1:1);
 % ---otherwise, your \matlab{} code is probably not sound!---^^A
 % that you can afford to highlight those variables manually, if you insist on
 % highlighting them at all.
-% 
+%
 % \paragraph{No highlighting of unterminated strings}
 % Because \lstpkg{} cannot look very far ahead, I haven't found an easy way of
 % checking whether an opening string delimiter is missing a matching (closing)
@@ -1143,8 +1143,8 @@ y = x(end:-1:1);
 %        %% the rule gets pushed to the right...
 %    \end{lstlisting}
 % \end{lstsample}
-% 
-% \paragraph{``Runaway'' block comments end prematurely (in some cases)} 
+%
+% \paragraph{``Runaway'' block comments end prematurely (in some cases)}
 % \matlab{} requires opening and closing delimiters of block comments to each
 % be on a line on its own, without any visible character, but \mlpkg{}
 % incorrectly considers block comments closed even in some cases where this
@@ -1292,7 +1292,7 @@ y = x(end:-1:1);
 %
 %
 % \section{Required packages}
-% 
+%
 % The \mlpkg{} package require three packages without any package option:
 % the \pkg{textcomp} package, in order to use \lstpkg{}' \keyname{upquote}
 % key;
@@ -1362,10 +1362,10 @@ y = x(end:-1:1);
 % Because different \matlab{} keywords affect the context in different ways,
 % we use several classes of \pkg{listings} keywords to handle them.
 %
-% The following keywords open a block unrelated to class definition. 
+% The following keywords open a block unrelated to class definition.
 %    \begin{macrocode}
   morekeywords=[1]%
-  {% 
+  {%
     for,
     if,
     otherwise,
@@ -1393,7 +1393,7 @@ y = x(end:-1:1);
     elseif,
     function,
     return,
-  }, 
+  },
   keywordstyle=[2]\processMidKW@mlpr,
 %    \end{macrocode}
 % The following two keywords are ``standalone'';
@@ -1403,13 +1403,13 @@ y = x(end:-1:1);
   {%
     global,
     persistent,
-  }, 
+  },
   keywordstyle=[3]\processStdaKW@mlpr,
 %    \end{macrocode}
 % The "classdef" keyword interacts with other keywords in a unique fashion;
-% therefore, we dedicate a whole class of \lstpkg{} keywords to it. 
+% therefore, we dedicate a whole class of \lstpkg{} keywords to it.
 %    \begin{macrocode}
-  morekeywords=[4]{classdef},  
+  morekeywords=[4]{classdef},
   keywordstyle=[4]\processClassdefKW@mlpr,
 %    \end{macrocode}
 % We dedicate a class of \lstpkg{} keywords to the four \matlab{} keywords
@@ -1466,7 +1466,7 @@ y = x(end:-1:1);
   moredelim=[l][\syscomStyle@mlpr]!,
 %    \end{macrocode}
 %
-% \paragraph{Required \lstpkg{} aspects} 
+% \paragraph{Required \lstpkg{} aspects}
 % We now only need to specify the required \lstpkg{} ``aspects''.
 %    \begin{macrocode}
 }[
@@ -1672,7 +1672,7 @@ y = x(end:-1:1);
       \global\ClosingEndKW@mlpr@false%
       \global\advance\netBracketCount@mlpr by \@ne%
     \fi
-  }%  
+  }%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1698,11 +1698,11 @@ y = x(end:-1:1);
         \fi
       \fi
     \fi
-  }%  
+  }%
 }
 %    \end{macrocode}
 % \end{macro}
-% 
+%
 % \begin{macro}{\processSemicolon@mlpr}
 % This macro is used to ``hook into'' the semicolon character and update
 % state variables every time such a character is encountered in \lstpkg{}'
@@ -1904,7 +1904,7 @@ y = x(end:-1:1);
 % \end{macro}
 % \begin{macro}{\drawSectionRule@mlpr}
 % This helper macro is used for drawing a horizontal rule just above the
-% current line. 
+% current line.
 %    \begin{macrocode}
 \newcommand\drawSectionRule@mlpr
 {%
@@ -1969,7 +1969,7 @@ y = x(end:-1:1);
       \let\localFontSize@mlpr\f@size%
       \let\localBaselineskip@mlpr\f@baselineskip%
 %    \end{macrocode}
-% \ldots and we use the basic style but we update the font size. 
+% \ldots and we use the basic style but we update the font size.
 %    \begin{macrocode}
       \expandafter\def\expandafter\lst@basicstyle\expandafter%
       {%
@@ -1989,7 +1989,7 @@ y = x(end:-1:1);
 \newcommand\dropOutputAfterHeader@mlpr
 {%
   \ifonlyheader@mlpr@%
-    \ifnum\lst@lineno>1%  
+    \ifnum\lst@lineno>1%
       \lst@ifLmode%
       \else
 %    \end{macrocode}
@@ -2016,7 +2016,7 @@ y = x(end:-1:1);
 %
 % \paragraph{\hookname{InitVarsEOL}}
 % (See the
-% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation} 
+% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}
 % for more details on this hook.)
 % \begin{macro}{\addedToInitVarsEOL@mlpr}
 % We add this macro (initially empty) to \lstpkg{}'
@@ -2058,7 +2058,7 @@ y = x(end:-1:1);
 %
 % \paragraph{\hookname{EndGroup}}
 % (See the
-% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation} 
+% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}
 % for more details on this hook.)
 % \begin{macro}{\addedToEndGroup@mlpr}
 % We add this macro (initially empty) to \lstpkg{}'
@@ -2081,7 +2081,7 @@ y = x(end:-1:1);
 %
 % \paragraph{\hookname{PostOutput}}
 % (See the
-% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation} 
+% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}
 % for more details on this hook.)
 % \begin{macro}{\addedToPostOutput@mlpr}
 % We add this macro (initially empty) to \lstpkg{}'
@@ -2110,7 +2110,7 @@ y = x(end:-1:1);
 %
 % \paragraph{\hookname{Output}}
 % (See the
-% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation} 
+% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}
 % for more details on this hook.)
 % \begin{macro}{\addedToOutput@mlpr}
 % We add this macro (initially empty) to \lstpkg{}'
@@ -2129,10 +2129,10 @@ y = x(end:-1:1);
 \newcommand\@ddedToOutput@mlpr{\dropOutputAfterHeader@mlpr}
 %    \end{macrocode}
 % \end{macro}
-% 
+%
 % \paragraph{\hookname{OutputOther}}
 % (See the
-% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation} 
+% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}
 % for more details on this hook.)
 % \begin{macro}{\addedToOutputOther@mlpr}
 % We add this macro (initially empty) to \lstpkg{}'
@@ -2154,11 +2154,11 @@ y = x(end:-1:1);
 %
 % \paragraph{\hookname{PreInit}}
 % (See the
-% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation} 
+% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}
 % for more details on this hook.)
 % Because the |\lst@AddToHook| affects hooks globally
 % (i.e.\ for all listings),
-% we must apply our patches only when required, i.e.\ 
+% we must apply our patches only when required, i.e.\
 % in listings that use \mllng{}, and not in others.
 % The \hookname{PreInit}, which is called at the very beginning of each
 % listing, is where we do that.
@@ -2185,7 +2185,7 @@ y = x(end:-1:1);
 %
 % \paragraph{\hookname{DeInit}}
 % (See the
-% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation} 
+% \href{http://www.ctan.org/pkg/listings}{\lstpkg{} documentation}
 % for more details on this hook.)
 % In the \hookname{DeInit} hook, which is called at the very end of each
 % listing, we carry out some housekeeping tasks if the current listing uses
@@ -2480,7 +2480,7 @@ y = x(end:-1:1);
 %    \end{macrocode}
 % \end{macro}
 %
-% 
+%
 % \section{Other helper macros}
 %
 %    \begin{macrocode}
