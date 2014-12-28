@@ -36,16 +36,14 @@
 \usepackage{cleveref}
 
 \DeclareUrlCommand\email{\urlstyle{tt}}
-\lstset
-{
+\lstset{%
   style                 = Matlab-editor,
   basicstyle            = \normalsize\mlttfamily,
   upquote               = true,
   mlunquotedstringdelim = {/*}{*/},
   mlmoresharedvars      = {myglobalvar},
 }
-\lstdefinestyle{nonbnoframe}
-{
+\lstdefinestyle{nonbnoframe}{%
   frame   = none,
   numbers = none,
 }
@@ -99,13 +97,13 @@
 %   Right brace   \}     Tilde         \~}
 %
 % \changes{v0.1}{2014/04/24}{Initial release.}
-% \changes{v0.2}{2014/04/25}{
+% \changes{v0.2}{2014/04/25}{%
 %   Refactor code extensively;
 %   rewrite automatic scaling of inline code;
 %   implement mlscaleinline key;
 %   implement mlonlyheader.
 % }
-% \changes{v0.3}{2014/06/19}{
+% \changes{v0.3}{2014/06/19}{%
 %   Change default font from Bera Mono to Computer Modern typewriter
 %   (for compatibility reasons);
 %   fix bug (end keyword now gets reset by a semicolon);
@@ -1218,13 +1216,10 @@ y = x(end:-1:1);
 %   This macro checks whether \lstpkg{} was loaded with a given option
 %   and, if so, throws an error.
 %    \begin{macrocode}
-\newcommand\lstoptcheck@mlpr[1]
-{%
-  \@ifpackagewith{listings}{#1}%
-  {
+\newcommand\lstoptcheck@mlpr[1]{%
+  \@ifpackagewith{listings}{#1}{%
     \PackageError{matlab-prettifier}%
-      {incompatible listings' option #1}%
-      {%
+      {incompatible listings' option #1}{%
         Make sure the `listings' package
         doesn't get loaded with option `#1'%
       }
@@ -1279,8 +1274,7 @@ y = x(end:-1:1);
 % We discard any other option passed to \mlpkg{} by the user
 % and issue a warning.
 %    \begin{macrocode}
-\DeclareOption*%
-{%
+\DeclareOption*{%
   \OptionNotUsed
   \PackageWarning{matlab-prettifier}{Unknown `\CurrentOption' option}
 }
@@ -1330,8 +1324,7 @@ y = x(end:-1:1);
 % trickery on |\lstdefinelanguage|.
 %    \begin{macrocode}
 \expandafter\expandafter\expandafter\lstdefinelanguage\expandafter%
-{\language@mlpr}
-{%
+{\language@mlpr}{%
 %    \end{macrocode}
 %
 % \paragraph{Case sensitivity}
@@ -1364,8 +1357,7 @@ y = x(end:-1:1);
 %
 % The following keywords open a block unrelated to class definition.
 %    \begin{macrocode}
-  morekeywords=[1]%
-  {%
+  morekeywords=[1]{%
     for,
     if,
     otherwise,
@@ -1383,8 +1375,7 @@ y = x(end:-1:1);
 % seem to have the same effects on syntax highlighting as the others---^^A
 % and are unrelated to class definition.
 %    \begin{macrocode}
-  morekeywords=[2]%
-  {%
+  morekeywords=[2]{%
     break,
     case,
     catch,
@@ -1399,8 +1390,7 @@ y = x(end:-1:1);
 % The following two keywords are ``standalone'';
 % they don't open or close any block.
 %    \begin{macrocode}
-  morekeywords=[3]%
-  {%
+  morekeywords=[3]{%
     global,
     persistent,
   },
@@ -1417,8 +1407,7 @@ y = x(end:-1:1);
 % namely \overrideEvents{}, \overrideEnumeration{}, \overrideMethods{},
 % and \overrideProperties{}.
 %    \begin{macrocode}
-  morekeywords=[5]%
-  {%
+  morekeywords=[5]{%
     enumeration,
     events,
     methods,
@@ -1555,8 +1544,7 @@ y = x(end:-1:1);
 % \begin{macro}{\resetEndKW@mlpr}
 % This macro restores the |end| keyword as a closing keyword.
 %    \begin{macrocode}
-\newcommand\resetEndKW@mlpr
-{%
+\newcommand\resetEndKW@mlpr{%
   \global\ClosingEndKW@mlpr@true%
   \global\netBracketCount@mlpr=0%
 }
@@ -1565,8 +1553,7 @@ y = x(end:-1:1);
 % \begin{macro}{\resetClassdefKW@mlpr}
 % This macro reinitializes state variables related to class definition.
 %    \begin{macrocode}
-\newcommand\resetClassdefKW@mlpr
-{%
+\newcommand\resetClassdefKW@mlpr{%
   \global\InClassdef@mlpr@false%
   \global\blkLvl@mlpr=0%
   \global\blkLvlAtClassdef@mlpr=0%
@@ -1594,8 +1581,7 @@ y = x(end:-1:1);
 % in the definition of \mllng{}, allows us to dictate what happens when a
 % bracket or a semicolon is encountered.
 %    \begin{macrocode}
-\newcommand\MoreSelectCharTable@mlpr
-{%
+\newcommand\MoreSelectCharTable@mlpr{%
 %    \end{macrocode}
 %
 % \begin{macro}{\roundBktOp@mlpr}
@@ -1663,10 +1649,8 @@ y = x(end:-1:1);
 % state variables every time such a character is encountered in \lstpkg{}'
 % ``processing mode''.
 %    \begin{macrocode}
-\newcommand\processOpenBracket@mlpr[2]
-{%
-  \lst@DefSaveDef{#1}#2%
-  {%
+\newcommand\processOpenBracket@mlpr[2]{%
+  \lst@DefSaveDef{#1}#2{%
     #2%
     \ifnum\lst@mode=\lst@Pmode\relax%
       \global\ClosingEndKW@mlpr@false%
@@ -1682,10 +1666,8 @@ y = x(end:-1:1);
 % state variables every time such a character is encountered in \lstpkg{}'
 % ``processing mode''.
 %    \begin{macrocode}
-\newcommand\processCloseBracket@mlpr[2]
-{%
-  \lst@DefSaveDef{#1}#2%
-  {%
+\newcommand\processCloseBracket@mlpr[2]{%
+  \lst@DefSaveDef{#1}#2{%
     #2%
     \ifnum\lst@mode=\lst@Pmode\relax%
       \ifClosingEndKW@mlpr@%
@@ -1708,10 +1690,8 @@ y = x(end:-1:1);
 % state variables every time such a character is encountered in \lstpkg{}'
 % ``processing mode''.
 %    \begin{macrocode}
-\newcommand\processSemicolon@mlpr[2]
-{%
-  \lst@DefSaveDef{#1}#2%
-  {%
+\newcommand\processSemicolon@mlpr[2]{%
+  \lst@DefSaveDef{#1}#2{%
     #2%
     \ifnum\lst@mode=\lst@Pmode\relax%
       \resetEndKW@mlpr%
@@ -1729,8 +1709,7 @@ y = x(end:-1:1);
 % This macro updates state variables every time an opening keyword is
 % processed, and applies keyword style.
 %    \begin{macrocode}
-\newcommand\processOpRegKW@mlpr
-{%
+\newcommand\processOpRegKW@mlpr{%
   \resetEndKW@mlpr%
   \global\advance\blkLvl@mlpr\@ne%
   \keywordStyle@mlpr%
@@ -1742,8 +1721,7 @@ y = x(end:-1:1);
 % This macro updates state variables every time a ``middle'' keyword is
 % processed, and applies keyword style.
 %    \begin{macrocode}
-\newcommand\processMidKW@mlpr
-{%
+\newcommand\processMidKW@mlpr{%
   \resetEndKW@mlpr%
   \keywordStyle@mlpr%
 }
@@ -1761,8 +1739,7 @@ y = x(end:-1:1);
 % This macro updates state variables every time the "classdef" keyword is
 % processed, and applies keyword style.
 %    \begin{macrocode}
-\newcommand\processClassdefKW@mlpr
-{%
+\newcommand\processClassdefKW@mlpr{%
   \resetEndKW@mlpr%
   \global\InClassdef@mlpr@true%
   \global\blkLvlAtClassdef@mlpr=\blkLvl@mlpr%
@@ -1776,8 +1753,7 @@ y = x(end:-1:1);
 % that only occur within a class-definition block is processed, and applies
 % the appropriate style.
 %    \begin{macrocode}
-\newcommand\processMidClassdefKW@mlpr
-{%
+\newcommand\processMidClassdefKW@mlpr{%
   \ifOverridecontext@mlpr@%
     \keywordStyle@mlpr%
   \else
@@ -1794,8 +1770,7 @@ y = x(end:-1:1);
 % This macro updates state variables every time the |end| keyword is
 % processed, and applies the appropriate style.
 %    \begin{macrocode}
-\newcommand\processEndKW@mlpr
-{%
+\newcommand\processEndKW@mlpr{%
   \ifOverridecontext@mlpr@%
     \lastElemStyle@mlpr%
   \else
@@ -1820,8 +1795,7 @@ y = x(end:-1:1);
 % This macro records that a string has just started by setting the appropriate
 % switch, and applies string style.
 %    \begin{macrocode}
-\newcommand\processString@mlpr
-{%
+\newcommand\processString@mlpr{%
     \global\InStr@mlpr@true%
     \stringStyle@mlpr%
 }
@@ -1835,8 +1809,7 @@ y = x(end:-1:1);
 % prohibits any mode changes on the rest of the current line,
 % and applies comment style to the rest of the current line.
 %    \begin{macrocode}
-\newcommand\processDotDotDot@mlpr
-{%
+\newcommand\processDotDotDot@mlpr{%
   \lst@CalcLostSpaceAndOutput%
   {\keywordStyle@mlpr...}%
   \lst@modetrue%
@@ -1874,8 +1847,7 @@ y = x(end:-1:1);
 % \begin{macro}{\processSectionTitle@mlpr}
 % This macro is invoked when a |%%| delimiter is encountered.
 %    \begin{macrocode}
-\newcommand\processSectionTitle@mlpr
-{%
+\newcommand\processSectionTitle@mlpr{%
   \ifInSecTitle@mlpr@%
     \sectionTitleStyle@mlpr%
   \else
@@ -1906,16 +1878,14 @@ y = x(end:-1:1);
 % This helper macro is used for drawing a horizontal rule just above the
 % current line.
 %    \begin{macrocode}
-\newcommand\drawSectionRule@mlpr
-{%
+\newcommand\drawSectionRule@mlpr{%
 %    \end{macrocode}
 % We measure the height of the ``M'' character and the depth of the ``j''
 % character, which we then use to calculate the required vertical offset.
 %    \begin{macrocode}
   \setlength\emHeight@mlpr{\fontcharht\font`M}%
   \setlength\jayDepth@mlpr{\fontchardp\font`j}%
-  \setlength\sectionRuleOffset@mlpr%
-  {%
+  \setlength\sectionRuleOffset@mlpr{%
     \dimexpr.5\emHeight@mlpr%
            +.5\baselineskip%
            -.5\jayDepth@mlpr\relax%
@@ -1925,8 +1895,7 @@ y = x(end:-1:1);
 %    \begin{macrocode}
   \bgroup%
   \color{\sectionRuleColor@mlpr}%
-    \makebox[0em][l]%
-    {%
+    \makebox[0em][l]{%
       \raisebox{\sectionRuleOffset@mlpr}[0pt][0pt]%
         {\rule{\lst@linewidth}{\sectionRuleRT@mlpr\baselineskip}}%
     }%
@@ -1957,8 +1926,7 @@ y = x(end:-1:1);
 % This helper macro is for setting the font size of inline code to the local
 % font size (only if the \rkeyname{mlscaleinline} key is set).
 %    \begin{macrocode}
-\newcommand\scaleInlineCode@mlpr
-{%
+\newcommand\scaleInlineCode@mlpr{%
   \lst@ifdisplaystyle%
   \else
     \ifScaleInline@mlpr@%
@@ -1971,8 +1939,7 @@ y = x(end:-1:1);
 %    \end{macrocode}
 % \ldots and we use the basic style but we update the font size.
 %    \begin{macrocode}
-      \expandafter\def\expandafter\lst@basicstyle\expandafter%
-      {%
+      \expandafter\def\expandafter\lst@basicstyle\expandafter{%
         \lst@basicstyle%
         \fontsize{\localFontSize@mlpr}{\localBaselineskip@mlpr}%
         \selectfont%
@@ -1986,8 +1953,7 @@ y = x(end:-1:1);
 % This macro detects when the first block (if any) of contiguous of line
 % comments (function header) ends and drops output thereafter.
 %    \begin{macrocode}
-\newcommand\dropOutputAfterHeader@mlpr
-{%
+\newcommand\dropOutputAfterHeader@mlpr{%
   \ifonlyheader@mlpr@%
     \ifnum\lst@lineno>1%
       \lst@ifLmode%
@@ -2030,8 +1996,7 @@ y = x(end:-1:1);
 % The |\addedToInitVarsEOL@mlpr| macro is let to this one under certain
 % conditions (more details follow).
 %    \begin{macrocode}
-\newcommand\@ddedToInitVarsEOL@mlpr
-{%
+\newcommand\@ddedToInitVarsEOL@mlpr{%
 %    \end{macrocode}
 % \lstpkg{}' built-in mechanism for handling \matlab{} string does not cover
 % the illegal case in which an opening string delimiter is not followed by
@@ -2098,8 +2063,7 @@ y = x(end:-1:1);
 % (this check is necessary if \lstpkg{}' \keyname{keepspaces} key is set),
 % we set the relevant switch.
 %    \begin{macrocode}
-\newcommand\@ddedToPostOutput@mlpr
-{%
+\newcommand\@ddedToPostOutput@mlpr{%
   \lst@ifwhitespace%
   \else
     \global\VisCharOccured@mlpr@true%
@@ -2167,8 +2131,7 @@ y = x(end:-1:1);
 % whether |\lst@language| and |\languageNormedDefd@mlpr| expand (once) to the
 % same replacement text and only apply our patches under that condition.
 %    \begin{macrocode}
-\newcommand\addedToPreInitHook@mlpr
-{%
+\newcommand\addedToPreInitHook@mlpr{%
   \ifx\lst@language\languageNormedDefd@mlpr%
     \scaleInlineCode@mlpr%
     \renewcommand\addedToInitVarsEOL@mlpr\@ddedToInitVarsEOL@mlpr%
@@ -2196,8 +2159,7 @@ y = x(end:-1:1);
 % same replacement text and, under that condition, we reset all state
 % variables.
 %    \begin{macrocode}
-\newcommand\addedToDeInitHook@mlpr
-{%
+\newcommand\addedToDeInitHook@mlpr{%
   \ifx\lst@language\languageNormedDefd@mlpr%
     \resetEndKW@mlpr%
     \resetClassdefKW@mlpr%
@@ -2350,8 +2312,7 @@ y = x(end:-1:1);
 %   This helper macro (which is based on \lstpkg{}' |\lst@InstallKeywords|),
 %   will let us defines four keys in one go, all prefixed by |ml|.
 %    \begin{macrocode}
-\gdef\InstallKeywords@mlpr#1#2#3#4#5%
-{%
+\gdef\InstallKeywords@mlpr#1#2#3#4#5{%
   \lst@Key{ml#2}\relax
     {\lst@UseFamily{#2}[\@ne]##1\relax\lst@MakeKeywords}%
   \lst@Key{mlmore#2}\relax
@@ -2450,8 +2411,7 @@ y = x(end:-1:1);
 % Bera Mono font, a typewriter font family which, contrary to typewriter
 % \TeX{} fonts, conveniently comes with a boldface version.
 %    \begin{macrocode}
-\newcommand\mlttfamily
-{%
+\newcommand\mlttfamily{%
   \def\fvm@Scale{.85}%
   \fontfamily{fvm}\selectfont%
 }
@@ -2462,8 +2422,7 @@ y = x(end:-1:1);
 % \begin{macro}{\mlplaceholder}
 % This user-level macro can be used to typeset placeholders in code snippets.
 %    \begin{macrocode}
-\newcommand\mlplaceholder[1]
-{%
+\newcommand\mlplaceholder[1]{%
   \bgroup%
     \phStyle@mlpr%
     \bgroup%
@@ -2497,8 +2456,7 @@ y = x(end:-1:1);
 % This macro is used for applying italic correction in case the current font
 % shape is either italic or slanted.
 %    \begin{macrocode}
-\newcommand\itcorr@mlpr
-{%
+\newcommand\itcorr@mlpr{%
 %    \end{macrocode}
 % We define a (long) macro that expands (once) to the current font shape,
 % for comparison purposes.
@@ -2534,8 +2492,7 @@ y = x(end:-1:1);
 % to define the style.
 %    \begin{macrocode}
 \newtoks\toks@mlpr
-\toks@mlpr=%
-{
+\toks@mlpr={%
   language               = \languageNormedDefd@mlpr,
   basicstyle             = \color{black}\ttfamily\normalsize,
   breaklines             = true,
@@ -2571,8 +2528,7 @@ y = x(end:-1:1);
 %    \end{macrocode}
 % \end{macro}
 %    \begin{macrocode}
-\lstdefinestyle{Matlab-editor}
-{
+\lstdefinestyle{Matlab-editor}{%
   style               = MatlabBaseStyle@mlpr,
   mllastelementstyle  = \color{black}                    ,
   mlkeywordstyle      = \color[RGB]{000,000,255}         ,
@@ -2595,8 +2551,7 @@ y = x(end:-1:1);
 %    \end{macrocode}
 % \end{macro}
 %    \begin{macrocode}
-\lstdefinestyle{Matlab-bw}
-{
+\lstdefinestyle{Matlab-bw}{%
   style               = MatlabBaseStyle@mlpr,
   mlkeywordstyle      = \color[gray]{0}  \bfseries        ,
   mlcommentstyle      = \color[gray]{.75}         \itshape,
@@ -2618,8 +2573,7 @@ y = x(end:-1:1);
 %    \end{macrocode}
 % \end{macro}
 %    \begin{macrocode}
-\lstdefinestyle{Matlab-Pyglike}
-{
+\lstdefinestyle{Matlab-Pyglike}{%
   style               = MatlabBaseStyle@mlpr,
   mllastelementstyle  = \color[RGB]{127,000,000}                 ,
   mlkeywordstyle      = \color[RGB]{000,127,000}\bfseries        ,

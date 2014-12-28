@@ -30,13 +30,10 @@
 \NeedsTeXFormat{LaTeX2e}[2011/06/27]
 \ProvidesPackage{matlab-prettifier}
   [2014/06/19 v0.3 A package for prettyprinting Matlab source code]
-\newcommand\lstoptcheck@mlpr[1]
-{%
-  \@ifpackagewith{listings}{#1}%
-  {
+\newcommand\lstoptcheck@mlpr[1]{%
+  \@ifpackagewith{listings}{#1}{%
     \PackageError{matlab-prettifier}%
-      {incompatible listings' option #1}%
-      {%
+      {incompatible listings' option #1}{%
         Make sure the `listings' package
         doesn't get loaded with option `#1'%
       }
@@ -52,8 +49,7 @@
 \DeclareOption{numbered}{\numbered@mlpr@true}
 \DeclareOption{draft}{\PassOptionsToPackage{\CurrentOption}{listings}}
 \DeclareOption{final}{\PassOptionsToPackage{\CurrentOption}{listings}}
-\DeclareOption*%
-{%
+\DeclareOption*{%
   \OptionNotUsed
   \PackageWarning{matlab-prettifier}{Unknown `\CurrentOption' option}
 }
@@ -65,13 +61,11 @@
 \expandafter\lst@NormedDef\expandafter\languageNormedDefd@mlpr%
   \expandafter{\language@mlpr}
 \expandafter\expandafter\expandafter\lstdefinelanguage\expandafter%
-{\language@mlpr}
-{%
+{\language@mlpr}{%
   sensitive=true,
   alsoother={\$@},
   MoreSelectCharTable=\MoreSelectCharTable@mlpr,
-  morekeywords=[1]%
-  {%
+  morekeywords=[1]{%
     for,
     if,
     otherwise,
@@ -82,8 +76,7 @@
     while,
   },
   keywordstyle=[1]\processOpRegKW@mlpr,
-  morekeywords=[2]%
-  {%
+  morekeywords=[2]{%
     break,
     case,
     catch,
@@ -94,16 +87,14 @@
     return,
   },
   keywordstyle=[2]\processMidKW@mlpr,
-  morekeywords=[3]%
-  {%
+  morekeywords=[3]{%
     global,
     persistent,
   },
   keywordstyle=[3]\processStdaKW@mlpr,
   morekeywords=[4]{classdef},
   keywordstyle=[4]\processClassdefKW@mlpr,
-  morekeywords=[5]%
-  {%
+  morekeywords=[5]{%
     enumeration,
     events,
     methods,
@@ -134,19 +125,16 @@
 \newif\ifVisCharOccured@mlpr@\VisCharOccured@mlpr@false
 \newif\ifInSecTitle@mlpr@        \InSecTitle@mlpr@false
 \newif\ifDroppingOutput@mlpr@\DroppingOutput@mlpr@false
-\newcommand\resetEndKW@mlpr
-{%
+\newcommand\resetEndKW@mlpr{%
   \global\ClosingEndKW@mlpr@true%
   \global\netBracketCount@mlpr=0%
 }
-\newcommand\resetClassdefKW@mlpr
-{%
+\newcommand\resetClassdefKW@mlpr{%
   \global\InClassdef@mlpr@false%
   \global\blkLvl@mlpr=0%
   \global\blkLvlAtClassdef@mlpr=0%
 }
-\newcommand\MoreSelectCharTable@mlpr
-{%
+\newcommand\MoreSelectCharTable@mlpr{%
   \processOpenBracket@mlpr{`(}{\roundBktOp@mlpr}%
   \processOpenBracket@mlpr{`[}{\squareBktOp@mlpr}%
   \processOpenBracket@mlpr{`\{}{\curlyBktOp@mlpr}%
@@ -155,10 +143,8 @@
   \processCloseBracket@mlpr{`\}}{\curlyBktCl@mlpr}%
   \processSemicolon@mlpr{`;}{\semicolon@mlpr}%
 }
-\newcommand\processOpenBracket@mlpr[2]
-{%
-  \lst@DefSaveDef{#1}#2%
-  {%
+\newcommand\processOpenBracket@mlpr[2]{%
+  \lst@DefSaveDef{#1}#2{%
     #2%
     \ifnum\lst@mode=\lst@Pmode\relax%
       \global\ClosingEndKW@mlpr@false%
@@ -166,10 +152,8 @@
     \fi
   }%
 }
-\newcommand\processCloseBracket@mlpr[2]
-{%
-  \lst@DefSaveDef{#1}#2%
-  {%
+\newcommand\processCloseBracket@mlpr[2]{%
+  \lst@DefSaveDef{#1}#2{%
     #2%
     \ifnum\lst@mode=\lst@Pmode\relax%
       \ifClosingEndKW@mlpr@%
@@ -184,38 +168,32 @@
     \fi
   }%
 }
-\newcommand\processSemicolon@mlpr[2]
-{%
-  \lst@DefSaveDef{#1}#2%
-  {%
+\newcommand\processSemicolon@mlpr[2]{%
+  \lst@DefSaveDef{#1}#2{%
     #2%
     \ifnum\lst@mode=\lst@Pmode\relax%
       \resetEndKW@mlpr%
     \fi
   }%
 }
-\newcommand\processOpRegKW@mlpr
-{%
+\newcommand\processOpRegKW@mlpr{%
   \resetEndKW@mlpr%
   \global\advance\blkLvl@mlpr\@ne%
   \keywordStyle@mlpr%
 }
-\newcommand\processMidKW@mlpr
-{%
+\newcommand\processMidKW@mlpr{%
   \resetEndKW@mlpr%
   \keywordStyle@mlpr%
 }
 \newcommand\processStdaKW@mlpr\processMidKW@mlpr
-\newcommand\processClassdefKW@mlpr
-{%
+\newcommand\processClassdefKW@mlpr{%
   \resetEndKW@mlpr%
   \global\InClassdef@mlpr@true%
   \global\blkLvlAtClassdef@mlpr=\blkLvl@mlpr%
   \global\advance\blkLvl@mlpr\@ne%
   \keywordStyle@mlpr%
 }
-\newcommand\processMidClassdefKW@mlpr
-{%
+\newcommand\processMidClassdefKW@mlpr{%
   \ifOverridecontext@mlpr@%
     \keywordStyle@mlpr%
   \else
@@ -226,8 +204,7 @@
     \fi
   \fi
 }
-\newcommand\processEndKW@mlpr
-{%
+\newcommand\processEndKW@mlpr{%
   \ifOverridecontext@mlpr@%
     \lastElemStyle@mlpr%
   \else
@@ -244,13 +221,11 @@
     \fi
   \fi
 }
-\newcommand\processString@mlpr
-{%
+\newcommand\processString@mlpr{%
     \global\InStr@mlpr@true%
     \stringStyle@mlpr%
 }
-\newcommand\processDotDotDot@mlpr
-{%
+\newcommand\processDotDotDot@mlpr{%
   \lst@CalcLostSpaceAndOutput%
   {\keywordStyle@mlpr...}%
   \lst@modetrue%
@@ -260,8 +235,7 @@
 \newlength\emHeight@mlpr
 \newlength\jayDepth@mlpr
 \newlength\sectionRuleOffset@mlpr
-\newcommand\processSectionTitle@mlpr
-{%
+\newcommand\processSectionTitle@mlpr{%
   \ifInSecTitle@mlpr@%
     \sectionTitleStyle@mlpr%
   \else
@@ -277,20 +251,17 @@
     \fi
   \fi
 }
-\newcommand\drawSectionRule@mlpr
-{%
+\newcommand\drawSectionRule@mlpr{%
   \setlength\emHeight@mlpr{\fontcharht\font`M}%
   \setlength\jayDepth@mlpr{\fontchardp\font`j}%
-  \setlength\sectionRuleOffset@mlpr%
-  {%
+  \setlength\sectionRuleOffset@mlpr{%
     \dimexpr.5\emHeight@mlpr%
            +.5\baselineskip%
            -.5\jayDepth@mlpr\relax%
   }%
   \bgroup%
   \color{\sectionRuleColor@mlpr}%
-    \makebox[0em][l]%
-    {%
+    \makebox[0em][l]{%
       \raisebox{\sectionRuleOffset@mlpr}[0pt][0pt]%
         {\rule{\lst@linewidth}{\sectionRuleRT@mlpr\baselineskip}}%
     }%
@@ -298,15 +269,13 @@
 }
 \newcommand\localFontSize@mlpr{}
 \newcommand\localBaselineskip@mlpr{}
-\newcommand\scaleInlineCode@mlpr
-{%
+\newcommand\scaleInlineCode@mlpr{%
   \lst@ifdisplaystyle%
   \else
     \ifScaleInline@mlpr@%
       \let\localFontSize@mlpr\f@size%
       \let\localBaselineskip@mlpr\f@baselineskip%
-      \expandafter\def\expandafter\lst@basicstyle\expandafter%
-      {%
+      \expandafter\def\expandafter\lst@basicstyle\expandafter{%
         \lst@basicstyle%
         \fontsize{\localFontSize@mlpr}{\localBaselineskip@mlpr}%
         \selectfont%
@@ -314,8 +283,7 @@
     \fi
   \fi
 }
-\newcommand\dropOutputAfterHeader@mlpr
-{%
+\newcommand\dropOutputAfterHeader@mlpr{%
   \ifonlyheader@mlpr@%
     \ifnum\lst@lineno>1%
       \lst@ifLmode%
@@ -332,8 +300,7 @@
 }
 \newcommand\addedToInitVarsEOL@mlpr{}
 \lst@AddToHook{InitVarsEOL}{\addedToInitVarsEOL@mlpr}
-\newcommand\@ddedToInitVarsEOL@mlpr
-{%
+\newcommand\@ddedToInitVarsEOL@mlpr{%
   \ifInStr@mlpr@%
     \global\InStr@mlpr@false%
     \lst@LeaveMode%
@@ -346,8 +313,7 @@
 \newcommand\@ddedToEndGroup@mlpr{\global\InStr@mlpr@false}
 \newcommand\addedToPostOutput@mlpr{}
 \lst@AddToHook{PostOutput}{\addedToPostOutput@mlpr}
-\newcommand\@ddedToPostOutput@mlpr
-{%
+\newcommand\@ddedToPostOutput@mlpr{%
   \lst@ifwhitespace%
   \else
     \global\VisCharOccured@mlpr@true%
@@ -359,8 +325,7 @@
 \newcommand\addedToOutputOther@mlpr{}
 \lst@AddToHook{OutputOther}{\addedToOutputOther@mlpr}
 \newcommand\@ddedToOutputOther@mlpr{\dropOutputAfterHeader@mlpr}
-\newcommand\addedToPreInitHook@mlpr
-{%
+\newcommand\addedToPreInitHook@mlpr{%
   \ifx\lst@language\languageNormedDefd@mlpr%
     \scaleInlineCode@mlpr%
     \renewcommand\addedToInitVarsEOL@mlpr\@ddedToInitVarsEOL@mlpr%
@@ -372,8 +337,7 @@
 \fi
 }
 \lst@AddToHook{PreInit}{\addedToPreInitHook@mlpr}
-\newcommand\addedToDeInitHook@mlpr
-{%
+\newcommand\addedToDeInitHook@mlpr{%
   \ifx\lst@language\languageNormedDefd@mlpr%
     \resetEndKW@mlpr%
     \resetClassdefKW@mlpr%
@@ -412,8 +376,7 @@
 \newcommand\syscomStyle@mlpr{}
 \lst@Key{mlsyscomstyle}\relax%
   {\renewcommand\syscomStyle@mlpr{#1}}
-\gdef\InstallKeywords@mlpr#1#2#3#4#5%
-{%
+\gdef\InstallKeywords@mlpr#1#2#3#4#5{%
   \lst@Key{ml#2}\relax
     {\lst@UseFamily{#2}[\@ne]##1\relax\lst@MakeKeywords}%
   \lst@Key{mlmore#2}\relax
@@ -438,13 +401,11 @@
   {\lstKV@SetIf{#1}\ifScaleInline@mlpr@}
 \lst@Key{mlonlyheader}{false}[t]%
   {\lstKV@SetIf{#1}\ifonlyheader@mlpr@}
-\newcommand\mlttfamily
-{%
+\newcommand\mlttfamily{%
   \def\fvm@Scale{.85}%
   \fontfamily{fvm}\selectfont%
 }
-\newcommand\mlplaceholder[1]
-{%
+\newcommand\mlplaceholder[1]{%
   \bgroup%
     \phStyle@mlpr%
     \bgroup%
@@ -461,8 +422,7 @@
 \newcommand\phDelimStyle@mlpr{\rmfamily\upshape}
 \newcommand\phOpDelim@mlpr{\textlangle}
 \newcommand\phClDelim@mlpr{\textrangle}
-\newcommand\itcorr@mlpr
-{%
+\newcommand\itcorr@mlpr{%
   \expandafter\newcommand\expandafter\long@f@shape@mlpr%
     \expandafter{\f@shape}%
   \ifx\long@f@shape@mlpr\itdefault%
@@ -474,8 +434,7 @@
   \fi
 }
 \newtoks\toks@mlpr
-\toks@mlpr=%
-{
+\toks@mlpr={%
   language               = \languageNormedDefd@mlpr,
   basicstyle             = \color{black}\ttfamily\normalsize,
   breaklines             = true,
@@ -497,8 +456,7 @@
   \noexpand\lstdefinestyle{MatlabBaseStyle@mlpr}{\the\toks@mlpr}
 }\@tempa
 \newcommand\mleditorphstyle{\color[RGB]{209,000,086}\rmfamily\itshape}
-\lstdefinestyle{Matlab-editor}
-{
+\lstdefinestyle{Matlab-editor}{%
   style               = MatlabBaseStyle@mlpr,
   mllastelementstyle  = \color{black}                    ,
   mlkeywordstyle      = \color[RGB]{000,000,255}         ,
@@ -510,8 +468,7 @@
   mlplaceholderstyle  = \mleditorphstyle,
 }
 \newcommand\mlbwphstyle{\color[gray]{0}\rmfamily\itshape}
-\lstdefinestyle{Matlab-bw}
-{
+\lstdefinestyle{Matlab-bw}{%
   style               = MatlabBaseStyle@mlpr,
   mlkeywordstyle      = \color[gray]{0}  \bfseries        ,
   mlcommentstyle      = \color[gray]{.75}         \itshape,
@@ -522,8 +479,7 @@
   mlplaceholderstyle  = \mlbwphstyle,
 }
 \newcommand\mlpyglikephstyle{\color[RGB]{127,063,127}\rmfamily\itshape}
-\lstdefinestyle{Matlab-Pyglike}
-{
+\lstdefinestyle{Matlab-Pyglike}{%
   style               = MatlabBaseStyle@mlpr,
   mllastelementstyle  = \color[RGB]{127,000,000}                 ,
   mlkeywordstyle      = \color[RGB]{000,127,000}\bfseries        ,
