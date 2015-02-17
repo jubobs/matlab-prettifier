@@ -23,10 +23,10 @@ $(PKGNAME).sty: $(PKGNAME).ins \
                 $(PKGNAME).dtx
 	latex $(PKGNAME).ins
 
-$(PKGNAME).gls: $(PKGNAME).glo 
+$(PKGNAME).gls: $(PKGNAME).glo
 	makeindex -s gglo.ist -o $(PKGNAME).gls $(PKGNAME).glo
 
-$(PKGNAME).ind: $(PKGNAME).idx 
+$(PKGNAME).ind: $(PKGNAME).idx
 	makeindex -s gind.ist -o $(PKGNAME).ind $(PKGNAME).idx
 
 $(PKGNAME).glo: $(PKGNAME).dtx $(PKGNAME).sty
@@ -37,7 +37,7 @@ dist: $(PACKAGE)
 	zip $(PKGNAME).zip $(PACKAGE)
 
 clean:
-	$(RM) *.aux *.fdb_latexmk *.fls *.ind *.idx *.ilg *.glo *.gls \
+	$(RM) *.aux *.fdb_latexmk *.fls *.glo *.gls *.ind *.idx *.ilg \
           *.log *.lol *.m *.out *.tmp *.toc
 
 cleanall: clean
