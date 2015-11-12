@@ -1,7 +1,7 @@
-PKGNAME="matlab-prettifier"
-if [ -f ${PKGNAME}.tar.gz ]; then
-    rm ${PKGNAME}.tar.gz
-fi
-make
-make clean
-ctanify ${PKGNAME}.ins ${PKGNAME}.pdf README makefile
+#!/bin/sh
+[ $# -eq 1 ] || exit 1
+
+PKGNAME="$1"
+rm -f ${PKGNAME}.tar.gz
+make all clean && \
+  ctanify ${PKGNAME}.ins ${PKGNAME}.pdf README makefile
